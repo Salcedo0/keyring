@@ -1,0 +1,25 @@
+# Dependencias
+node_modules/
+
+# Compilados
+dist/
+*.tsbuildinfo
+
+# Variables de entorno (se sube solo el .env.example)
+.env
+.env.*
+!.env.example
+
+# Base de datos local del backend
+*.sqlite
+
+# Registros
+*.log
+npm-debug.log*
+
+# Editores y sistema
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db

@@ -1,0 +1,72 @@
+@import 'tailwindcss';
+
+/*
+ * Colores y tipografía de la marca. Se definen una sola vez aquí y se usan como clases de
+ * Tailwind: bg-petroleo, text-ingreso, border-borde, etc.
+ * Si cambias un color, cámbialo también en src/utils/paleta.ts (lo usan los gráficos).
+ */
+@theme {
+  --font-sans: 'Figtree', ui-sans-serif, system-ui, sans-serif;
+
+  --color-petroleo: #0e5160;
+  --color-petroleo-oscuro: #0a3b47;
+  --color-petroleo-claro: #e3f0f2;
+  --color-menta: #8fd3c8;
+
+  --color-ingreso: #177a4f;
+  --color-ingreso-claro: #e5f3ec;
+  --color-gasto: #b3372e;
+  --color-gasto-suave: #e06c62;
+  --color-gasto-claro: #fbe9e7;
+  --color-ambar: #8a5300;
+  --color-ambar-claro: #fff1d6;
+
+  --color-tinta: #14212b;
+  --color-tinta-suave: #3a4a54;
+  --color-apagado: #5b6b75;
+  --color-borde: #e3e8eb;
+  --color-borde-fuerte: #d5dde1;
+  --color-fondo: #f4f6f7;
+  --color-fondo-suave: #f8fafa;
+}
+
+@layer base {
+  body {
+    @apply bg-fondo font-sans text-tinta antialiased;
+  }
+}
+
+/* Clases que se repiten en todo el proyecto. Usarlas en vez de copiar listas largas de clases. */
+@layer components {
+  .tarjeta {
+    @apply rounded-2xl border border-borde bg-white;
+  }
+
+  .boton-primario {
+    @apply inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-petroleo px-5 text-sm font-semibold text-white transition-colors hover:bg-petroleo-oscuro disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .boton-secundario {
+    @apply inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-borde-fuerte bg-white px-5 text-sm font-semibold text-tinta transition-colors hover:bg-fondo;
+  }
+
+  .boton-peligro {
+    @apply inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-gasto px-5 text-sm font-semibold text-white transition-colors hover:brightness-95;
+  }
+
+  .boton-icono {
+    @apply inline-flex h-10 w-10 items-center justify-center rounded-xl border border-borde bg-white text-tinta-suave transition-colors hover:bg-fondo;
+  }
+
+  .campo {
+    @apply h-11 w-full rounded-xl border border-borde-fuerte bg-white px-3.5 text-[15px] text-tinta outline-none focus:border-petroleo focus:ring-3 focus:ring-petroleo/15;
+  }
+
+  .campo-con-error {
+    @apply border-gasto;
+  }
+
+  .etiqueta {
+    @apply text-sm font-semibold text-tinta-suave;
+  }
+}
