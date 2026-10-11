@@ -56,16 +56,13 @@ function salir(): void {
       <span class="flex items-center gap-2.5">
         <span
           aria-hidden="true"
-          class="flex h-9.5 w-9.5 items-center justify-center rounded-full bg-petroleo-claro text-sm font-bold text-petroleo"
+          class="flex h-9.5 w-9.5 items-center justify-center rounded-full bg-marca-claro text-sm font-bold text-marca"
         >
           {{ iniciales }}
         </span>
         <span class="hidden flex-col items-start gap-0.5 sm:flex">
           <strong class="text-sm font-semibold">{{ usuario.nombre }}</strong>
-          <InsigniaEstado
-            :texto="usuario.rol"
-            :tono="usuario.rol === 'ADMIN' ? 'petroleo' : 'gris'"
-          />
+          <InsigniaEstado :texto="usuario.rol" :tono="usuario.rol === 'ADMIN' ? 'marca' : 'gris'" />
         </span>
       </span>
       <button type="button" class="boton-secundario px-3.5" @click="salir">

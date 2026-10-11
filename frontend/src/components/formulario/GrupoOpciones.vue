@@ -26,11 +26,11 @@ defineProps<{
         class="flex h-11 min-w-36 flex-1 cursor-pointer items-center gap-2.5 rounded-xl border px-4 text-sm font-semibold transition-colors"
         :class="
           valor === opcion.valor
-            ? 'border-petroleo bg-petroleo-claro text-petroleo'
+            ? 'border-marca bg-marca-claro text-marca'
             : 'border-borde-fuerte bg-white text-tinta-suave hover:bg-fondo'
         "
       >
-        <input v-model="valor" type="radio" :value="opcion.valor" class="accent-petroleo" />
+        <input v-model="valor" type="radio" :value="opcion.valor" class="accent-marca" />
         {{ opcion.texto }}
       </label>
     </div>

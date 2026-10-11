@@ -81,7 +81,7 @@ watch(filtroRol, usuarios.cargar)
         <template #celda-rol="{ fila }">
           <InsigniaEstado
             :texto="ROLES[fila.rol]"
-            :tono="fila.rol === 'ADMIN' ? 'petroleo' : 'gris'"
+            :tono="fila.rol === 'ADMIN' ? 'marca' : 'gris'"
           />
         </template>
       </TablaDatos>

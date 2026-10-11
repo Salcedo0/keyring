@@ -19,6 +19,12 @@ const rutas: RouteRecordRaw[] = [
   { path: '/', name: 'inicio', component: InicioView, meta: { publica: true } },
   { path: '/ingresar', name: 'ingreso', component: IngresoView, meta: { publica: true } },
   {
+    path: '/registrarse',
+    name: 'registro',
+    component: () => import('@/views/RegistroView.vue'),
+    meta: { publica: true },
+  },
+  {
     path: '/dashboard',
     name: 'dashboard',
     component: () => import('@/views/DashboardView.vue'),

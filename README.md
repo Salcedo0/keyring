@@ -1,4 +1,6 @@
-# KeyRing
+# KeyRing · Propiedades en equilibrio
+
+![KeyRing](frontend/src/assets/img/keyring-logo.png)
 
 Dashboard para propietarios de inmuebles en arriendo, de **corta estancia** (tipo Airbnb) y de
 **contrato fijo**. Permite registrar propiedades, contratos e ingresos y gastos, y ver el desempeño
@@ -11,11 +13,11 @@ Proyecto del curso **Ingeniería de Desarrollo Web**.
 | Parte | Estado |
 | --- | --- |
 | `frontend/` | Listo. Todas las pantallas consumen la API; **no tiene datos de ejemplo**. |
-| `backend/` | Pendiente. Ver [`backend/README.md`](backend/README.md). |
+| `backend/` | Listo. API en Nest con login (JWT), roles y base de datos SQLite. |
 | Contrato de la API | Listo en [`docs/CONTRATO-API.md`](docs/CONTRATO-API.md). |
 
-Mientras el backend no exista, el front abre bien pero cada pantalla muestra el aviso
-"No se pudo conectar con el servidor" y sus tablas vacías. Es el comportamiento esperado.
+Si el backend no está corriendo, el front abre bien pero cada pantalla muestra el aviso
+"No se pudo conectar con el servidor" y sus tablas vacías.
 
 ## Estructura
 
@@ -24,8 +26,9 @@ keyring/
 ├── GUIA-DE-CODIGO.md     Reglas para escribir el código (leer antes de programar)
 ├── README.md             Este archivo
 ├── docs/
-│   └── CONTRATO-API.md   Lo que el back debe responder
-├── backend/              API en Nest (pendiente)
+│   ├── CONTRATO-API.md   Lo que el back responde y el front consume
+│   └── DECISIONES.md     Por qué se tomó cada decisión importante
+├── backend/              API en Nest + TypeORM + SQLite
 └── frontend/             App en Vue 3 + TypeScript + Vite + Tailwind
 ```
 
@@ -34,10 +37,21 @@ El detalle de cada carpeta de `frontend/src/` está en la sección 3 de
 
 ## Requisitos
 
-- Node.js 20.19 o superior (o 22.12 o superior)
+- **Node.js 22.18 o superior** (o 24). El backend no arranca con versiones anteriores.
 - npm
 
-## Cómo correr el frontend
+## Cómo correr el proyecto
+
+Primero el backend (en una terminal), siguiendo [`backend/README.md`](backend/README.md):
+
+```bash
+cd backend
+npm install
+cp .env.example .env
+npm run start:dev
+```
+
+Después el frontend (en otra terminal):
 
 ```bash
 cd frontend
@@ -47,6 +61,7 @@ npm run dev
 ```
 
 La app queda en `http://localhost:5173`. La ruta principal es `/` (página pública de inicio).
+Para entrar: usa el administrador del `.env` del backend, o crea una cuenta en "Crear cuenta".
 
 ### Variables de entorno
 
@@ -70,6 +85,7 @@ La app queda en `http://localhost:5173`. La ruta principal es `/` (página públ
 | --- | --- | --- |
 | `/` | Inicio | Pública |
 | `/ingresar` | Login | Pública |
+| `/registrarse` | Crear cuenta de propietario | Pública |
 | `/dashboard` | Indicadores, gráficos y últimas transacciones | Con sesión |
 | `/propiedades` | Lista y mapa de propiedades | Con sesión |
 | `/propiedades/nueva`, `/propiedades/:id/editar` | Formulario de propiedad | Con sesión |
@@ -94,13 +110,15 @@ opciones de administración en el menú y, si escribe la dirección a mano, vuel
 | `TarjetaGrafico` | `base/` | Título + gráfico, con estado vacío si no hay datos |
 | `GraficoLineas`, `GraficoBarras`, `GraficoDona` | `graficos/` | Gráficos con Chart.js |
 | `MapaPropiedades`, `SelectorUbicacion` | `mapa/` | Mapas con Leaflet y OpenStreetMap |
+| `LogoKeyRing` | `base/` | Logo completo o solo ícono, en versión normal o clara (fondos oscuros) |
 | `InsigniaEstado`, `AvisoError`, `EstadoVacio` | `base/` | Insignias de color, avisos de error, "No hay datos todavía" |
 | `PlantillaInterna`, `MenuLateral`, `BarraSuperior` | `layout/` | Estructura de las páginas internas, menú colapsable |
 
 ## Pendientes
 
-- Construir el backend en `backend/` siguiendo `docs/CONTRATO-API.md`.
-- Conectar el despliegue (Docker y GCP), como en el tutorial 08 del curso.
+- Despliegue en GCP con Docker, como en el tutorial 08 del curso.
+- Wiki del repositorio: Entregable 2 (diagramas), guía de estilo y reglas de programación del
+  backend.
 
 ## Documentación
 
@@ -108,6 +126,7 @@ opciones de administración en el menú y, si escribe la dirección a mano, vuel
 | --- | --- |
 | [`GUIA-DE-CODIGO.md`](GUIA-DE-CODIGO.md) | Reglas de código: idioma, nombres, estructura, KISS, comentarios, git |
 | [`docs/CONTRATO-API.md`](docs/CONTRATO-API.md) | Endpoints, filtros, cuerpos, respuestas y errores de la API |
-| [`backend/README.md`](backend/README.md) | Qué falta en el back y cómo se organiza |
+| [`docs/DECISIONES.md`](docs/DECISIONES.md) | Decisiones importantes y su porqué (registro público, JWT, fechas…) |
+| [`backend/README.md`](backend/README.md) | Cómo correr el back, su estructura, cómo funciona el login y sus reglas |
 
 Cada cambio se documenta al terminarlo (ver la sección 13 de la guía).

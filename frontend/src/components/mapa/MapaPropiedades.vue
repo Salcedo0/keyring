@@ -36,7 +36,7 @@ function dibujarPropiedades(): void {
       radius: 9,
       color: '#FFFFFF',
       weight: 2.5,
-      fillColor: COLORES.petroleo,
+      fillColor: COLORES.marca,
       fillOpacity: 1,
     })
       .bindPopup(contenidoVentana(propiedad))

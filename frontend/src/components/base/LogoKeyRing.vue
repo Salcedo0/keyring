@@ -1,38 +1,36 @@
 <script setup lang="ts">
+import { computed } from 'vue'
+
+import iconoClaro from '@/assets/img/keyring-icono-claro.png'
+import icono from '@/assets/img/keyring-icono.png'
+import logoClaro from '@/assets/img/keyring-logo-claro.png'
+import logo from '@/assets/img/keyring-logo.png'
+
 const {
-  tamano = 32,
-  conTexto = true,
-  invertido = false,
+  variante = 'completo',
+  alto = 40,
+  claro = false,
 } = defineProps<{
-  tamano?: number
-  conTexto?: boolean
-  /** Versión para fondos oscuros: ícono blanco y texto blanco. */
-  invertido?: boolean
+  /** 'completo': llave, casa, nombre y lema. 'icono': solo la llave y la casa. */
+  variante?: 'completo' | 'icono'
+  /** Alto en píxeles; el ancho se ajusta solo. */
+  alto?: number
+  /** Versión para fondos oscuros: la casa y el nombre pasan a color crema. */
+  claro?: boolean
 }>()
+
+const imagen = computed(() => {
+  if (variante === 'icono') return claro ? iconoClaro : icono
+  return claro ? logoClaro : logo
+})
 </script>
 
 <template>
-  <span class="inline-flex items-center gap-2.5">
-    <!-- El ojo de la llave es un aro abierto (el llavero); el punto marca "tu" propiedad. -->
-    <svg :width="tamano" :height="tamano" viewBox="0 0 32 32" aria-hidden="true" class="shrink-0">
-      <rect width="32" height="32" rx="9" :class="invertido ? 'fill-white' : 'fill-petroleo'" />
-      <g
-        fill="none"
-        stroke-width="2.6"
-        stroke-linecap="round"
-        :class="invertido ? 'stroke-petroleo' : 'stroke-white'"
-      >
-        <path d="M10.95 7.36A6 6 0 1 1 7.36 10.95" />
-        <path d="M17.3 17.3L25 25M21.4 21.4l2.2-2.2M23.9 23.9l1.9-1.9" />
-      </g>
-      <circle cx="13" cy="13" r="2" class="fill-menta" />
-    </svg>
-    <span
-      v-if="conTexto"
-      class="text-xl font-extrabold tracking-tight"
-      :class="invertido ? 'text-white' : 'text-tinta'"
-    >
-      Key<span :class="invertido ? 'text-white' : 'text-petroleo'">Ring</span>
-    </span>
-  </span>
+  <img
+    :src="imagen"
+    :style="{ height: `${alto}px` }"
+    class="w-auto shrink-0 select-none"
+    alt="KeyRing, propiedades en equilibrio"
+    draggable="false"
+  />
 </template>

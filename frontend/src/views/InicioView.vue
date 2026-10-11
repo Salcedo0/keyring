@@ -17,7 +17,7 @@ const BENEFICIOS: Beneficio[] = [
     titulo: 'Todas tus propiedades en un lugar',
     texto:
       'Registra apartamentos, casas y locales con su ciudad, tipo y modalidad: corta estancia, contrato fijo o ambas. Ubícalas en el mapa.',
-    clasesIcono: 'bg-petroleo-claro text-petroleo',
+    clasesIcono: 'bg-marca-claro text-marca',
   },
   {
     icono: 'tendencia',
@@ -52,35 +52,45 @@ const PASOS = [
   <div class="min-h-screen">
     <EncabezadoPublico />
 
-    <section class="mx-auto flex max-w-6xl flex-col gap-6 px-6 pt-24 pb-20">
-      <span
-        class="self-start rounded-full bg-petroleo-claro px-3 py-1.5 text-[13px] font-semibold text-petroleo"
-      >
-        Corta estancia y contrato fijo
-      </span>
-      <h1 class="max-w-3xl text-5xl leading-[1.05] font-extrabold tracking-tight sm:text-6xl">
-        Todos tus arriendos en un solo llavero.
-      </h1>
-      <p class="max-w-xl text-lg leading-relaxed text-tinta-suave">
-        KeyRing reúne tus propiedades, contratos, ingresos y gastos en un tablero financiero claro.
-        Sabe cuánto deja cada inmueble, mes a mes, en pesos colombianos.
-      </p>
-      <div class="flex flex-wrap gap-3 pt-2">
-        <RouterLink to="/ingresar" class="boton-primario h-13 px-7 text-base">
-          Iniciar sesión
-          <Icono nombre="flechaDerecha" :tamano="18" />
-        </RouterLink>
-        <a href="#como-funciona" class="boton-secundario h-13 px-6 text-base">Ver cómo funciona</a>
+    <section class="mx-auto flex max-w-6xl flex-wrap items-center gap-12 px-6 pt-20 pb-20">
+      <div class="flex min-w-0 flex-[1_1_480px] flex-col gap-6">
+        <span class="text-[13px] font-semibold tracking-[0.3em] text-apagado uppercase">
+          Propiedades en equilibrio
+        </span>
+        <h1 class="max-w-3xl text-5xl leading-[1.05] font-bold tracking-tight sm:text-6xl">
+          Todos tus arriendos en un solo <span class="text-marca">llavero</span>.
+        </h1>
+        <p class="max-w-xl text-lg leading-relaxed text-tinta-suave">
+          KeyRing reúne tus propiedades de corta estancia y contrato fijo, sus contratos, ingresos y
+          gastos en un tablero claro. Sabe cuánto deja cada inmueble, mes a mes, en pesos
+          colombianos.
+        </p>
+        <div class="flex flex-wrap gap-3 pt-2">
+          <RouterLink to="/ingresar" class="boton-primario h-13 px-7 text-base">
+            Iniciar sesión
+            <Icono nombre="flechaDerecha" :tamano="18" />
+          </RouterLink>
+          <a href="#como-funciona" class="boton-secundario h-13 px-6 text-base">
+            Ver cómo funciona
+          </a>
+        </div>
+      </div>
+      <div class="flex flex-[1_1_320px] justify-center">
+        <span
+          class="flex h-80 w-80 items-center justify-center rounded-full bg-white shadow-xl shadow-tinta/10"
+        >
+          <LogoKeyRing variante="icono" :alto="220" />
+        </span>
       </div>
     </section>
 
     <section id="beneficios" class="border-y border-borde bg-white">
       <div class="mx-auto flex max-w-6xl flex-col gap-10 px-6 py-20">
         <div class="flex max-w-2xl flex-col gap-2.5">
-          <span class="text-[13px] font-bold tracking-widest text-petroleo uppercase">
+          <span class="text-[13px] font-bold tracking-widest text-marca uppercase">
             Beneficios
           </span>
-          <h2 class="text-4xl font-extrabold tracking-tight">
+          <h2 class="text-4xl font-bold tracking-tight">
             Menos hojas de cálculo, más claridad sobre tu negocio.
           </h2>
         </div>
@@ -104,7 +114,7 @@ const PASOS = [
     </section>
 
     <section id="como-funciona" class="mx-auto flex max-w-6xl flex-col gap-9 px-6 py-20">
-      <h2 class="text-3xl font-extrabold tracking-tight">Cómo funciona</h2>
+      <h2 class="text-3xl font-bold tracking-tight">Cómo funciona</h2>
       <ol class="flex flex-wrap gap-5">
         <li
           v-for="(paso, indice) in PASOS"
@@ -112,7 +122,7 @@ const PASOS = [
           class="flex flex-1 basis-64 items-start gap-4"
         >
           <span
-            class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-petroleo font-bold text-white"
+            class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-marca font-bold text-white"
           >
             {{ indice + 1 }}
           </span>
@@ -123,18 +133,15 @@ const PASOS = [
         </li>
       </ol>
       <div
-        class="mt-4 flex flex-wrap items-center justify-between gap-6 rounded-2xl bg-petroleo p-10 text-white"
+        class="mt-4 flex flex-wrap items-center justify-between gap-6 rounded-2xl bg-marca p-10 text-white"
       >
         <div class="flex flex-col gap-2">
-          <div class="text-2xl font-extrabold">¿Listo para ver tus números?</div>
-          <div class="text-petroleo-claro">
+          <div class="font-titulo text-2xl font-bold">¿Listo para ver tus números?</div>
+          <div class="text-white/90">
             Entra con tu cuenta y empieza por registrar tu primera propiedad.
           </div>
         </div>
-        <RouterLink
-          to="/ingresar"
-          class="boton-secundario h-13 border-0 px-7 text-base text-petroleo"
-        >
+        <RouterLink to="/ingresar" class="boton-secundario h-13 border-0 px-7 text-base text-marca">
           Iniciar sesión
         </RouterLink>
       </div>
@@ -145,7 +152,7 @@ const PASOS = [
         class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-6 py-6 text-sm text-apagado"
       >
         <span class="flex items-center gap-2">
-          <LogoKeyRing :tamano="22" :con-texto="false" />
+          <LogoKeyRing variante="icono" :alto="26" />
           © KeyRing
         </span>
         <span>Hecho para propietarios en Colombia · Valores en COP</span>

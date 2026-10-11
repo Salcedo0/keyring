@@ -76,8 +76,12 @@ keyring/
 ├── GUIA-DE-CODIGO.md        ← este archivo
 ├── README.md                ← qué es, cómo se corre, documentación
 ├── docs/
-│   └── CONTRATO-API.md      ← lo que el back debe responder (la fuente de verdad)
-├── backend/                 ← API en Nest (pendiente)
+│   ├── CONTRATO-API.md      ← lo que el back responde (la fuente de verdad)
+│   └── DECISIONES.md        ← por qué se decidió cada cosa importante
+├── backend/
+│   └── src/
+│       ├── comun/           ← guard de autenticación, decoradores, validaciones compartidas
+│       └── <recurso>/       ← un módulo por recurso: entities/, dto/, service, controller, module
 └── frontend/
     └── src/
         ├── assets/css/      ← estilos globales y colores de la marca
@@ -114,6 +118,20 @@ views  ──►  components
 - **`http.ts`** es el único lugar que sabe dónde está la API, cómo se envía el token y cómo se
   traduce un error a un mensaje en español.
 - **`utils/`** son funciones puras: reciben datos y devuelven datos, sin estado ni peticiones.
+
+En el **backend** el camino es el mismo, en sentido contrario:
+
+```
+petición  ──►  AutenticacionGuard  ──►  controller  ──►  service  ──►  repositorio (TypeORM)  ──►  SQLite
+              (token y rol)            (DTO valida)    (reglas)
+```
+
+- **El controlador** solo recibe, llama al servicio y responde. No tiene lógica.
+- **El servicio** tiene toda la lógica y lanza los errores de Nest (`NotFoundException`,
+  `ConflictException`…) con mensajes en español.
+- **El DTO** valida lo que llega. **La entidad** repite las reglas como `CHECK` en la base de datos.
+- Las rutas están protegidas por defecto; las públicas llevan `@Publica()` y las de administración
+  `@SoloAdmin()`.
 
 ---
 
@@ -195,9 +213,14 @@ export function formatearPesos(valor: number): string {
 ## 7. Estilos
 
 - Se usa **Tailwind**. Los colores de la marca están definidos una sola vez en
-  `assets/css/principal.css` (`bg-petroleo`, `text-ingreso`, `text-gasto`…).
-- **Prohibido escribir colores sueltos** (`#0E5160`) en componentes. Si falta un color, se agrega
+  `assets/css/principal.css` (`bg-marca`, `text-ingreso`, `text-gasto`…).
+- Los nombres de los colores dicen **para qué sirven, no qué color son**: `marca`, `tinta`, `fondo`,
+  `ingreso`, `gasto`. Así, si la marca cambia de color, ningún nombre queda mintiendo.
+- **Prohibido escribir colores sueltos** (`#A35A44`) en componentes. Si falta un color, se agrega
   al tema.
+- **Identidad:** terracota de la llave (`marca`), carbón de la casa (`tinta`) y fondos crema. Títulos
+  con serifa (`font-titulo`, Fraunces) y texto sin serifa (Figtree). El logo siempre se muestra con
+  el componente `LogoKeyRing` (las imágenes están en `assets/img/`); nunca se redibuja.
 - Los gráficos usan los mismos colores desde `utils/paleta.ts` (Chart.js no puede leer las clases
   de Tailwind). Si cambias un color de la marca, cámbialo en los dos archivos.
 - Las clases que se repiten mucho tienen nombre propio en `principal.css`: `tarjeta`,
@@ -283,5 +306,6 @@ está terminado.
 | `README.md` | Qué es KeyRing, cómo se instala y se corre, estructura y pendientes | Al agregar una página, un comando o una variable de entorno |
 | `GUIA-DE-CODIGO.md` | Estas reglas | Cuando el equipo acuerda una regla nueva |
 | `docs/CONTRATO-API.md` | Cada endpoint: método, ruta, filtros, cuerpo y respuesta | **Antes** de escribir un servicio nuevo o cambiar uno existente |
-| `backend/README.md` | Cómo se corre el back y qué falta | Al empezar y avanzar el back |
+| `backend/README.md` | Cómo se corre el back, su estructura, el login y sus reglas | Al agregar un módulo, una variable de entorno o una regla |
+| `docs/DECISIONES.md` | Cada decisión importante: qué, por qué y qué se descartó | Al tomar una decisión que alguien podría preguntar "¿por qué así?" |
 | Comentarios `/** … */` | Qué hace cada función de `services/` y `utils/` | Al crear o cambiar la función |

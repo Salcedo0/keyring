@@ -55,24 +55,24 @@ async function ingresar(): Promise<void> {
 <template>
   <div class="flex min-h-screen flex-wrap">
     <aside
-      class="relative flex flex-1 basis-[420px] flex-col justify-between gap-12 overflow-hidden bg-petroleo p-12 text-white"
+      class="relative flex flex-1 basis-[420px] flex-col justify-between gap-12 overflow-hidden bg-tinta p-12 text-white"
     >
-      <RouterLink to="/" aria-label="KeyRing, volver al inicio" class="relative">
-        <LogoKeyRing invertido :tamano="36" />
+      <RouterLink to="/" aria-label="KeyRing, volver al inicio" class="relative self-start">
+        <LogoKeyRing claro :alto="72" />
       </RouterLink>
       <div class="relative flex max-w-md flex-col gap-4">
-        <h1 class="text-4xl leading-tight font-extrabold tracking-tight">Bienvenido de nuevo.</h1>
-        <p class="text-[17px] leading-relaxed text-petroleo-claro">
+        <h1 class="text-4xl leading-tight font-bold tracking-tight">Bienvenido de nuevo.</h1>
+        <p class="text-[17px] leading-relaxed text-borde">
           Tus propiedades, contratos y movimientos te esperan donde los dejaste.
         </p>
       </div>
-      <span class="relative text-[13px] text-petroleo-claro">© KeyRing</span>
+      <span class="relative text-[13px] text-borde">© KeyRing · Propiedades en equilibrio</span>
     </aside>
 
     <main class="flex flex-[999_1_560px] items-center justify-center px-6 py-12">
       <form class="flex w-full max-w-md flex-col gap-5" novalidate @submit.prevent="ingresar">
         <div class="flex flex-col gap-2">
-          <h2 class="text-3xl font-extrabold tracking-tight">Iniciar sesión</h2>
+          <h2 class="text-3xl font-bold tracking-tight">Iniciar sesión</h2>
           <p class="text-[15px] text-apagado">Ingresa con el correo de tu cuenta.</p>
         </div>
 
@@ -94,6 +94,11 @@ async function ingresar(): Promise<void> {
         <button type="submit" class="boton-primario h-12 text-base" :disabled="enviando">
           {{ enviando ? 'Ingresando…' : 'Iniciar sesión' }}
         </button>
+
+        <p class="text-center text-sm text-apagado">
+          ¿No tienes cuenta?
+          <RouterLink to="/registrarse" class="font-semibold text-marca">Crea una aquí</RouterLink>
+        </p>
 
         <RouterLink
           to="/"

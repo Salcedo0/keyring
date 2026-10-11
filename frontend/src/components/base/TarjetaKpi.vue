@@ -12,17 +12,13 @@ defineProps<{
 <template>
   <div
     class="flex flex-1 basis-56 flex-col gap-2.5 rounded-2xl p-5"
-    :class="destacada ? 'bg-petroleo text-white shadow-lg shadow-petroleo/20' : 'tarjeta shadow-sm'"
+    :class="destacada ? 'bg-tinta text-white shadow-lg shadow-tinta/20' : 'tarjeta shadow-sm'"
   >
-    <span class="text-sm font-semibold" :class="destacada ? 'text-petroleo-claro' : 'text-apagado'">
+    <span class="text-sm font-semibold" :class="destacada ? 'text-borde' : 'text-apagado'">
       {{ etiqueta }}
     </span>
     <span class="text-3xl font-extrabold tracking-tight tabular-nums">{{ valor }}</span>
-    <span
-      v-if="nota"
-      class="text-[13px]"
-      :class="destacada ? 'text-petroleo-claro' : 'text-apagado'"
-    >
+    <span v-if="nota" class="text-[13px]" :class="destacada ? 'text-borde' : 'text-apagado'">
       {{ nota }}
     </span>
   </div>

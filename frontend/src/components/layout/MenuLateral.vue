@@ -62,7 +62,8 @@ function estaActivo(enlace: EnlaceMenu): boolean {
       aria-label="KeyRing, ir al dashboard"
       @click="emit('navegar')"
     >
-      <LogoKeyRing :con-texto="!colapsado" />
+      <LogoKeyRing v-if="colapsado" variante="icono" :alto="40" />
+      <LogoKeyRing v-else :alto="62" />
     </RouterLink>
 
     <nav aria-label="Navegación principal" class="flex flex-col gap-1">
@@ -85,7 +86,7 @@ function estaActivo(enlace: EnlaceMenu): boolean {
           class="flex h-11 items-center gap-3 rounded-xl px-3 text-[15px] transition-colors"
           :class="
             estaActivo(enlace)
-              ? 'bg-petroleo-claro font-semibold text-petroleo'
+              ? 'bg-marca-claro font-semibold text-marca'
               : 'font-medium text-tinta-suave hover:bg-fondo'
           "
           @click="emit('navegar')"

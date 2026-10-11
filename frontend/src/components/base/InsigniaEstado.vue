@@ -11,7 +11,7 @@ const CLASES_POR_TONO: Record<Tono, string> = {
   ambar: 'bg-ambar-claro text-ambar',
   gris: 'bg-fondo text-tinta-suave',
   rojo: 'bg-gasto-claro text-gasto',
-  petroleo: 'bg-petroleo-claro text-petroleo',
+  marca: 'bg-marca-claro text-marca',
 }
 </script>
 

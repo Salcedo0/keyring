@@ -10,7 +10,7 @@ import type { Rol } from '@/interfaces/UsuarioInterface'
  */
 
 /** Color de una insignia. Cada tono tiene su fondo y texto en InsigniaEstado.vue. */
-export type Tono = 'verde' | 'ambar' | 'gris' | 'rojo' | 'petroleo'
+export type Tono = 'verde' | 'ambar' | 'gris' | 'rojo' | 'marca'
 
 export const TIPOS_PROPIEDAD: Record<TipoPropiedad, string> = {
   APARTAMENTO: 'Apartamento',
@@ -27,7 +27,7 @@ export const MODALIDADES: Record<Modalidad, string> = {
 }
 
 export const TONOS_MODALIDAD: Record<Modalidad, Tono> = {
-  CORTA: 'petroleo',
+  CORTA: 'marca',
   FIJA: 'ambar',
   AMBAS: 'gris',
 }

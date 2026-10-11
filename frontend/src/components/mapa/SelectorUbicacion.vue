@@ -33,7 +33,7 @@ function dibujarMarcador(): void {
     radius: 10,
     color: '#FFFFFF',
     weight: 3,
-    fillColor: COLORES.petroleo,
+    fillColor: COLORES.marca,
     fillOpacity: 1,
   }).addTo(mapa)
 }

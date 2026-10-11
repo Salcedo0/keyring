@@ -3,12 +3,12 @@
  * por eso se repiten aquí. Deben coincidir con el @theme de assets/css/principal.css.
  */
 export const COLORES = {
-  petroleo: '#0E5160',
-  ingreso: '#177A4F',
-  gasto: '#E06C62',
-  apagado: '#5B6B75',
-  rejilla: '#EEF1F3',
+  marca: '#A35A44',
+  ingreso: '#2F7A4F',
+  gasto: '#D46A76',
+  apagado: '#6E625A',
+  rejilla: '#F0E9E2',
 }
 
 /** Colores para series sin un color propio (categorías de la dona, roles). */
-export const PALETA_CATEGORIAS = ['#0E5160', '#3E97A6', '#E0A23A', '#E06C62', '#9AA9B2', '#7B5EA7']
+export const PALETA_CATEGORIAS = ['#A35A44', '#2B2523', '#C9A27E', '#7C9A82', '#D46A76', '#8C8C94']

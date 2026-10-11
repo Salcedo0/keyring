@@ -2,37 +2,46 @@
 
 /*
  * Colores y tipografía de la marca. Se definen una sola vez aquí y se usan como clases de
- * Tailwind: bg-petroleo, text-ingreso, border-borde, etc.
+ * Tailwind: bg-marca, text-ingreso, border-borde, etc.
  * Si cambias un color, cámbialo también en src/utils/paleta.ts (lo usan los gráficos).
  */
 @theme {
+  /* Títulos con serifa, como el nombre en el logo; el resto del texto sin serifa. */
+  --font-titulo: 'Fraunces', Georgia, serif;
   --font-sans: 'Figtree', ui-sans-serif, system-ui, sans-serif;
 
-  --color-petroleo: #0e5160;
-  --color-petroleo-oscuro: #0a3b47;
-  --color-petroleo-claro: #e3f0f2;
-  --color-menta: #8fd3c8;
+  /* Terracota de la llave del logo. */
+  --color-marca: #a35a44;
+  --color-marca-oscuro: #864634;
+  --color-marca-claro: #f6e7e0;
 
-  --color-ingreso: #177a4f;
-  --color-ingreso-claro: #e5f3ec;
-  --color-gasto: #b3372e;
-  --color-gasto-suave: #e06c62;
-  --color-gasto-claro: #fbe9e7;
-  --color-ambar: #8a5300;
-  --color-ambar-claro: #fff1d6;
+  --color-ingreso: #2f7a4f;
+  --color-ingreso-claro: #e4f1e8;
+  --color-gasto: #a8323f;
+  --color-gasto-suave: #d46a76;
+  --color-gasto-claro: #fae6e8;
+  --color-ambar: #845600;
+  --color-ambar-claro: #faebcb;
 
-  --color-tinta: #14212b;
-  --color-tinta-suave: #3a4a54;
-  --color-apagado: #5b6b75;
-  --color-borde: #e3e8eb;
-  --color-borde-fuerte: #d5dde1;
-  --color-fondo: #f4f6f7;
-  --color-fondo-suave: #f8fafa;
+  /* Carbón de la casa del logo y neutros cálidos. */
+  --color-tinta: #2b2523;
+  --color-tinta-suave: #4e4540;
+  --color-apagado: #6e625a;
+  --color-borde: #e8dfd6;
+  --color-borde-fuerte: #d9cec3;
+  --color-fondo: #f6f1eb;
+  --color-fondo-suave: #faf7f3;
 }
 
 @layer base {
   body {
     @apply bg-fondo font-sans text-tinta antialiased;
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply font-titulo;
   }
 }
 
@@ -43,7 +52,7 @@
   }
 
   .boton-primario {
-    @apply inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-petroleo px-5 text-sm font-semibold text-white transition-colors hover:bg-petroleo-oscuro disabled:cursor-not-allowed disabled:opacity-50;
+    @apply inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-marca px-5 text-sm font-semibold text-white transition-colors hover:bg-marca-oscuro disabled:cursor-not-allowed disabled:opacity-50;
   }
 
   .boton-secundario {
@@ -59,7 +68,7 @@
   }
 
   .campo {
-    @apply h-11 w-full rounded-xl border border-borde-fuerte bg-white px-3.5 text-[15px] text-tinta outline-none focus:border-petroleo focus:ring-3 focus:ring-petroleo/15;
+    @apply h-11 w-full rounded-xl border border-borde-fuerte bg-white px-3.5 text-[15px] text-tinta outline-none focus:border-marca focus:ring-3 focus:ring-marca/15;
   }
 
   .campo-con-error {

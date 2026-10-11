@@ -180,7 +180,7 @@ watch(filtros, resumen.cargar)
   <section class="tarjeta overflow-hidden">
     <div class="flex flex-wrap items-center justify-between gap-3 px-5 py-4">
       <h2 class="text-[17px] font-bold">Últimas transacciones</h2>
-      <RouterLink to="/transacciones" class="py-2.5 text-sm font-semibold text-petroleo">
+      <RouterLink to="/transacciones" class="py-2.5 text-sm font-semibold text-marca">
         Ver todas →
       </RouterLink>
     </div>

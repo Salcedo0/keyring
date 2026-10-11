@@ -12,8 +12,8 @@ Si algo cambia, se cambia **primero aquí** y luego en el código de los dos lad
 - **URL base:** `${VITE_API_BASE_URL}/api` (por defecto `http://localhost:3000/api`).
 - **Formato:** JSON. Los nombres de los campos van en camelCase y en español, como en este
   documento.
-- **Autenticación:** todas las rutas, excepto `POST /auth/ingresar`, requieren el encabezado
-  `Authorization: Bearer <token>`.
+- **Autenticación:** todas las rutas, excepto `POST /auth/ingresar` y `POST /auth/registrarse`,
+  requieren el encabezado `Authorization: Bearer <token>`. El token dura 8 horas.
 - **Fechas:** texto `AAAA-MM-DD` (ej. `2026-09-30`), sin hora. **Meses:** `AAAA-MM`.
 - **Dinero:** número entero en pesos colombianos (COP), sin decimales. Ej. `1840000`.
 - **Ids:** números enteros.
@@ -133,6 +133,21 @@ Respuesta `200`:
 
 Credenciales incorrectas: `401` con `message: "Correo o contraseña incorrectos"`.
 
+### `POST /auth/registrarse`
+
+Crea una cuenta de `PROPIETARIO` y deja la sesión iniciada. Es pública, como el login (ver la
+decisión D1 en [`DECISIONES.md`](DECISIONES.md)).
+
+Cuerpo:
+
+```json
+{ "nombre": "Daniel Mejía", "correo": "daniel.mejia@correo.co", "contrasena": "mínimo 8 caracteres" }
+```
+
+Respuesta `201`: igual a la del login (`token` y `usuario`).
+
+Correo ya registrado: `409` con `message: "Ya existe una cuenta con ese correo"`.
+
 ---
 
 ## Tablero (Dashboard)
@@ -243,7 +258,10 @@ Ordenado de mayor a menor `total`.
 Filtro de `GET /categorias`: `tipo`.
 
 `GuardarCategoria`: `{ "nombre": "Seguros", "tipo": "GASTO" }`. El nombre no se puede repetir:
-`409`.
+`409`. Una categoría que ya usan transacciones no se puede eliminar: `409`.
+
+La primera vez que arranca la API se crean las categorías iniciales (canon de arriendo, corta
+estancia, administración, mantenimiento, servicios públicos, aseo, etc.).
 
 ---
 
