@@ -29,7 +29,10 @@ keyring/
 │   ├── CONTRATO-API.md   Lo que el back responde y el front consume
 │   └── DECISIONES.md     Por qué se tomó cada decisión importante
 ├── backend/              API en Nest + TypeORM + SQLite
-└── frontend/             App en Vue 3 + TypeScript + Vite + Tailwind
+├── frontend/             App en Vue 3 + TypeScript + Vite + Tailwind
+├── docker-compose.yml    Los dos contenedores del despliegue (API y front con nginx)
+├── deploy.sh             Construye y levanta el despliegue en la VM
+└── .env.example          Variables del despliegue (se copia como .env en la VM)
 ```
 
 El detalle de cada carpeta de `frontend/src/` está en la sección 3 de
@@ -79,6 +82,35 @@ Para entrar: usa el administrador del `.env` del backend, o crea una cuenta en "
 | `npm run preview` | Sirve el `dist/` generado |
 | `npm run format` | Formatea el código con Prettier |
 
+## Despliegue con Docker
+
+Como en la Presentación 12 del curso: cada parte tiene un Dockerfile de dos etapas (compila y
+luego deja solo lo necesario para correr), y `docker-compose.yml` levanta la API en el puerto
+`3000` y el front con nginx en el puerto `80`. La base SQLite vive en un volumen, así que no se
+pierde al reconstruir. Se compila en la máquina: no se sube `dist/`.
+
+En la VM (con Docker y Docker Compose instalados):
+
+```bash
+git clone https://github.com/Salcedo0/keyring.git
+cd keyring
+cp .env.example .env      # y llena los valores con la IP de la VM y secretos nuevos
+./deploy.sh
+```
+
+| Variable (`.env`) | Para qué |
+| --- | --- |
+| `VITE_API_BASE_URL` | Dirección de la API como la ve el navegador (`http://IP:3000`). Queda dentro del bundle: si cambia, hay que volver a correr `./deploy.sh` |
+| `CORS_ORIGIN` | Dirección del front que puede llamar a la API (`http://IP`) |
+| `JWT_SECRETO` | Clave para firmar las sesiones. Texto largo y aleatorio, distinto al de desarrollo |
+| `ADMIN_NOMBRE`, `ADMIN_CORREO`, `ADMIN_CONTRASENA` | Primer administrador, que se crea al primer arranque |
+
+El `.env` nunca se sube al repositorio (está en `.gitignore`), y `deploy.sh` no arranca si falta.
+En GCP hay que abrir los puertos `80` (front) y `3000` (API) en el firewall.
+
+Para probarlo en el computador, lo mismo con `http://localhost:3000` y `http://localhost` en el
+`.env`.
+
 ## Páginas
 
 | Ruta | Página | Acceso |
@@ -116,7 +148,7 @@ opciones de administración en el menú y, si escribe la dirección a mano, vuel
 
 ## Pendientes
 
-- Despliegue en GCP con Docker, como en el tutorial 08 del curso.
+- Desplegar en la VM de GCP (la configuración de Docker ya está; ver "Despliegue con Docker").
 - Wiki del repositorio: Entregable 2 (diagramas), guía de estilo y reglas de programación del
   backend.
 
