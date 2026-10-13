@@ -25,6 +25,6 @@ export const ICONOS = {
   tendencia: '<path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/>',
   flechaDerecha: '<path d="M5 12h14M13 6l6 6-6 6"/>',
   flechaIzquierda: '<path d="M19 12H5M11 18l-6-6 6-6"/>',
-}
+};
 
-export type NombreIcono = keyof typeof ICONOS
+export type NombreIcono = keyof typeof ICONOS;

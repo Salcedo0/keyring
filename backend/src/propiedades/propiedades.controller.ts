@@ -8,13 +8,13 @@ import {
   ParseIntPipe,
   Post,
   Put,
-} from '@nestjs/common'
+} from '@nestjs/common';
 
-import { UsuarioActual } from '../comun/decoradores.js'
-import type { UsuarioDelToken } from '../comun/sesion.js'
-import { GuardarPropiedadDto } from './dto/guardar-propiedad.dto.js'
-import type { Propiedad } from './entities/propiedad.entity.js'
-import { PropiedadesService } from './propiedades.service.js'
+import { UsuarioActual } from '../comun/decoradores.js';
+import type { UsuarioDelToken } from '../comun/sesion.js';
+import { GuardarPropiedadDto } from './dto/guardar-propiedad.dto.js';
+import type { Propiedad } from './entities/propiedad.entity.js';
+import { PropiedadesService } from './propiedades.service.js';
 
 @Controller('propiedades')
 export class PropiedadesController {
@@ -22,7 +22,7 @@ export class PropiedadesController {
 
   @Get()
   listar(@UsuarioActual() usuario: UsuarioDelToken): Promise<Propiedad[]> {
-    return this.propiedadesService.listar(usuario.sub)
+    return this.propiedadesService.listar(usuario.sub);
   }
 
   @Get(':id')
@@ -30,7 +30,7 @@ export class PropiedadesController {
     @Param('id', ParseIntPipe) id: number,
     @UsuarioActual() usuario: UsuarioDelToken,
   ): Promise<Propiedad> {
-    return this.propiedadesService.buscar(id, usuario.sub)
+    return this.propiedadesService.buscar(id, usuario.sub);
   }
 
   @Post()
@@ -38,7 +38,7 @@ export class PropiedadesController {
     @Body() datos: GuardarPropiedadDto,
     @UsuarioActual() usuario: UsuarioDelToken,
   ): Promise<Propiedad> {
-    return this.propiedadesService.crear(datos, usuario.sub)
+    return this.propiedadesService.crear(datos, usuario.sub);
   }
 
   @Put(':id')
@@ -47,7 +47,7 @@ export class PropiedadesController {
     @Body() datos: GuardarPropiedadDto,
     @UsuarioActual() usuario: UsuarioDelToken,
   ): Promise<Propiedad> {
-    return this.propiedadesService.actualizar(id, datos, usuario.sub)
+    return this.propiedadesService.actualizar(id, datos, usuario.sub);
   }
 
   @Delete(':id')
@@ -56,6 +56,6 @@ export class PropiedadesController {
     @Param('id', ParseIntPipe) id: number,
     @UsuarioActual() usuario: UsuarioDelToken,
   ): Promise<void> {
-    return this.propiedadesService.eliminar(id, usuario.sub)
+    return this.propiedadesService.eliminar(id, usuario.sub);
   }
 }

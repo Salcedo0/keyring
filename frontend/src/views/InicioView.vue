@@ -1,22 +1,22 @@
 <script setup lang="ts">
-import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { SplitText } from 'gsap/SplitText'
-import { onBeforeUnmount, onMounted, useTemplateRef } from 'vue'
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { SplitText } from 'gsap/SplitText';
+import { onBeforeUnmount, onMounted, useTemplateRef } from 'vue';
 
-import Icono from '@/components/base/Icono.vue'
-import LogoKeyRing from '@/components/base/LogoKeyRing.vue'
-import EncabezadoPublico from '@/components/layout/EncabezadoPublico.vue'
-import { useDesplazamientoSuave } from '@/composables/useDesplazamientoSuave'
-import type { NombreIcono } from '@/utils/iconos'
+import Icono from '@/components/base/Icono.vue';
+import LogoKeyRing from '@/components/base/LogoKeyRing.vue';
+import EncabezadoPublico from '@/components/layout/EncabezadoPublico.vue';
+import { useDesplazamientoSuave } from '@/composables/useDesplazamientoSuave';
+import type { NombreIcono } from '@/utils/iconos';
 
-gsap.registerPlugin(ScrollTrigger, SplitText)
+gsap.registerPlugin(ScrollTrigger, SplitText);
 
 interface Beneficio {
-  icono: NombreIcono
-  titulo: string
-  texto: string
-  clasesIcono: string
+  icono: NombreIcono;
+  titulo: string;
+  texto: string;
+  clasesIcono: string;
 }
 
 const BENEFICIOS: Beneficio[] = [
@@ -41,7 +41,7 @@ const BENEFICIOS: Beneficio[] = [
       'Guarda los datos de cada inquilino, las fechas y el valor. El estado de cada contrato se ve de un vistazo.',
     clasesIcono: 'bg-ambar-claro text-ambar',
   },
-]
+];
 
 const PASOS = [
   {
@@ -53,28 +53,28 @@ const PASOS = [
     texto: 'Reservas, cánones, servicios, administración y más.',
   },
   { titulo: 'Mira el desempeño', texto: 'Indicadores, gráficos y filtros por propiedad y fecha.' },
-]
+];
 
-const DURACION_CIRCULO = 0.9
+const DURACION_CIRCULO = 0.9;
 
-useDesplazamientoSuave()
+useDesplazamientoSuave();
 
-const raiz = useTemplateRef<HTMLElement>('raiz')
-let animaciones: ReturnType<typeof gsap.matchMedia> | null = null
+const raiz = useTemplateRef<HTMLElement>('raiz');
+let animaciones: ReturnType<typeof gsap.matchMedia> | null = null;
 
 /** Elementos de esta vista marcados con data-animar="nombre". */
 function elementos(nombre: string): HTMLElement[] {
-  return Array.from(raiz.value?.querySelectorAll<HTMLElement>(`[data-animar="${nombre}"]`) ?? [])
+  return Array.from(raiz.value?.querySelectorAll<HTMLElement>(`[data-animar="${nombre}"]`) ?? []);
 }
 
 // Las animaciones de scroll corren una sola vez: si se repitieran al subir y bajar, distraerían.
 function alEntrar(nombre: string): ScrollTrigger.Vars {
-  return { trigger: elementos(nombre), start: 'top 80%', once: true }
+  return { trigger: elementos(nombre), start: 'top 80%', once: true };
 }
 
 function animarEntrada(): void {
-  const titulo = SplitText.create(elementos('titulo'), { type: 'words' })
-  const circulo = elementos('circulo')
+  const titulo = SplitText.create(elementos('titulo'), { type: 'words' });
+  const circulo = elementos('circulo');
 
   gsap
     .timeline({ defaults: { duration: 0.6, ease: 'power3.out' } })
@@ -82,7 +82,7 @@ function animarEntrada(): void {
     .from(titulo.words, { autoAlpha: 0, y: 24, stagger: 0.03 }, 0.15)
     .from(elementos('parrafo'), { autoAlpha: 0, y: 12 }, '-=0.4')
     .from(elementos('botones'), { autoAlpha: 0, y: 12 }, '-=0.4')
-    .from(circulo, { autoAlpha: 0, scale: 0.9, duration: DURACION_CIRCULO }, 0)
+    .from(circulo, { autoAlpha: 0, scale: 0.9, duration: DURACION_CIRCULO }, 0);
 
   gsap.to(circulo, {
     y: -8,
@@ -91,7 +91,7 @@ function animarEntrada(): void {
     yoyo: true,
     repeat: -1,
     delay: DURACION_CIRCULO,
-  })
+  });
 }
 
 function animarParallax(): void {
@@ -99,7 +99,7 @@ function animarParallax(): void {
     y: 90,
     ease: 'none',
     scrollTrigger: { trigger: elementos('hero'), start: 'top top', end: 'bottom top', scrub: true },
-  })
+  });
 }
 
 function animarBeneficios(): void {
@@ -109,7 +109,7 @@ function animarBeneficios(): void {
       scrollTrigger: alEntrar('beneficios'),
     })
     .from(elementos('beneficios-titulo'), { autoAlpha: 0, y: 20 })
-    .from(elementos('beneficio'), { autoAlpha: 0, y: 30, stagger: 0.12 }, '-=0.4')
+    .from(elementos('beneficio'), { autoAlpha: 0, y: 30, stagger: 0.12 }, '-=0.4');
 }
 
 function animarPasos(): void {
@@ -121,7 +121,7 @@ function animarPasos(): void {
       ease: 'back.out(1.7)',
       stagger: 0.15,
     })
-    .from(elementos('paso-texto'), { autoAlpha: 0, y: 12, stagger: 0.15 }, 0.15)
+    .from(elementos('paso-texto'), { autoAlpha: 0, y: 12, stagger: 0.15 }, 0.15);
 
   gsap.from(elementos('llamado'), {
     autoAlpha: 0,
@@ -129,35 +129,35 @@ function animarPasos(): void {
     duration: 0.8,
     ease: 'power3.out',
     scrollTrigger: alEntrar('llamado'),
-  })
+  });
 }
 
 function animarConMovimiento(): void {
-  animarEntrada()
-  animarBeneficios()
-  animarPasos()
+  animarEntrada();
+  animarBeneficios();
+  animarPasos();
 }
 
 // Con movimiento reducido no se anima nada: la página se ve completa tal como está en el HTML.
 function sinAnimaciones(): void {}
 
 onMounted(() => {
-  const alcance = raiz.value ?? undefined
-  animaciones = gsap.matchMedia()
-  animaciones.add('(prefers-reduced-motion: no-preference)', animarConMovimiento, alcance)
+  const alcance = raiz.value ?? undefined;
+  animaciones = gsap.matchMedia();
+  animaciones.add('(prefers-reduced-motion: no-preference)', animarConMovimiento, alcance);
   animaciones.add(
     '(prefers-reduced-motion: no-preference) and (min-width: 1024px)',
     animarParallax,
     alcance,
-  )
-  animaciones.add('(prefers-reduced-motion: reduce)', sinAnimaciones, alcance)
-})
+  );
+  animaciones.add('(prefers-reduced-motion: reduce)', sinAnimaciones, alcance);
+});
 
 // revert() borra los tweens, los ScrollTrigger y el SplitText para que no queden vivos al salir.
 onBeforeUnmount(() => {
-  animaciones?.revert()
-  animaciones = null
-})
+  animaciones?.revert();
+  animaciones = null;
+});
 </script>
 
 <template>

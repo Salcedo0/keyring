@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { ICONOS, type NombreIcono } from '@/utils/iconos'
+import { ICONOS, type NombreIcono } from '@/utils/iconos';
 
 const { nombre, tamano = 20 } = defineProps<{
-  nombre: NombreIcono
-  tamano?: number
-}>()
+  nombre: NombreIcono;
+  tamano?: number;
+}>();
 </script>
 
 <template>

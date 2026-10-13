@@ -1,28 +1,28 @@
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { reactive, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
-import AvisoError from '@/components/base/AvisoError.vue'
-import Icono from '@/components/base/Icono.vue'
-import LogoKeyRing from '@/components/base/LogoKeyRing.vue'
-import CampoTexto from '@/components/formulario/CampoTexto.vue'
-import { useSesion } from '@/composables/useSesion'
-import { describirError } from '@/services/http'
-import { esCorreoValido, estaVacio, hayErrores } from '@/utils/validaciones'
+import AvisoError from '@/components/base/AvisoError.vue';
+import Icono from '@/components/base/Icono.vue';
+import LogoKeyRing from '@/components/base/LogoKeyRing.vue';
+import CampoTexto from '@/components/formulario/CampoTexto.vue';
+import { useSesion } from '@/composables/useSesion';
+import { describirError } from '@/services/http';
+import { esCorreoValido, estaVacio, hayErrores } from '@/utils/validaciones';
 
-const ruta = useRoute()
-const router = useRouter()
-const { iniciarSesion } = useSesion()
+const ruta = useRoute();
+const router = useRouter();
+const { iniciarSesion } = useSesion();
 
-const formulario = reactive({ correo: '', contrasena: '' })
-const errores = reactive({ correo: '', contrasena: '' })
-const errorGeneral = ref('')
-const enviando = ref(false)
+const formulario = reactive({ correo: '', contrasena: '' });
+const errores = reactive({ correo: '', contrasena: '' });
+const errorGeneral = ref('');
+const enviando = ref(false);
 
 function validar(): boolean {
-  errores.correo = esCorreoValido(formulario.correo) ? '' : 'Ingresa un correo válido'
-  errores.contrasena = estaVacio(formulario.contrasena) ? 'Ingresa tu contraseña' : ''
-  return !hayErrores(errores)
+  errores.correo = esCorreoValido(formulario.correo) ? '' : 'Ingresa un correo válido';
+  errores.contrasena = estaVacio(formulario.contrasena) ? 'Ingresa tu contraseña' : '';
+  return !hayErrores(errores);
 }
 
 /**
@@ -30,24 +30,24 @@ function validar(): boolean {
  * Solo se aceptan rutas internas ('/contratos'), nunca direcciones de otros sitios.
  */
 function rutaDeRegreso(): string {
-  const volver = ruta.query.volver
+  const volver = ruta.query.volver;
   const esRutaInterna =
-    typeof volver === 'string' && volver.startsWith('/') && !volver.startsWith('//')
-  return esRutaInterna ? volver : '/dashboard'
+    typeof volver === 'string' && volver.startsWith('/') && !volver.startsWith('//');
+  return esRutaInterna ? volver : '/dashboard';
 }
 
 async function ingresar(): Promise<void> {
-  errorGeneral.value = ''
-  if (!validar()) return
+  errorGeneral.value = '';
+  if (!validar()) return;
 
-  enviando.value = true
+  enviando.value = true;
   try {
-    await iniciarSesion(formulario)
-    router.push(rutaDeRegreso())
+    await iniciarSesion(formulario);
+    router.push(rutaDeRegreso());
   } catch (error) {
-    errorGeneral.value = describirError(error, 'No pudimos iniciar sesión.')
+    errorGeneral.value = describirError(error, 'No pudimos iniciar sesión.');
   } finally {
-    enviando.value = false
+    enviando.value = false;
   }
 }
 </script>

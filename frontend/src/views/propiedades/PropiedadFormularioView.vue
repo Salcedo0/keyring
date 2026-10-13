@@ -1,32 +1,32 @@
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { computed, onMounted, reactive, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
-import AvisoError from '@/components/base/AvisoError.vue'
-import EncabezadoPagina from '@/components/base/EncabezadoPagina.vue'
-import CampoSelector from '@/components/formulario/CampoSelector.vue'
-import CampoTexto from '@/components/formulario/CampoTexto.vue'
-import GrupoOpciones from '@/components/formulario/GrupoOpciones.vue'
-import SelectorUbicacion from '@/components/mapa/SelectorUbicacion.vue'
-import type { GuardarPropiedadDTO } from '@/dtos/GuardarPropiedadDTO'
-import type { Modalidad, TipoPropiedad } from '@/interfaces/PropiedadInterface'
-import { describirError } from '@/services/http'
-import { actualizarPropiedad, crearPropiedad, obtenerPropiedad } from '@/services/PropiedadService'
-import { aOpciones, MODALIDADES, TIPOS_PROPIEDAD } from '@/utils/etiquetas'
-import { estaVacio, hayErrores } from '@/utils/validaciones'
+import AvisoError from '@/components/base/AvisoError.vue';
+import EncabezadoPagina from '@/components/base/EncabezadoPagina.vue';
+import CampoSelector from '@/components/formulario/CampoSelector.vue';
+import CampoTexto from '@/components/formulario/CampoTexto.vue';
+import GrupoOpciones from '@/components/formulario/GrupoOpciones.vue';
+import SelectorUbicacion from '@/components/mapa/SelectorUbicacion.vue';
+import type { GuardarPropiedadDTO } from '@/dtos/GuardarPropiedadDTO';
+import type { Modalidad, TipoPropiedad } from '@/interfaces/PropiedadInterface';
+import { describirError } from '@/services/http';
+import { PropiedadService } from '@/services/PropiedadService';
+import { aOpciones, MODALIDADES, TIPOS_PROPIEDAD } from '@/utils/etiquetas';
+import { estaVacio, hayErrores } from '@/utils/validaciones';
 
 // El formulario empieza sin tipo ni modalidad: el usuario los debe elegir.
 interface FormularioPropiedad extends Omit<GuardarPropiedadDTO, 'tipo' | 'modalidad'> {
-  tipo: TipoPropiedad | null
-  modalidad: Modalidad | null
+  tipo: TipoPropiedad | null;
+  modalidad: Modalidad | null;
 }
 
-const ruta = useRoute()
-const router = useRouter()
+const ruta = useRoute();
+const router = useRouter();
 
 // Si la ruta trae id se está editando; si no, se está creando.
-const id = computed(() => (ruta.params.id ? Number(ruta.params.id) : null))
-const esEdicion = computed(() => id.value !== null)
+const id = computed(() => (ruta.params.id ? Number(ruta.params.id) : null));
+const esEdicion = computed(() => id.value !== null);
 
 const formulario = reactive<FormularioPropiedad>({
   nombre: '',
@@ -36,7 +36,7 @@ const formulario = reactive<FormularioPropiedad>({
   modalidad: null,
   latitud: null,
   longitud: null,
-})
+});
 const errores = reactive({
   nombre: '',
   direccion: '',
@@ -44,53 +44,55 @@ const errores = reactive({
   tipo: '',
   modalidad: '',
   ubicacion: '',
-})
-const errorGeneral = ref('')
-const enviando = ref(false)
+});
+const errorGeneral = ref('');
+const enviando = ref(false);
 
-const opcionesTipo = aOpciones(TIPOS_PROPIEDAD)
-const opcionesModalidad = aOpciones(MODALIDADES)
+const opcionesTipo = aOpciones(TIPOS_PROPIEDAD);
+const opcionesModalidad = aOpciones(MODALIDADES);
 
 async function cargarPropiedad(): Promise<void> {
-  if (id.value === null) return
+  if (id.value === null) return;
   try {
-    // El id no hace parte del formulario: va en la URL al guardar.
-    const { id: _id, ...propiedad } = await obtenerPropiedad(id.value)
-    Object.assign(formulario, propiedad)
+    // Solo se copian los campos del formulario: la API también responde id y usuarioId, y si se
+    // devolvieran al guardar, el back los rechazaría (400) por ser campos de más.
+    const propiedad = await PropiedadService.obtenerPropiedad(id.value);
+    const { nombre, direccion, ciudad, tipo, modalidad, latitud, longitud } = propiedad;
+    Object.assign(formulario, { nombre, direccion, ciudad, tipo, modalidad, latitud, longitud });
   } catch (error) {
-    errorGeneral.value = describirError(error, 'No se pudo cargar la propiedad.')
+    errorGeneral.value = describirError(error, 'No se pudo cargar la propiedad.');
   }
 }
 
 function validar(): boolean {
-  errores.nombre = estaVacio(formulario.nombre) ? 'Escribe un nombre para reconocerla' : ''
-  errores.direccion = estaVacio(formulario.direccion) ? 'La dirección es obligatoria' : ''
-  errores.ciudad = estaVacio(formulario.ciudad) ? 'La ciudad es obligatoria' : ''
-  errores.tipo = formulario.tipo ? '' : 'Elige el tipo de inmueble'
-  errores.modalidad = formulario.modalidad ? '' : 'Elige la modalidad de arriendo'
-  errores.ubicacion = formulario.latitud === null ? 'Marca la ubicación en el mapa' : ''
-  return !hayErrores(errores)
+  errores.nombre = estaVacio(formulario.nombre) ? 'Escribe un nombre para reconocerla' : '';
+  errores.direccion = estaVacio(formulario.direccion) ? 'La dirección es obligatoria' : '';
+  errores.ciudad = estaVacio(formulario.ciudad) ? 'La ciudad es obligatoria' : '';
+  errores.tipo = formulario.tipo ? '' : 'Elige el tipo de inmueble';
+  errores.modalidad = formulario.modalidad ? '' : 'Elige la modalidad de arriendo';
+  errores.ubicacion = formulario.latitud === null ? 'Marca la ubicación en el mapa' : '';
+  return !hayErrores(errores);
 }
 
 async function guardar(): Promise<void> {
-  errorGeneral.value = ''
-  if (!validar()) return
+  errorGeneral.value = '';
+  if (!validar()) return;
 
-  enviando.value = true
+  enviando.value = true;
   try {
     // Después de validar, tipo y modalidad ya tienen valor.
-    const datos = formulario as GuardarPropiedadDTO
-    if (id.value === null) await crearPropiedad(datos)
-    else await actualizarPropiedad(id.value, datos)
-    router.push('/propiedades')
+    const datos = formulario as GuardarPropiedadDTO;
+    if (id.value === null) await PropiedadService.crearPropiedad(datos);
+    else await PropiedadService.actualizarPropiedad(id.value, datos);
+    router.push('/propiedades');
   } catch (error) {
-    errorGeneral.value = describirError(error, 'No se pudo guardar la propiedad.')
+    errorGeneral.value = describirError(error, 'No se pudo guardar la propiedad.');
   } finally {
-    enviando.value = false
+    enviando.value = false;
   }
 }
 
-onMounted(cargarPropiedad)
+onMounted(cargarPropiedad);
 </script>
 
 <template>

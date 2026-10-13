@@ -1,37 +1,37 @@
-import { IsIn, IsInt, IsOptional, IsString, Length, Min } from 'class-validator'
+import { IsIn, IsInt, IsOptional, IsString, Length, Min } from 'class-validator';
 
-import { EsFecha } from '../../comun/validaciones.js'
+import { EsFecha } from '../../comun/validaciones.js';
 import {
   NOMBRES_CATEGORIAS,
   TIPOS_TRANSACCION,
   type TipoTransaccion,
-} from '../entities/transaccion.entity.js'
+} from '../entities/transaccion.entity.js';
 
 /** Sirve para crear y para actualizar una transacción. */
 export class GuardarTransaccionDto {
   @IsInt()
   @Min(1)
-  propiedadId: number
+  propiedadId: number;
 
   // null = la transacción no está ligada a ningún contrato.
   @IsOptional()
   @IsInt()
-  contratoId: number | null
+  contratoId: number | null;
 
   @IsIn(TIPOS_TRANSACCION)
-  tipo: TipoTransaccion
+  tipo: TipoTransaccion;
 
   @IsIn(NOMBRES_CATEGORIAS)
-  categoria: string
+  categoria: string;
 
   @IsInt()
   @Min(1)
-  monto: number
+  monto: number;
 
   @EsFecha()
-  fecha: string
+  fecha: string;
 
   @IsString()
   @Length(0, 200)
-  descripcion: string
+  descripcion: string;
 }

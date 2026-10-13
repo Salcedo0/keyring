@@ -1,16 +1,16 @@
 <script setup lang="ts" generic="T extends string">
-import type { Opcion } from '@/interfaces/OpcionInterface'
+import type { Opcion } from '@/interfaces/OpcionInterface';
 
-import MensajeCampo from './MensajeCampo.vue'
+import MensajeCampo from './MensajeCampo.vue';
 
-const valor = defineModel<T | null>({ required: true })
+const valor = defineModel<T | null>({ required: true });
 
 defineProps<{
-  etiqueta: string
-  opciones: Opcion<T>[]
-  error?: string
-  obligatorio?: boolean
-}>()
+  etiqueta: string;
+  opciones: Opcion<T>[];
+  error?: string;
+  obligatorio?: boolean;
+}>();
 </script>
 
 <template>

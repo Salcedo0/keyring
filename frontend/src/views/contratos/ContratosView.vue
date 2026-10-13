@@ -1,26 +1,26 @@
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref, watch } from 'vue'
-import { useRouter } from 'vue-router'
+import { computed, onMounted, reactive, ref, watch } from 'vue';
+import { useRouter } from 'vue-router';
 
-import AvisoError from '@/components/base/AvisoError.vue'
-import EncabezadoPagina from '@/components/base/EncabezadoPagina.vue'
-import Icono from '@/components/base/Icono.vue'
-import InsigniaEstado from '@/components/base/InsigniaEstado.vue'
-import FiltroSelector from '@/components/formulario/FiltroSelector.vue'
-import TablaDatos from '@/components/tabla/TablaDatos.vue'
-import { useConsulta } from '@/composables/useConsulta'
-import type { Contrato, FiltrosContratos } from '@/interfaces/ContratoInterface'
-import type { Columna } from '@/interfaces/OpcionInterface'
-import { eliminarContrato, obtenerContratos } from '@/services/ContratoService'
-import { describirError } from '@/services/http'
-import { obtenerPropiedades } from '@/services/PropiedadService'
+import AvisoError from '@/components/base/AvisoError.vue';
+import EncabezadoPagina from '@/components/base/EncabezadoPagina.vue';
+import Icono from '@/components/base/Icono.vue';
+import InsigniaEstado from '@/components/base/InsigniaEstado.vue';
+import FiltroSelector from '@/components/formulario/FiltroSelector.vue';
+import TablaDatos from '@/components/tabla/TablaDatos.vue';
+import { useConsulta } from '@/composables/useConsulta';
+import type { ContratoInterface, FiltrosContratos } from '@/interfaces/ContratoInterface';
+import type { Columna } from '@/interfaces/OpcionInterface';
+import { ContratoService } from '@/services/ContratoService';
+import { describirError } from '@/services/http';
+import { PropiedadService } from '@/services/PropiedadService';
 import {
   aOpcionesConTodos,
   ESTADOS_CONTRATO,
   TIPOS_CONTRATO,
   TONOS_ESTADO_CONTRATO,
-} from '@/utils/etiquetas'
-import { formatearFecha, formatearPesos } from '@/utils/formato'
+} from '@/utils/etiquetas';
+import { formatearFecha, formatearPesos } from '@/utils/formato';
 
 const COLUMNAS: Columna[] = [
   { clave: 'propiedadNombre', titulo: 'Propiedad' },
@@ -30,57 +30,57 @@ const COLUMNAS: Columna[] = [
   { clave: 'fechaFin', titulo: 'Fin' },
   { clave: 'valor', titulo: 'Valor', alineacion: 'derecha' },
   { clave: 'estado', titulo: 'Estado' },
-]
+];
 
-const OPCIONES_ESTADO = aOpcionesConTodos(ESTADOS_CONTRATO, 'Todos los estados')
+const OPCIONES_ESTADO = aOpcionesConTodos(ESTADOS_CONTRATO, 'Todos los estados');
 
-const router = useRouter()
-const filtros = reactive<FiltrosContratos>({ propiedadId: null, estado: null })
-const errorAccion = ref('')
+const router = useRouter();
+const filtros = reactive<FiltrosContratos>({ propiedadId: null, estado: null });
+const errorAccion = ref('');
 
-const propiedades = useConsulta(obtenerPropiedades, [])
-const contratos = useConsulta(() => obtenerContratos(filtros), [])
+const propiedades = useConsulta(() => PropiedadService.obtenerPropiedades(), []);
+const contratos = useConsulta(() => ContratoService.obtenerContratos(filtros), []);
 
 const opcionesPropiedad = computed(() => [
   { valor: null, texto: 'Todas las propiedades' },
   ...propiedades.datos.value.map((propiedad) => ({ valor: propiedad.id, texto: propiedad.nombre })),
-])
+]);
 
-const hayFiltros = computed(() => filtros.propiedadId !== null || filtros.estado !== null)
+const hayFiltros = computed(() => filtros.propiedadId !== null || filtros.estado !== null);
 
 const mensajeVacio = computed(() =>
   hayFiltros.value
     ? 'Ningún contrato coincide con estos filtros.'
     : 'Cuando registres tu primer contrato aparecerá aquí.',
-)
+);
 
-function editar(contrato: Contrato): void {
-  router.push(`/contratos/${contrato.id}/editar`)
+function editar(contrato: ContratoInterface): void {
+  router.push(`/contratos/${contrato.id}/editar`);
 }
 
-async function eliminar(contrato: Contrato): Promise<void> {
-  const pregunta = `¿Eliminar el contrato de ${contrato.inquilinoNombre}? Esta acción no se puede deshacer.`
-  if (!window.confirm(pregunta)) return
-  errorAccion.value = ''
+async function eliminar(contrato: ContratoInterface): Promise<void> {
+  const pregunta = `¿Eliminar el contrato de ${contrato.inquilinoNombre}? Esta acción no se puede deshacer.`;
+  if (!window.confirm(pregunta)) return;
+  errorAccion.value = '';
   try {
-    await eliminarContrato(contrato.id)
-    await contratos.cargar()
+    await ContratoService.eliminarContrato(contrato.id);
+    await contratos.cargar();
   } catch (error) {
-    errorAccion.value = describirError(error, 'No se pudo eliminar el contrato.')
+    errorAccion.value = describirError(error, 'No se pudo eliminar el contrato.');
   }
 }
 
 function limpiarFiltros(): void {
-  filtros.propiedadId = null
-  filtros.estado = null
+  filtros.propiedadId = null;
+  filtros.estado = null;
 }
 
 onMounted(() => {
-  propiedades.cargar()
-  contratos.cargar()
-})
+  propiedades.cargar();
+  contratos.cargar();
+});
 
-watch(filtros, contratos.cargar)
+watch(filtros, contratos.cargar);
 </script>
 
 <template>

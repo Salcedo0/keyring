@@ -4,13 +4,13 @@ import {
   UnauthorizedException,
   type CanActivate,
   type ExecutionContext,
-} from '@nestjs/common'
-import { Reflector } from '@nestjs/core'
-import { JwtService } from '@nestjs/jwt'
+} from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
+import { JwtService } from '@nestjs/jwt';
 
-import { UsuariosService } from '../usuarios/usuarios.service.js'
-import { ES_PUBLICA, ES_SOLO_ADMIN } from './decoradores.js'
-import type { PeticionAutenticada, UsuarioDelToken } from './sesion.js'
+import { UsuariosService } from '../usuarios/usuarios.service.js';
+import { ES_PUBLICA, ES_SOLO_ADMIN } from './decoradores.js';
+import type { PeticionAutenticada, UsuarioDelToken } from './sesion.js';
 
 /**
  * Revisa cada petición antes de que llegue al controlador (patrón de la guía de Nest):
@@ -28,30 +28,31 @@ export class AutenticacionGuard implements CanActivate {
   ) {}
 
   async canActivate(contexto: ExecutionContext): Promise<boolean> {
-    if (this.tieneMarca(contexto, ES_PUBLICA)) return true
+    if (this.tieneMarca(contexto, ES_PUBLICA)) return true;
 
-    const peticion = contexto.switchToHttp().getRequest<PeticionAutenticada>()
-    const token = this.extraerToken(peticion)
-    if (!token) throw new UnauthorizedException('Debes iniciar sesión')
+    const peticion = contexto.switchToHttp().getRequest<PeticionAutenticada>();
+    const token = this.extraerToken(peticion);
+    if (!token) throw new UnauthorizedException('Debes iniciar sesión');
 
-    let contenido: UsuarioDelToken
+    let contenido: UsuarioDelToken;
     try {
-      contenido = await this.jwtService.verifyAsync<UsuarioDelToken>(token)
+      contenido = await this.jwtService.verifyAsync<UsuarioDelToken>(token);
     } catch {
-      throw new UnauthorizedException('Tu sesión venció. Inicia sesión de nuevo.')
+      throw new UnauthorizedException('Tu sesión venció. Inicia sesión de nuevo.');
     }
 
     // Un token sigue siendo válido hasta que vence, aunque el ADMIN haya eliminado la cuenta.
     // Por eso se busca el usuario: si ya no existe, se rechaza; y el rol sale de la base de
     // datos, no del token, para que un cambio de rol aplique de inmediato.
-    const usuario = await this.usuariosService.buscarPorId(contenido.sub)
-    if (!usuario) throw new UnauthorizedException('Tu cuenta ya no existe. Inicia sesión de nuevo.')
-    peticion.usuario = { sub: usuario.id, rol: usuario.rol }
+    const usuario = await this.usuariosService.buscarPorId(contenido.sub);
+    if (!usuario)
+      throw new UnauthorizedException('Tu cuenta ya no existe. Inicia sesión de nuevo.');
+    peticion.usuario = { sub: usuario.id, rol: usuario.rol };
 
     if (this.tieneMarca(contexto, ES_SOLO_ADMIN) && peticion.usuario.rol !== 'ADMIN') {
-      throw new ForbiddenException('Solo un administrador puede hacer esto')
+      throw new ForbiddenException('Solo un administrador puede hacer esto');
     }
-    return true
+    return true;
   }
 
   /** Busca la marca (@Publica, @SoloAdmin) en el método o en el controlador completo. */
@@ -59,11 +60,11 @@ export class AutenticacionGuard implements CanActivate {
     return this.reflector.getAllAndOverride<boolean>(marca, [
       contexto.getHandler(),
       contexto.getClass(),
-    ])
+    ]);
   }
 
   private extraerToken(peticion: PeticionAutenticada): string | undefined {
-    const [tipo, token] = peticion.headers.authorization?.split(' ') ?? []
-    return tipo === 'Bearer' ? token : undefined
+    const [tipo, token] = peticion.headers.authorization?.split(' ') ?? [];
+    return tipo === 'Bearer' ? token : undefined;
   }
 }

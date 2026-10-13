@@ -1,9 +1,11 @@
-import type { ReporteGlobal } from '@/interfaces/ReporteInterface'
+import type { ReporteInterface } from '@/interfaces/ReporteInterface';
 
-import { http } from './http'
+import { http } from './http';
 
-/** Pide al back el reporte global del negocio (solo ADMIN). */
-export async function obtenerReporte(): Promise<ReporteGlobal> {
-  const respuesta = await http.get<ReporteGlobal>('/reporte')
-  return respuesta.data
+export class ReporteService {
+  /** Pide al back el reporte global del negocio (solo ADMIN). */
+  static async obtenerReporte(): Promise<ReporteInterface> {
+    const respuesta = await http.get<ReporteInterface>('/reporte');
+    return respuesta.data;
+  }
 }

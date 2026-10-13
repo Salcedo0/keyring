@@ -10,20 +10,20 @@ import {
   Tooltip,
   type ChartData,
   type ChartOptions,
-} from 'chart.js'
-import { computed } from 'vue'
-import { Line } from 'vue-chartjs'
+} from 'chart.js';
+import { computed } from 'vue';
+import { Line } from 'vue-chartjs';
 
-import type { SerieLinea } from '@/interfaces/GraficoInterface'
-import { formatearPesos } from '@/utils/formato'
-import { COLORES } from '@/utils/paleta'
+import type { SerieLinea } from '@/interfaces/GraficoInterface';
+import { formatearPesos } from '@/utils/formato';
+import { COLORES } from '@/utils/paleta';
 
-Chart.register(CategoryScale, LinearScale, PointElement, LineElement, Filler, Legend, Tooltip)
+Chart.register(CategoryScale, LinearScale, PointElement, LineElement, Filler, Legend, Tooltip);
 
 const props = defineProps<{
-  etiquetas: string[]
-  series: SerieLinea[]
-}>()
+  etiquetas: string[];
+  series: SerieLinea[];
+}>();
 
 const datos = computed<ChartData<'line'>>(() => ({
   labels: props.etiquetas,
@@ -35,7 +35,7 @@ const datos = computed<ChartData<'line'>>(() => ({
     tension: 0.3,
     pointRadius: 4,
   })),
-}))
+}));
 
 const opciones: ChartOptions<'line'> = {
   responsive: true,
@@ -61,7 +61,7 @@ const opciones: ChartOptions<'line'> = {
       },
     },
   },
-}
+};
 </script>
 
 <template>

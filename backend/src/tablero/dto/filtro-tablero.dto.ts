@@ -1,18 +1,18 @@
-import { Type } from 'class-transformer'
-import { IsInt, IsOptional } from 'class-validator'
+import { Type } from 'class-transformer';
+import { IsInt, IsOptional } from 'class-validator';
 
-import { EsFecha } from '../../comun/validaciones.js'
+import { EsFecha } from '../../comun/validaciones.js';
 
 /** Filtros de GET /tablero. El rango de fechas es obligatorio; la propiedad, opcional. */
 export class FiltroTableroDto {
   @IsOptional()
   @Type(() => Number)
   @IsInt()
-  propiedadId?: number
+  propiedadId?: number;
 
   @EsFecha()
-  desde: string
+  desde: string;
 
   @EsFecha()
-  hasta: string
+  hasta: string;
 }

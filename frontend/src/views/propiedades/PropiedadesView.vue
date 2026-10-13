@@ -1,49 +1,54 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
-import AvisoError from '@/components/base/AvisoError.vue'
-import EncabezadoPagina from '@/components/base/EncabezadoPagina.vue'
-import Icono from '@/components/base/Icono.vue'
-import InsigniaEstado from '@/components/base/InsigniaEstado.vue'
-import TarjetaGrafico from '@/components/base/TarjetaGrafico.vue'
-import MapaPropiedades from '@/components/mapa/MapaPropiedades.vue'
-import TablaDatos from '@/components/tabla/TablaDatos.vue'
-import { useConsulta } from '@/composables/useConsulta'
-import type { Columna } from '@/interfaces/OpcionInterface'
-import type { Propiedad } from '@/interfaces/PropiedadInterface'
-import { describirError } from '@/services/http'
-import { eliminarPropiedad, obtenerPropiedades } from '@/services/PropiedadService'
-import { MODALIDADES, TIPOS_PROPIEDAD, TONOS_MODALIDAD } from '@/utils/etiquetas'
+import AvisoError from '@/components/base/AvisoError.vue';
+import EncabezadoPagina from '@/components/base/EncabezadoPagina.vue';
+import Icono from '@/components/base/Icono.vue';
+import InsigniaEstado from '@/components/base/InsigniaEstado.vue';
+import TarjetaGrafico from '@/components/base/TarjetaGrafico.vue';
+import MapaPropiedades from '@/components/mapa/MapaPropiedades.vue';
+import TablaDatos from '@/components/tabla/TablaDatos.vue';
+import { useConsulta } from '@/composables/useConsulta';
+import type { Columna } from '@/interfaces/OpcionInterface';
+import type { PropiedadInterface } from '@/interfaces/PropiedadInterface';
+import { describirError } from '@/services/http';
+import { PropiedadService } from '@/services/PropiedadService';
+import { MODALIDADES, TIPOS_PROPIEDAD, TONOS_MODALIDAD } from '@/utils/etiquetas';
 
 const COLUMNAS: Columna[] = [
   { clave: 'nombre', titulo: 'Nombre' },
   { clave: 'ciudad', titulo: 'Ciudad' },
   { clave: 'tipo', titulo: 'Tipo' },
   { clave: 'modalidad', titulo: 'Modalidad' },
-]
+];
 
-const router = useRouter()
-const errorAccion = ref('')
+const router = useRouter();
+const errorAccion = ref('');
 
-const { datos: propiedades, cargando, error, cargar } = useConsulta(obtenerPropiedades, [])
+const {
+  datos: propiedades,
+  cargando,
+  error,
+  cargar,
+} = useConsulta(() => PropiedadService.obtenerPropiedades(), []);
 
-function editar(propiedad: Propiedad): void {
-  router.push(`/propiedades/${propiedad.id}/editar`)
+function editar(propiedad: PropiedadInterface): void {
+  router.push(`/propiedades/${propiedad.id}/editar`);
 }
 
-async function eliminar(propiedad: Propiedad): Promise<void> {
-  if (!window.confirm(`¿Eliminar "${propiedad.nombre}"? Esta acción no se puede deshacer.`)) return
-  errorAccion.value = ''
+async function eliminar(propiedad: PropiedadInterface): Promise<void> {
+  if (!window.confirm(`¿Eliminar "${propiedad.nombre}"? Esta acción no se puede deshacer.`)) return;
+  errorAccion.value = '';
   try {
-    await eliminarPropiedad(propiedad.id)
-    await cargar()
+    await PropiedadService.eliminarPropiedad(propiedad.id);
+    await cargar();
   } catch (problema) {
-    errorAccion.value = describirError(problema, 'No se pudo eliminar la propiedad.')
+    errorAccion.value = describirError(problema, 'No se pudo eliminar la propiedad.');
   }
 }
 
-onMounted(cargar)
+onMounted(cargar);
 </script>
 
 <template>

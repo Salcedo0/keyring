@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed } from 'vue';
 
-import iconoClaro from '@/assets/img/keyring-icono-claro.png'
-import icono from '@/assets/img/keyring-icono.png'
-import logoClaro from '@/assets/img/keyring-logo-claro.png'
-import logo from '@/assets/img/keyring-logo.png'
+import iconoClaro from '@/assets/img/keyring-icono-claro.png';
+import icono from '@/assets/img/keyring-icono.png';
+import logoClaro from '@/assets/img/keyring-logo-claro.png';
+import logo from '@/assets/img/keyring-logo.png';
 
 const {
   variante = 'completo',
@@ -12,17 +12,17 @@ const {
   claro = false,
 } = defineProps<{
   /** 'completo': llave, casa, nombre y lema. 'icono': solo la llave y la casa. */
-  variante?: 'completo' | 'icono'
+  variante?: 'completo' | 'icono';
   /** Alto en píxeles; el ancho se ajusta solo. */
-  alto?: number
+  alto?: number;
   /** Versión para fondos oscuros: la casa y el nombre pasan a color crema. */
-  claro?: boolean
-}>()
+  claro?: boolean;
+}>();
 
 const imagen = computed(() => {
-  if (variante === 'icono') return claro ? iconoClaro : icono
-  return claro ? logoClaro : logo
-})
+  if (variante === 'icono') return claro ? iconoClaro : icono;
+  return claro ? logoClaro : logo;
+});
 </script>
 
 <template>

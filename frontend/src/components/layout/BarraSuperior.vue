@@ -1,38 +1,38 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { computed } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
-import Icono from '@/components/base/Icono.vue'
-import InsigniaEstado from '@/components/base/InsigniaEstado.vue'
-import { useSesion } from '@/composables/useSesion'
+import Icono from '@/components/base/Icono.vue';
+import InsigniaEstado from '@/components/base/InsigniaEstado.vue';
+import { useSesion } from '@/composables/useSesion';
 
 defineProps<{
-  menuMovilAbierto: boolean
-}>()
+  menuMovilAbierto: boolean;
+}>();
 
 const emit = defineEmits<{
-  alternarMenuMovil: []
-}>()
+  alternarMenuMovil: [];
+}>();
 
-const ruta = useRoute()
-const router = useRouter()
-const { usuario, cerrarSesion } = useSesion()
+const ruta = useRoute();
+const router = useRouter();
+const { usuario, cerrarSesion } = useSesion();
 
-const titulo = computed(() => ruta.meta.titulo ?? '')
+const titulo = computed(() => ruta.meta.titulo ?? '');
 
 /** Primeras letras del nombre y apellido: "Daniel Mejía" → "DM". */
 const iniciales = computed(() => {
-  const palabras = (usuario.value?.nombre ?? '').split(' ').filter(Boolean)
+  const palabras = (usuario.value?.nombre ?? '').split(' ').filter(Boolean);
   return palabras
     .slice(0, 2)
     .map((palabra) => palabra[0])
     .join('')
-    .toUpperCase()
-})
+    .toUpperCase();
+});
 
 function salir(): void {
-  cerrarSesion()
-  router.push('/ingresar')
+  cerrarSesion();
+  router.push('/ingresar');
 }
 </script>
 

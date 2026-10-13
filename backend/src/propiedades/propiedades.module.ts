@@ -1,11 +1,11 @@
-import { Module } from '@nestjs/common'
-import { TypeOrmModule } from '@nestjs/typeorm'
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { Contrato } from '../contratos/entities/contrato.entity.js'
-import { Transaccion } from '../transacciones/entities/transaccion.entity.js'
-import { Propiedad } from './entities/propiedad.entity.js'
-import { PropiedadesController } from './propiedades.controller.js'
-import { PropiedadesService } from './propiedades.service.js'
+import { Contrato } from '../contratos/entities/contrato.entity.js';
+import { Transaccion } from '../transacciones/entities/transaccion.entity.js';
+import { Propiedad } from './entities/propiedad.entity.js';
+import { PropiedadesController } from './propiedades.controller.js';
+import { PropiedadesService } from './propiedades.service.js';
 
 @Module({
   // Contrato y Transaccion se usan solo para saber si una propiedad tiene historial antes de eliminarla.

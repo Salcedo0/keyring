@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import type { Tono } from '@/utils/etiquetas'
+import type { Tono } from '@/utils/etiquetas';
 
 defineProps<{
-  texto: string
-  tono: Tono
-}>()
+  texto: string;
+  tono: Tono;
+}>();
 
 const CLASES_POR_TONO: Record<Tono, string> = {
   verde: 'bg-ingreso-claro text-ingreso',
@@ -12,7 +12,7 @@ const CLASES_POR_TONO: Record<Tono, string> = {
   gris: 'bg-fondo text-tinta-suave',
   rojo: 'bg-gasto-claro text-gasto',
   marca: 'bg-marca-claro text-marca',
-}
+};
 </script>
 
 <template>

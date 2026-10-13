@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref } from 'vue';
 
-import BarraSuperior from './BarraSuperior.vue'
-import MenuLateral from './MenuLateral.vue'
+import BarraSuperior from './BarraSuperior.vue';
+import MenuLateral from './MenuLateral.vue';
 
 // En escritorio el menú se puede colapsar a solo íconos.
-const menuColapsado = ref(false)
+const menuColapsado = ref(false);
 // En el celular el menú vive escondido y se abre encima del contenido.
-const menuMovilAbierto = ref(false)
+const menuMovilAbierto = ref(false);
 </script>
 
 <template>

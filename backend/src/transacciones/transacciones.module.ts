@@ -1,11 +1,11 @@
-import { Module } from '@nestjs/common'
-import { TypeOrmModule } from '@nestjs/typeorm'
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { Contrato } from '../contratos/entities/contrato.entity.js'
-import { PropiedadesModule } from '../propiedades/propiedades.module.js'
-import { Transaccion } from './entities/transaccion.entity.js'
-import { TransaccionesController } from './transacciones.controller.js'
-import { TransaccionesService } from './transacciones.service.js'
+import { Contrato } from '../contratos/entities/contrato.entity.js';
+import { PropiedadesModule } from '../propiedades/propiedades.module.js';
+import { Transaccion } from './entities/transaccion.entity.js';
+import { TransaccionesController } from './transacciones.controller.js';
+import { TransaccionesService } from './transacciones.service.js';
 
 @Module({
   // Contrato se usa solo para revisar que el contrato elegido sea de la misma propiedad.

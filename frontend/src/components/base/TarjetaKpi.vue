@@ -1,12 +1,12 @@
 <script setup lang="ts">
 defineProps<{
-  etiqueta: string
+  etiqueta: string;
   /** Valor ya formateado, por ejemplo "$ 86.420.000". */
-  valor: string
-  nota?: string
+  valor: string;
+  nota?: string;
   /** Fondo petróleo para el indicador principal. */
-  destacada?: boolean
-}>()
+  destacada?: boolean;
+}>();
 </script>
 
 <template>

@@ -1,59 +1,59 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue';
 
-import AvisoError from '@/components/base/AvisoError.vue'
-import EncabezadoPagina from '@/components/base/EncabezadoPagina.vue'
-import InsigniaEstado from '@/components/base/InsigniaEstado.vue'
-import TarjetaGrafico from '@/components/base/TarjetaGrafico.vue'
-import FiltroSelector from '@/components/formulario/FiltroSelector.vue'
-import GraficoBarras from '@/components/graficos/GraficoBarras.vue'
-import TablaDatos from '@/components/tabla/TablaDatos.vue'
-import { useConsulta } from '@/composables/useConsulta'
-import type { Columna } from '@/interfaces/OpcionInterface'
-import type { Rol, Usuario } from '@/interfaces/UsuarioInterface'
-import { describirError } from '@/services/http'
-import { eliminarUsuario, obtenerResumenPorRol, obtenerUsuarios } from '@/services/UsuarioService'
-import { aOpcionesConTodos, ROLES } from '@/utils/etiquetas'
-import { PALETA_CATEGORIAS } from '@/utils/paleta'
+import AvisoError from '@/components/base/AvisoError.vue';
+import EncabezadoPagina from '@/components/base/EncabezadoPagina.vue';
+import InsigniaEstado from '@/components/base/InsigniaEstado.vue';
+import TarjetaGrafico from '@/components/base/TarjetaGrafico.vue';
+import FiltroSelector from '@/components/formulario/FiltroSelector.vue';
+import GraficoBarras from '@/components/graficos/GraficoBarras.vue';
+import TablaDatos from '@/components/tabla/TablaDatos.vue';
+import { useConsulta } from '@/composables/useConsulta';
+import type { Columna } from '@/interfaces/OpcionInterface';
+import type { Rol, UsuarioInterface } from '@/interfaces/UsuarioInterface';
+import { describirError } from '@/services/http';
+import { UsuarioService } from '@/services/UsuarioService';
+import { aOpcionesConTodos, ROLES } from '@/utils/etiquetas';
+import { PALETA_CATEGORIAS } from '@/utils/paleta';
 
 const COLUMNAS: Columna[] = [
   { clave: 'nombre', titulo: 'Nombre' },
   { clave: 'correo', titulo: 'Email' },
   { clave: 'rol', titulo: 'Rol' },
-]
+];
 
-const OPCIONES_ROL = aOpcionesConTodos(ROLES, 'Todos los roles')
+const OPCIONES_ROL = aOpcionesConTodos(ROLES, 'Todos los roles');
 
-const filtroRol = ref<Rol | null>(null)
-const errorAccion = ref('')
+const filtroRol = ref<Rol | null>(null);
+const errorAccion = ref('');
 
-const usuarios = useConsulta(() => obtenerUsuarios(filtroRol.value), [])
-const resumen = useConsulta(obtenerResumenPorRol, [])
+const usuarios = useConsulta(() => UsuarioService.obtenerUsuarios(filtroRol.value), []);
+const resumen = useConsulta(() => UsuarioService.obtenerResumenPorRol(), []);
 
-const rolesResumen = computed(() => resumen.datos.value.map((fila) => fila.rol))
-const cantidadesResumen = computed(() => resumen.datos.value.map((fila) => fila.cantidad))
+const rolesResumen = computed(() => resumen.datos.value.map((fila) => fila.rol));
+const cantidadesResumen = computed(() => resumen.datos.value.map((fila) => fila.cantidad));
 const totalUsuarios = computed(() =>
   cantidadesResumen.value.reduce((suma, cantidad) => suma + cantidad, 0),
-)
+);
 
-async function eliminar(usuario: Usuario): Promise<void> {
-  if (!window.confirm(`¿Eliminar a ${usuario.nombre}? Esta acción no se puede deshacer.`)) return
-  errorAccion.value = ''
+async function eliminar(usuario: UsuarioInterface): Promise<void> {
+  if (!window.confirm(`¿Eliminar a ${usuario.nombre}? Esta acción no se puede deshacer.`)) return;
+  errorAccion.value = '';
   try {
-    await eliminarUsuario(usuario.id)
-    usuarios.cargar()
-    resumen.cargar()
+    await UsuarioService.eliminarUsuario(usuario.id);
+    usuarios.cargar();
+    resumen.cargar();
   } catch (error) {
-    errorAccion.value = describirError(error, 'No se pudo eliminar el usuario.')
+    errorAccion.value = describirError(error, 'No se pudo eliminar el usuario.');
   }
 }
 
 onMounted(() => {
-  usuarios.cargar()
-  resumen.cargar()
-})
+  usuarios.cargar();
+  resumen.cargar();
+});
 
-watch(filtroRol, usuarios.cargar)
+watch(filtroRol, usuarios.cargar);
 </script>
 
 <template>

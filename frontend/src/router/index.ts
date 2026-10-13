@@ -1,17 +1,17 @@
-import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
+import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router';
 
-import { useSesion } from '@/composables/useSesion'
-import InicioView from '@/views/InicioView.vue'
-import IngresoView from '@/views/IngresoView.vue'
+import { useSesion } from '@/composables/useSesion';
+import InicioView from '@/views/InicioView.vue';
+import IngresoView from '@/views/IngresoView.vue';
 
 declare module 'vue-router' {
   interface RouteMeta {
     /** Título que se muestra en la barra superior. */
-    titulo?: string
+    titulo?: string;
     /** Se ve sin iniciar sesión y sin menú lateral. */
-    publica?: boolean
+    publica?: boolean;
     /** Solo la puede abrir un usuario con rol ADMIN. */
-    soloAdmin?: boolean
+    soloAdmin?: boolean;
   }
 }
 
@@ -102,22 +102,22 @@ const rutas: RouteRecordRaw[] = [
     component: () => import('@/views/NoEncontradaView.vue'),
     meta: { publica: true },
   },
-]
+];
 
 const router = createRouter({
   history: createWebHistory(),
   routes: rutas,
   scrollBehavior: () => ({ top: 0 }),
-})
+});
 
 // Protege las páginas internas: sin sesión se va al login; sin rol ADMIN no se entra a admin.
 router.beforeEach((destino) => {
-  const { estaAutenticado, esAdmin } = useSesion()
+  const { estaAutenticado, esAdmin } = useSesion();
 
-  if (destino.meta.publica) return true
-  if (!estaAutenticado.value) return { name: 'ingreso', query: { volver: destino.fullPath } }
-  if (destino.meta.soloAdmin && !esAdmin.value) return { name: 'dashboard' }
-  return true
-})
+  if (destino.meta.publica) return true;
+  if (!estaAutenticado.value) return { name: 'ingreso', query: { volver: destino.fullPath } };
+  if (destino.meta.soloAdmin && !esAdmin.value) return { name: 'dashboard' };
+  return true;
+});
 
-export default router
+export default router;

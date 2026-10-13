@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import Icono from './Icono.vue'
+import Icono from './Icono.vue';
 
 const { titulo = 'No hay datos todavía' } = defineProps<{
-  titulo?: string
-  mensaje?: string
-}>()
+  titulo?: string;
+  mensaje?: string;
+}>();
 </script>
 
 <template>

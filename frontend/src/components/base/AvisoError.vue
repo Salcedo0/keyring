@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import Icono from './Icono.vue'
+import Icono from './Icono.vue';
 
 defineProps<{
   /** Si está vacío, el aviso no se muestra. */
-  mensaje: string
-}>()
+  mensaje: string;
+}>();
 </script>
 
 <template>

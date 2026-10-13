@@ -7,26 +7,26 @@ import {
   Tooltip,
   type ChartData,
   type ChartOptions,
-} from 'chart.js'
-import { computed } from 'vue'
-import { Bar } from 'vue-chartjs'
+} from 'chart.js';
+import { computed } from 'vue';
+import { Bar } from 'vue-chartjs';
 
-import { formatearPesos } from '@/utils/formato'
-import { COLORES } from '@/utils/paleta'
+import { formatearPesos } from '@/utils/formato';
+import { COLORES } from '@/utils/paleta';
 
-Chart.register(BarElement, CategoryScale, LinearScale, Tooltip)
+Chart.register(BarElement, CategoryScale, LinearScale, Tooltip);
 
 const { enPesos = true, ...props } = defineProps<{
-  etiquetas: string[]
-  valores: number[]
+  etiquetas: string[];
+  valores: number[];
   /** Un color por barra, en el mismo orden de las etiquetas. */
-  colores: string[]
+  colores: string[];
   /** Falso para contar cosas (usuarios) en vez de dinero. */
-  enPesos?: boolean
-}>()
+  enPesos?: boolean;
+}>();
 
 function formatearValor(valor: number): string {
-  return enPesos ? formatearPesos(valor) : String(valor)
+  return enPesos ? formatearPesos(valor) : String(valor);
 }
 
 const datos = computed<ChartData<'bar'>>(() => ({
@@ -34,7 +34,7 @@ const datos = computed<ChartData<'bar'>>(() => ({
   datasets: [
     { data: props.valores, backgroundColor: props.colores, borderRadius: 6, maxBarThickness: 26 },
   ],
-}))
+}));
 
 // Barras horizontales: los nombres de las categorías son largos y así se leen completos.
 const opciones = computed<ChartOptions<'bar'>>(() => ({
@@ -57,10 +57,10 @@ const opciones = computed<ChartOptions<'bar'>>(() => ({
     },
     y: { grid: { display: false }, ticks: { color: COLORES.apagado } },
   },
-}))
+}));
 
 // La altura crece con la cantidad de barras para que no queden apretadas.
-const alto = computed(() => `${Math.max(160, props.etiquetas.length * 40)}px`)
+const alto = computed(() => `${Math.max(160, props.etiquetas.length * 40)}px`);
 </script>
 
 <template>
