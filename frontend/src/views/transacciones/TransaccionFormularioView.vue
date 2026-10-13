@@ -1,43 +1,43 @@
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref, watch } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { computed, onMounted, reactive, ref, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
-import AvisoError from '@/components/base/AvisoError.vue'
-import EncabezadoPagina from '@/components/base/EncabezadoPagina.vue'
-import CampoSelector from '@/components/formulario/CampoSelector.vue'
-import CampoTexto from '@/components/formulario/CampoTexto.vue'
-import GrupoOpciones from '@/components/formulario/GrupoOpciones.vue'
-import { useConsulta } from '@/composables/useConsulta'
-import type { GuardarTransaccionDTO } from '@/dtos/GuardarTransaccionDTO'
-import type { TipoTransaccion } from '@/interfaces/TransaccionInterface'
-import { ContratoService } from '@/services/ContratoService'
-import { describirError } from '@/services/http'
-import { PropiedadService } from '@/services/PropiedadService'
-import { TransaccionService } from '@/services/TransaccionService'
-import { aOpciones, TIPOS_TRANSACCION } from '@/utils/etiquetas'
-import { hoy } from '@/utils/fechas'
-import { formatearFecha, formatearPesos } from '@/utils/formato'
-import { hayErrores } from '@/utils/validaciones'
+import AvisoError from '@/components/base/AvisoError.vue';
+import EncabezadoPagina from '@/components/base/EncabezadoPagina.vue';
+import CampoSelector from '@/components/formulario/CampoSelector.vue';
+import CampoTexto from '@/components/formulario/CampoTexto.vue';
+import GrupoOpciones from '@/components/formulario/GrupoOpciones.vue';
+import { useConsulta } from '@/composables/useConsulta';
+import type { GuardarTransaccionDTO } from '@/dtos/GuardarTransaccionDTO';
+import type { TipoTransaccion } from '@/interfaces/TransaccionInterface';
+import { ContratoService } from '@/services/ContratoService';
+import { describirError } from '@/services/http';
+import { PropiedadService } from '@/services/PropiedadService';
+import { TransaccionService } from '@/services/TransaccionService';
+import { aOpciones, TIPOS_TRANSACCION } from '@/utils/etiquetas';
+import { hoy } from '@/utils/fechas';
+import { formatearFecha, formatearPesos } from '@/utils/formato';
+import { hayErrores } from '@/utils/validaciones';
 
 // Los campos que el usuario debe elegir empiezan en null.
 interface FormularioTransaccion {
-  propiedadId: number | null
-  contratoId: number | null
-  tipo: TipoTransaccion | null
-  categoria: string | null
-  monto: number | null
-  fecha: string
-  descripcion: string
+  propiedadId: number | null;
+  contratoId: number | null;
+  tipo: TipoTransaccion | null;
+  categoria: string | null;
+  monto: number | null;
+  fecha: string;
+  descripcion: string;
 }
 
-const OPCIONES_TIPO = aOpciones(TIPOS_TRANSACCION)
+const OPCIONES_TIPO = aOpciones(TIPOS_TRANSACCION);
 
-const ruta = useRoute()
-const router = useRouter()
+const ruta = useRoute();
+const router = useRouter();
 
 // Si la ruta trae id se está editando; si no, se está creando.
-const id = computed(() => (ruta.params.id ? Number(ruta.params.id) : null))
-const esEdicion = computed(() => id.value !== null)
+const id = computed(() => (ruta.params.id ? Number(ruta.params.id) : null));
+const esEdicion = computed(() => id.value !== null);
 
 const formulario = reactive<FormularioTransaccion>({
   propiedadId: null,
@@ -47,7 +47,7 @@ const formulario = reactive<FormularioTransaccion>({
   monto: null,
   fecha: hoy(),
   descripcion: '',
-})
+});
 const errores = reactive({
   propiedadId: '',
   tipo: '',
@@ -55,21 +55,21 @@ const errores = reactive({
   monto: '',
   fecha: '',
   descripcion: '',
-})
-const errorGeneral = ref('')
-const enviando = ref(false)
+});
+const errorGeneral = ref('');
+const enviando = ref(false);
 
-const propiedades = useConsulta(() => PropiedadService.obtenerPropiedades(), [])
-const categorias = useConsulta(() => TransaccionService.obtenerCategorias(), [])
+const propiedades = useConsulta(() => PropiedadService.obtenerPropiedades(), []);
+const categorias = useConsulta(() => TransaccionService.obtenerCategorias(), []);
 // Solo se ofrecen los contratos de la propiedad elegida.
 const contratos = useConsulta(
   () => ContratoService.obtenerContratos({ propiedadId: formulario.propiedadId }),
   [],
-)
+);
 
 const opcionesPropiedad = computed(() =>
   propiedades.datos.value.map((propiedad) => ({ valor: propiedad.id, texto: propiedad.nombre })),
-)
+);
 
 const opcionesContrato = computed(() => [
   { valor: null, texto: 'Sin contrato' },
@@ -77,81 +77,81 @@ const opcionesContrato = computed(() => [
     valor: contrato.id,
     texto: `${contrato.inquilinoNombre} · ${formatearFecha(contrato.fechaInicio)}`,
   })),
-])
+]);
 
 // La categoría tiene que ser del mismo tipo que la transacción.
 const opcionesCategoria = computed(() =>
   categorias.datos.value
     .filter((categoria) => categoria.tipo === formulario.tipo)
     .map((categoria) => ({ valor: categoria.nombre, texto: categoria.nombre })),
-)
+);
 
 const textoVacioCategoria = computed(() =>
   formulario.tipo ? 'Selecciona una categoría' : 'Primero elige si es ingreso o gasto',
-)
+);
 
 const ayudaMonto = computed(() =>
   formulario.monto ? formatearPesos(formulario.monto) : 'Valor en pesos, sin puntos',
-)
+);
 
 async function cargarTransaccion(): Promise<void> {
-  if (id.value === null) return
+  if (id.value === null) return;
   try {
-    const transaccion = await TransaccionService.obtenerTransaccion(id.value)
-    const { id: _id, propiedadNombre: _propiedad, ...datos } = transaccion
-    Object.assign(formulario, datos)
+    const transaccion = await TransaccionService.obtenerTransaccion(id.value);
+    const { id: _id, propiedadNombre: _propiedad, ...datos } = transaccion;
+    Object.assign(formulario, datos);
   } catch (error) {
-    errorGeneral.value = describirError(error, 'No se pudo cargar la transacción.')
+    errorGeneral.value = describirError(error, 'No se pudo cargar la transacción.');
   }
 }
 
 function validar(): boolean {
-  errores.propiedadId = formulario.propiedadId === null ? 'Elige la propiedad' : ''
-  errores.tipo = formulario.tipo ? '' : 'Elige si es ingreso o gasto'
-  errores.categoria = formulario.categoria === null ? 'Selecciona una categoría' : ''
-  errores.monto = formulario.monto && formulario.monto > 0 ? '' : 'El monto debe ser mayor a $0'
-  errores.fecha = formulario.fecha ? '' : 'Elige la fecha'
-  errores.descripcion = formulario.descripcion.length > 200 ? 'Máximo 200 caracteres' : ''
-  return !hayErrores(errores)
+  errores.propiedadId = formulario.propiedadId === null ? 'Elige la propiedad' : '';
+  errores.tipo = formulario.tipo ? '' : 'Elige si es ingreso o gasto';
+  errores.categoria = formulario.categoria === null ? 'Selecciona una categoría' : '';
+  errores.monto = formulario.monto && formulario.monto > 0 ? '' : 'El monto debe ser mayor a $0';
+  errores.fecha = formulario.fecha ? '' : 'Elige la fecha';
+  errores.descripcion = formulario.descripcion.length > 200 ? 'Máximo 200 caracteres' : '';
+  return !hayErrores(errores);
 }
 
 async function guardar(): Promise<void> {
-  errorGeneral.value = ''
-  if (!validar()) return
+  errorGeneral.value = '';
+  if (!validar()) return;
 
-  enviando.value = true
+  enviando.value = true;
   try {
     // Después de validar, los campos que empezaban en null ya tienen valor.
-    const datos = formulario as GuardarTransaccionDTO
-    if (id.value === null) await TransaccionService.crearTransaccion(datos)
-    else await TransaccionService.actualizarTransaccion(id.value, datos)
-    router.push('/transacciones')
+    const datos = formulario as GuardarTransaccionDTO;
+    if (id.value === null) await TransaccionService.crearTransaccion(datos);
+    else await TransaccionService.actualizarTransaccion(id.value, datos);
+    router.push('/transacciones');
   } catch (error) {
-    errorGeneral.value = describirError(error, 'No se pudo guardar la transacción.')
+    errorGeneral.value = describirError(error, 'No se pudo guardar la transacción.');
   } finally {
-    enviando.value = false
+    enviando.value = false;
   }
 }
 
 /** Al cambiar de propiedad, el contrato elegido ya no aplica: se borra y se piden los nuevos. */
 function alCambiarPropiedad(nueva: number | null, anterior: number | null): void {
-  if (anterior !== null) formulario.contratoId = null
-  if (nueva !== null) contratos.cargar()
+  if (anterior !== null) formulario.contratoId = null;
+  if (nueva !== null) contratos.cargar();
 }
 
 /** Al cambiar entre ingreso y gasto, la categoría elegida deja de servir. */
 function alCambiarTipo(_nuevo: TipoTransaccion | null, anterior: TipoTransaccion | null): void {
-  if (anterior !== null) formulario.categoria = null
+  if (anterior !== null) formulario.categoria = null;
 }
 
 onMounted(() => {
-  propiedades.cargar()
-  categorias.cargar()
-  cargarTransaccion()
-})
+  propiedades.cargar();
+  categorias.cargar();
+  cargarTransaccion();
+});
 
-watch(() => formulario.propiedadId, alCambiarPropiedad)
-watch(() => formulario.tipo, alCambiarTipo)
+watch(() => formulario.propiedadId, alCambiarPropiedad);
+watch(() => formulario.tipo, alCambiarTipo);
 </script>
 
 <template>

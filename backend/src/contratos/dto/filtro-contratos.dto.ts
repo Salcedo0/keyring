@@ -1,7 +1,7 @@
-import { Type } from 'class-transformer'
-import { IsIn, IsInt, IsOptional } from 'class-validator'
+import { Type } from 'class-transformer';
+import { IsIn, IsInt, IsOptional } from 'class-validator';
 
-import { ESTADOS_CONTRATO, type EstadoContrato } from '../entities/contrato.entity.js'
+import { ESTADOS_CONTRATO, type EstadoContrato } from '../entities/contrato.entity.js';
 
 /** Filtros de GET /contratos. Un filtro que no llega significa "todos". */
 export class FiltroContratosDto {
@@ -9,9 +9,9 @@ export class FiltroContratosDto {
   @IsOptional()
   @Type(() => Number)
   @IsInt()
-  propiedadId?: number
+  propiedadId?: number;
 
   @IsOptional()
   @IsIn(ESTADOS_CONTRATO)
-  estado?: EstadoContrato
+  estado?: EstadoContrato;
 }

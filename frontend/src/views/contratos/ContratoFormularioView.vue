@@ -1,45 +1,45 @@
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { computed, onMounted, reactive, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
-import AvisoError from '@/components/base/AvisoError.vue'
-import EncabezadoPagina from '@/components/base/EncabezadoPagina.vue'
-import CampoSelector from '@/components/formulario/CampoSelector.vue'
-import CampoTexto from '@/components/formulario/CampoTexto.vue'
-import GrupoOpciones from '@/components/formulario/GrupoOpciones.vue'
-import { useConsulta } from '@/composables/useConsulta'
-import type { GuardarContratoDTO } from '@/dtos/GuardarContratoDTO'
-import type { EstadoContrato, TipoContrato } from '@/interfaces/ContratoInterface'
-import { ContratoService } from '@/services/ContratoService'
-import { describirError } from '@/services/http'
-import { PropiedadService } from '@/services/PropiedadService'
-import { aOpciones, ESTADOS_CONTRATO, TIPOS_CONTRATO } from '@/utils/etiquetas'
-import { formatearPesos } from '@/utils/formato'
-import { esCorreoValido, estaVacio, hayErrores } from '@/utils/validaciones'
+import AvisoError from '@/components/base/AvisoError.vue';
+import EncabezadoPagina from '@/components/base/EncabezadoPagina.vue';
+import CampoSelector from '@/components/formulario/CampoSelector.vue';
+import CampoTexto from '@/components/formulario/CampoTexto.vue';
+import GrupoOpciones from '@/components/formulario/GrupoOpciones.vue';
+import { useConsulta } from '@/composables/useConsulta';
+import type { GuardarContratoDTO } from '@/dtos/GuardarContratoDTO';
+import type { EstadoContrato, TipoContrato } from '@/interfaces/ContratoInterface';
+import { ContratoService } from '@/services/ContratoService';
+import { describirError } from '@/services/http';
+import { PropiedadService } from '@/services/PropiedadService';
+import { aOpciones, ESTADOS_CONTRATO, TIPOS_CONTRATO } from '@/utils/etiquetas';
+import { formatearPesos } from '@/utils/formato';
+import { esCorreoValido, estaVacio, hayErrores } from '@/utils/validaciones';
 
 // Los campos que el usuario debe elegir empiezan en null.
 interface FormularioContrato {
-  propiedadId: number | null
-  inquilinoNombre: string
-  inquilinoDocumento: string
-  inquilinoCorreo: string
-  inquilinoTelefono: string
-  tipo: TipoContrato | null
-  fechaInicio: string
-  fechaFin: string
-  valor: number | null
-  estado: EstadoContrato
+  propiedadId: number | null;
+  inquilinoNombre: string;
+  inquilinoDocumento: string;
+  inquilinoCorreo: string;
+  inquilinoTelefono: string;
+  tipo: TipoContrato | null;
+  fechaInicio: string;
+  fechaFin: string;
+  valor: number | null;
+  estado: EstadoContrato;
 }
 
-const OPCIONES_TIPO = aOpciones(TIPOS_CONTRATO)
-const OPCIONES_ESTADO = aOpciones(ESTADOS_CONTRATO)
+const OPCIONES_TIPO = aOpciones(TIPOS_CONTRATO);
+const OPCIONES_ESTADO = aOpciones(ESTADOS_CONTRATO);
 
-const ruta = useRoute()
-const router = useRouter()
+const ruta = useRoute();
+const router = useRouter();
 
 // Si la ruta trae id se está editando; si no, se está creando.
-const id = computed(() => (ruta.params.id ? Number(ruta.params.id) : null))
-const esEdicion = computed(() => id.value !== null)
+const id = computed(() => (ruta.params.id ? Number(ruta.params.id) : null));
+const esEdicion = computed(() => id.value !== null);
 
 const formulario = reactive<FormularioContrato>({
   propiedadId: null,
@@ -52,7 +52,7 @@ const formulario = reactive<FormularioContrato>({
   fechaFin: '',
   valor: null,
   estado: 'PENDIENTE',
-})
+});
 const errores = reactive({
   propiedadId: '',
   inquilinoNombre: '',
@@ -62,78 +62,78 @@ const errores = reactive({
   fechaInicio: '',
   fechaFin: '',
   valor: '',
-})
-const errorGeneral = ref('')
-const enviando = ref(false)
+});
+const errorGeneral = ref('');
+const enviando = ref(false);
 
-const propiedades = useConsulta(() => PropiedadService.obtenerPropiedades(), [])
+const propiedades = useConsulta(() => PropiedadService.obtenerPropiedades(), []);
 
 const opcionesPropiedad = computed(() =>
   propiedades.datos.value.map((propiedad) => ({ valor: propiedad.id, texto: propiedad.nombre })),
-)
+);
 
 // Debajo del valor se muestra cómo queda en pesos, para evitar errores de ceros.
 const ayudaValor = computed(() => {
-  if (!formulario.valor) return 'En contrato fijo, escribe el canon mensual.'
-  const periodo = formulario.tipo === 'FIJA' ? ' por mes' : ' en total'
-  return formatearPesos(formulario.valor) + periodo
-})
+  if (!formulario.valor) return 'En contrato fijo, escribe el canon mensual.';
+  const periodo = formulario.tipo === 'FIJA' ? ' por mes' : ' en total';
+  return formatearPesos(formulario.valor) + periodo;
+});
 
 async function cargarContrato(): Promise<void> {
-  if (id.value === null) return
+  if (id.value === null) return;
   try {
     const {
       id: _id,
       propiedadNombre: _nombre,
       ...contrato
-    } = await ContratoService.obtenerContrato(id.value)
-    Object.assign(formulario, contrato)
+    } = await ContratoService.obtenerContrato(id.value);
+    Object.assign(formulario, contrato);
   } catch (error) {
-    errorGeneral.value = describirError(error, 'No se pudo cargar el contrato.')
+    errorGeneral.value = describirError(error, 'No se pudo cargar el contrato.');
   }
 }
 
 function validar(): boolean {
-  errores.propiedadId = formulario.propiedadId === null ? 'Elige la propiedad' : ''
+  errores.propiedadId = formulario.propiedadId === null ? 'Elige la propiedad' : '';
   errores.inquilinoNombre = estaVacio(formulario.inquilinoNombre)
     ? 'Escribe el nombre del inquilino'
-    : ''
+    : '';
   errores.inquilinoDocumento = estaVacio(formulario.inquilinoDocumento)
     ? 'Escribe el número de documento'
-    : ''
+    : '';
   errores.inquilinoCorreo = esCorreoValido(formulario.inquilinoCorreo)
     ? ''
-    : 'Ingresa un correo válido, por ejemplo nombre@correo.com'
-  errores.tipo = formulario.tipo ? '' : 'Elige el tipo de contrato'
-  errores.fechaInicio = formulario.fechaInicio ? '' : 'Elige la fecha de inicio'
+    : 'Ingresa un correo válido, por ejemplo nombre@correo.com';
+  errores.tipo = formulario.tipo ? '' : 'Elige el tipo de contrato';
+  errores.fechaInicio = formulario.fechaInicio ? '' : 'Elige la fecha de inicio';
   errores.fechaFin =
-    formulario.fechaFin > formulario.fechaInicio ? '' : 'Debe ser posterior a la fecha de inicio'
-  errores.valor = formulario.valor && formulario.valor > 0 ? '' : 'El valor debe ser mayor a $0'
-  return !hayErrores(errores)
+    formulario.fechaFin > formulario.fechaInicio ? '' : 'Debe ser posterior a la fecha de inicio';
+  errores.valor = formulario.valor && formulario.valor > 0 ? '' : 'El valor debe ser mayor a $0';
+  return !hayErrores(errores);
 }
 
 async function guardar(): Promise<void> {
-  errorGeneral.value = ''
-  if (!validar()) return
+  errorGeneral.value = '';
+  if (!validar()) return;
 
-  enviando.value = true
+  enviando.value = true;
   try {
     // Después de validar, los campos que empezaban en null ya tienen valor.
-    const datos = formulario as GuardarContratoDTO
-    if (id.value === null) await ContratoService.crearContrato(datos)
-    else await ContratoService.actualizarContrato(id.value, datos)
-    router.push('/contratos')
+    const datos = formulario as GuardarContratoDTO;
+    if (id.value === null) await ContratoService.crearContrato(datos);
+    else await ContratoService.actualizarContrato(id.value, datos);
+    router.push('/contratos');
   } catch (error) {
-    errorGeneral.value = describirError(error, 'No se pudo guardar el contrato.')
+    errorGeneral.value = describirError(error, 'No se pudo guardar el contrato.');
   } finally {
-    enviando.value = false
+    enviando.value = false;
   }
 }
 
 onMounted(() => {
-  propiedades.cargar()
-  cargarContrato()
-})
+  propiedades.cargar();
+  cargarContrato();
+});
 </script>
 
 <template>

@@ -1,51 +1,51 @@
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { reactive, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
-import AvisoError from '@/components/base/AvisoError.vue'
-import Icono from '@/components/base/Icono.vue'
-import LogoKeyRing from '@/components/base/LogoKeyRing.vue'
-import CampoTexto from '@/components/formulario/CampoTexto.vue'
-import { useSesion } from '@/composables/useSesion'
-import { describirError } from '@/services/http'
-import { esCorreoValido, hayErrores } from '@/utils/validaciones'
+import AvisoError from '@/components/base/AvisoError.vue';
+import Icono from '@/components/base/Icono.vue';
+import LogoKeyRing from '@/components/base/LogoKeyRing.vue';
+import CampoTexto from '@/components/formulario/CampoTexto.vue';
+import { useSesion } from '@/composables/useSesion';
+import { describirError } from '@/services/http';
+import { esCorreoValido, hayErrores } from '@/utils/validaciones';
 
 // Debe coincidir con el mínimo que exige el back (RegistrarseDto).
-const LARGO_MINIMO_CONTRASENA = 8
+const LARGO_MINIMO_CONTRASENA = 8;
 
-const router = useRouter()
-const { crearCuenta } = useSesion()
+const router = useRouter();
+const { crearCuenta } = useSesion();
 
-const formulario = reactive({ nombre: '', correo: '', contrasena: '', confirmacion: '' })
-const errores = reactive({ nombre: '', correo: '', contrasena: '', confirmacion: '' })
-const errorGeneral = ref('')
-const enviando = ref(false)
+const formulario = reactive({ nombre: '', correo: '', contrasena: '', confirmacion: '' });
+const errores = reactive({ nombre: '', correo: '', contrasena: '', confirmacion: '' });
+const errorGeneral = ref('');
+const enviando = ref(false);
 
 function validar(): boolean {
-  errores.nombre = formulario.nombre.trim().length >= 2 ? '' : 'Escribe tu nombre completo'
-  errores.correo = esCorreoValido(formulario.correo) ? '' : 'Ingresa un correo válido'
+  errores.nombre = formulario.nombre.trim().length >= 2 ? '' : 'Escribe tu nombre completo';
+  errores.correo = esCorreoValido(formulario.correo) ? '' : 'Ingresa un correo válido';
   errores.contrasena =
     formulario.contrasena.length >= LARGO_MINIMO_CONTRASENA
       ? ''
-      : `La contraseña debe tener al menos ${LARGO_MINIMO_CONTRASENA} caracteres`
+      : `La contraseña debe tener al menos ${LARGO_MINIMO_CONTRASENA} caracteres`;
   errores.confirmacion =
-    formulario.confirmacion === formulario.contrasena ? '' : 'Las contraseñas no coinciden'
-  return !hayErrores(errores)
+    formulario.confirmacion === formulario.contrasena ? '' : 'Las contraseñas no coinciden';
+  return !hayErrores(errores);
 }
 
 async function registrar(): Promise<void> {
-  errorGeneral.value = ''
-  if (!validar()) return
+  errorGeneral.value = '';
+  if (!validar()) return;
 
-  enviando.value = true
+  enviando.value = true;
   try {
-    const { nombre, correo, contrasena } = formulario
-    await crearCuenta({ nombre, correo, contrasena })
-    router.push('/dashboard')
+    const { nombre, correo, contrasena } = formulario;
+    await crearCuenta({ nombre, correo, contrasena });
+    router.push('/dashboard');
   } catch (error) {
-    errorGeneral.value = describirError(error, 'No pudimos crear la cuenta.')
+    errorGeneral.value = describirError(error, 'No pudimos crear la cuenta.');
   } finally {
-    enviando.value = false
+    enviando.value = false;
   }
 }
 </script>

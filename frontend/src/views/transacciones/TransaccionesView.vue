@@ -1,25 +1,25 @@
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref, watch } from 'vue'
-import { useRouter } from 'vue-router'
+import { computed, onMounted, reactive, ref, watch } from 'vue';
+import { useRouter } from 'vue-router';
 
-import AvisoError from '@/components/base/AvisoError.vue'
-import EncabezadoPagina from '@/components/base/EncabezadoPagina.vue'
-import Icono from '@/components/base/Icono.vue'
-import InsigniaEstado from '@/components/base/InsigniaEstado.vue'
-import TarjetaGrafico from '@/components/base/TarjetaGrafico.vue'
-import CampoTexto from '@/components/formulario/CampoTexto.vue'
-import FiltroSelector from '@/components/formulario/FiltroSelector.vue'
-import GraficoBarras from '@/components/graficos/GraficoBarras.vue'
-import TablaDatos from '@/components/tabla/TablaDatos.vue'
-import { useConsulta } from '@/composables/useConsulta'
-import type { Columna } from '@/interfaces/OpcionInterface'
-import type { FiltrosTransacciones, TransaccionInterface } from '@/interfaces/TransaccionInterface'
-import { describirError } from '@/services/http'
-import { PropiedadService } from '@/services/PropiedadService'
-import { TransaccionService } from '@/services/TransaccionService'
-import { aOpcionesConTodos, TIPOS_TRANSACCION, TONOS_TRANSACCION } from '@/utils/etiquetas'
-import { formatearFecha, formatearMonto } from '@/utils/formato'
-import { COLORES } from '@/utils/paleta'
+import AvisoError from '@/components/base/AvisoError.vue';
+import EncabezadoPagina from '@/components/base/EncabezadoPagina.vue';
+import Icono from '@/components/base/Icono.vue';
+import InsigniaEstado from '@/components/base/InsigniaEstado.vue';
+import TarjetaGrafico from '@/components/base/TarjetaGrafico.vue';
+import CampoTexto from '@/components/formulario/CampoTexto.vue';
+import FiltroSelector from '@/components/formulario/FiltroSelector.vue';
+import GraficoBarras from '@/components/graficos/GraficoBarras.vue';
+import TablaDatos from '@/components/tabla/TablaDatos.vue';
+import { useConsulta } from '@/composables/useConsulta';
+import type { Columna } from '@/interfaces/OpcionInterface';
+import type { FiltrosTransacciones, TransaccionInterface } from '@/interfaces/TransaccionInterface';
+import { describirError } from '@/services/http';
+import { PropiedadService } from '@/services/PropiedadService';
+import { TransaccionService } from '@/services/TransaccionService';
+import { aOpcionesConTodos, TIPOS_TRANSACCION, TONOS_TRANSACCION } from '@/utils/etiquetas';
+import { formatearFecha, formatearMonto } from '@/utils/formato';
+import { COLORES } from '@/utils/paleta';
 
 const COLUMNAS: Columna[] = [
   { clave: 'fecha', titulo: 'Fecha' },
@@ -28,28 +28,28 @@ const COLUMNAS: Columna[] = [
   { clave: 'categoria', titulo: 'Categoría' },
   { clave: 'tipo', titulo: 'Tipo' },
   { clave: 'monto', titulo: 'Monto', alineacion: 'derecha' },
-]
+];
 
-const OPCIONES_TIPO = aOpcionesConTodos(TIPOS_TRANSACCION, 'Ingresos y gastos')
+const OPCIONES_TIPO = aOpcionesConTodos(TIPOS_TRANSACCION, 'Ingresos y gastos');
 
-const router = useRouter()
+const router = useRouter();
 const filtros = reactive<FiltrosTransacciones>({
   propiedadId: null,
   tipo: null,
   categoria: null,
   mes: '',
-})
-const errorAccion = ref('')
+});
+const errorAccion = ref('');
 
-const propiedades = useConsulta(() => PropiedadService.obtenerPropiedades(), [])
-const categorias = useConsulta(() => TransaccionService.obtenerCategorias(), [])
-const transacciones = useConsulta(() => TransaccionService.obtenerTransacciones(filtros), [])
-const resumen = useConsulta(() => TransaccionService.obtenerResumenPorCategoria(filtros), [])
+const propiedades = useConsulta(() => PropiedadService.obtenerPropiedades(), []);
+const categorias = useConsulta(() => TransaccionService.obtenerCategorias(), []);
+const transacciones = useConsulta(() => TransaccionService.obtenerTransacciones(filtros), []);
+const resumen = useConsulta(() => TransaccionService.obtenerResumenPorCategoria(filtros), []);
 
 const opcionesPropiedad = computed(() => [
   { valor: null, texto: 'Todas las propiedades' },
   ...propiedades.datos.value.map((propiedad) => ({ valor: propiedad.id, texto: propiedad.nombre })),
-])
+]);
 
 // Si hay un tipo elegido, solo se ofrecen las categorías de ese tipo.
 const opcionesCategoria = computed(() => [
@@ -57,47 +57,47 @@ const opcionesCategoria = computed(() => [
   ...categorias.datos.value
     .filter((categoria) => filtros.tipo === null || categoria.tipo === filtros.tipo)
     .map((categoria) => ({ valor: categoria.nombre, texto: categoria.nombre })),
-])
+]);
 
-const nombresResumen = computed(() => resumen.datos.value.map((fila) => fila.categoria))
-const totalesResumen = computed(() => resumen.datos.value.map((fila) => fila.total))
+const nombresResumen = computed(() => resumen.datos.value.map((fila) => fila.categoria));
+const totalesResumen = computed(() => resumen.datos.value.map((fila) => fila.total));
 const coloresResumen = computed(() =>
   resumen.datos.value.map((fila) => (fila.tipo === 'INGRESO' ? COLORES.ingreso : COLORES.gasto)),
-)
+);
 
 function recargar(): void {
-  transacciones.cargar()
-  resumen.cargar()
+  transacciones.cargar();
+  resumen.cargar();
 }
 
 function editar(transaccion: TransaccionInterface): void {
-  router.push(`/transacciones/${transaccion.id}/editar`)
+  router.push(`/transacciones/${transaccion.id}/editar`);
 }
 
 async function eliminar(transaccion: TransaccionInterface): Promise<void> {
   if (!window.confirm(`¿Eliminar "${transaccion.descripcion}"? Esta acción no se puede deshacer.`))
-    return
-  errorAccion.value = ''
+    return;
+  errorAccion.value = '';
   try {
-    await TransaccionService.eliminarTransaccion(transaccion.id)
-    recargar()
+    await TransaccionService.eliminarTransaccion(transaccion.id);
+    recargar();
   } catch (error) {
-    errorAccion.value = describirError(error, 'No se pudo eliminar la transacción.')
+    errorAccion.value = describirError(error, 'No se pudo eliminar la transacción.');
   }
 }
 
 onMounted(() => {
-  propiedades.cargar()
-  categorias.cargar()
-  recargar()
-})
+  propiedades.cargar();
+  categorias.cargar();
+  recargar();
+});
 
 // Al cambiar el tipo, la categoría elegida puede dejar de ser válida.
 watch(
   () => filtros.tipo,
   () => (filtros.categoria = null),
-)
-watch(filtros, recargar)
+);
+watch(filtros, recargar);
 </script>
 
 <template>

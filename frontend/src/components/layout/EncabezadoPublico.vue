@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import LogoKeyRing from '@/components/base/LogoKeyRing.vue'
+import LogoKeyRing from '@/components/base/LogoKeyRing.vue';
 </script>
 
 <template>

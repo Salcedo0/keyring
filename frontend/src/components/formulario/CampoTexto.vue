@@ -1,18 +1,18 @@
 <script setup lang="ts" generic="T extends string | number | null">
-import MensajeCampo from './MensajeCampo.vue'
+import MensajeCampo from './MensajeCampo.vue';
 
-const valor = defineModel<T>({ required: true })
+const valor = defineModel<T>({ required: true });
 
 const { tipo = 'text' } = defineProps<{
-  etiqueta: string
-  tipo?: 'text' | 'email' | 'password' | 'number' | 'date' | 'month' | 'tel'
-  placeholder?: string
-  error?: string
-  ayuda?: string
-  obligatorio?: boolean
+  etiqueta: string;
+  tipo?: 'text' | 'email' | 'password' | 'number' | 'date' | 'month' | 'tel';
+  placeholder?: string;
+  error?: string;
+  ayuda?: string;
+  obligatorio?: boolean;
   /** Muestra un área de texto de varias líneas en vez de un campo de una línea. */
-  multilinea?: boolean
-}>()
+  multilinea?: boolean;
+}>();
 </script>
 
 <template>

@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import EstadoVacio from './EstadoVacio.vue'
+import EstadoVacio from './EstadoVacio.vue';
 
 const { hayDatos = true } = defineProps<{
-  titulo: string
-  subtitulo?: string
+  titulo: string;
+  subtitulo?: string;
   /** Si es falso, en vez del gráfico se muestra el estado vacío. */
-  hayDatos?: boolean
-}>()
+  hayDatos?: boolean;
+}>();
 </script>
 
 <template>

@@ -1,29 +1,29 @@
 <script setup lang="ts" generic="T extends { id: number }">
-import EstadoVacio from '@/components/base/EstadoVacio.vue'
-import Icono from '@/components/base/Icono.vue'
-import type { Columna } from '@/interfaces/OpcionInterface'
+import EstadoVacio from '@/components/base/EstadoVacio.vue';
+import Icono from '@/components/base/Icono.vue';
+import type { Columna } from '@/interfaces/OpcionInterface';
 
 const {
   cargando = false,
   acciones = ['editar', 'eliminar'],
   mensajeVacio,
 } = defineProps<{
-  columnas: Columna[]
-  filas: T[]
-  cargando?: boolean
+  columnas: Columna[];
+  filas: T[];
+  cargando?: boolean;
   /** Qué botones se muestran al final de cada fila. Lista vacía: sin columna de acciones. */
-  acciones?: ('editar' | 'eliminar')[]
-  mensajeVacio?: string
-}>()
+  acciones?: ('editar' | 'eliminar')[];
+  mensajeVacio?: string;
+}>();
 
 const emit = defineEmits<{
-  editar: [fila: T]
-  eliminar: [fila: T]
-}>()
+  editar: [fila: T];
+  eliminar: [fila: T];
+}>();
 
 /** Valor de una celda cuando no se usa un slot personalizado para esa columna. */
 function valorCelda(fila: T, clave: string): unknown {
-  return (fila as Record<string, unknown>)[clave]
+  return (fila as Record<string, unknown>)[clave];
 }
 </script>
 

@@ -1,12 +1,12 @@
 <script setup lang="ts" generic="T">
-import type { Opcion } from '@/interfaces/OpcionInterface'
+import type { Opcion } from '@/interfaces/OpcionInterface';
 
-const valor = defineModel<T>({ required: true })
+const valor = defineModel<T>({ required: true });
 
 defineProps<{
-  etiqueta: string
-  opciones: Opcion<T>[]
-}>()
+  etiqueta: string;
+  opciones: Opcion<T>[];
+}>();
 </script>
 
 <template>

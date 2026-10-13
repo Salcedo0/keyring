@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import Icono from '@/components/base/Icono.vue'
+import Icono from '@/components/base/Icono.vue';
 
 defineProps<{
-  error?: string
-  ayuda?: string
-}>()
+  error?: string;
+  ayuda?: string;
+}>();
 </script>
 
 <template>

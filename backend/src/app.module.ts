@@ -1,19 +1,19 @@
-import { Module } from '@nestjs/common'
-import { APP_GUARD } from '@nestjs/core'
-import { JwtModule } from '@nestjs/jwt'
-import { TypeOrmModule } from '@nestjs/typeorm'
+import { Module } from '@nestjs/common';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtModule } from '@nestjs/jwt';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { AutenticacionModule } from './autenticacion/autenticacion.module.js'
-import { AutenticacionGuard } from './comun/autenticacion.guard.js'
-import { ContratosModule } from './contratos/contratos.module.js'
-import { opcionesBaseDeDatos } from './data-source.js'
-import { variableObligatoria } from './entorno.js'
-import { HomeModule } from './home/home.module.js'
-import { PropiedadesModule } from './propiedades/propiedades.module.js'
-import { ReporteModule } from './reporte/reporte.module.js'
-import { TableroModule } from './tablero/tablero.module.js'
-import { TransaccionesModule } from './transacciones/transacciones.module.js'
-import { UsuariosModule } from './usuarios/usuarios.module.js'
+import { AutenticacionModule } from './autenticacion/autenticacion.module.js';
+import { AutenticacionGuard } from './comun/autenticacion.guard.js';
+import { ContratosModule } from './contratos/contratos.module.js';
+import { opcionesBaseDeDatos } from './data-source.js';
+import { variableObligatoria } from './entorno.js';
+import { HomeModule } from './home/home.module.js';
+import { PropiedadesModule } from './propiedades/propiedades.module.js';
+import { ReporteModule } from './reporte/reporte.module.js';
+import { TableroModule } from './tablero/tablero.module.js';
+import { TransaccionesModule } from './transacciones/transacciones.module.js';
+import { UsuariosModule } from './usuarios/usuarios.module.js';
 
 @Module({
   imports: [

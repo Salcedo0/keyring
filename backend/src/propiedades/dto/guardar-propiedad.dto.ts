@@ -1,39 +1,39 @@
-import { IsIn, IsNumber, IsString, Length, Max, Min } from 'class-validator'
+import { IsIn, IsNumber, IsString, Length, Max, Min } from 'class-validator';
 
 import {
   MODALIDADES,
   TIPOS_PROPIEDAD,
   type Modalidad,
   type TipoPropiedad,
-} from '../entities/propiedad.entity.js'
+} from '../entities/propiedad.entity.js';
 
 /** Sirve para crear y para actualizar una propiedad. El dueño sale del token, no del cuerpo. */
 export class GuardarPropiedadDto {
   @IsString()
   @Length(2, 100)
-  nombre: string
+  nombre: string;
 
   @IsString()
   @Length(3, 200)
-  direccion: string
+  direccion: string;
 
   @IsString()
   @Length(2, 100)
-  ciudad: string
+  ciudad: string;
 
   @IsIn(TIPOS_PROPIEDAD)
-  tipo: TipoPropiedad
+  tipo: TipoPropiedad;
 
   @IsIn(MODALIDADES)
-  modalidad: Modalidad
+  modalidad: Modalidad;
 
   @IsNumber()
   @Min(-90)
   @Max(90)
-  latitud: number
+  latitud: number;
 
   @IsNumber()
   @Min(-180)
   @Max(180)
-  longitud: number
+  longitud: number;
 }

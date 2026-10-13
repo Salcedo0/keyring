@@ -1,31 +1,31 @@
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref, watch } from 'vue'
-import { useRouter } from 'vue-router'
+import { computed, onMounted, reactive, ref, watch } from 'vue';
+import { useRouter } from 'vue-router';
 
-import AvisoError from '@/components/base/AvisoError.vue'
-import EncabezadoPagina from '@/components/base/EncabezadoPagina.vue'
-import Icono from '@/components/base/Icono.vue'
-import InsigniaEstado from '@/components/base/InsigniaEstado.vue'
-import TarjetaGrafico from '@/components/base/TarjetaGrafico.vue'
-import TarjetaKpi from '@/components/base/TarjetaKpi.vue'
-import CampoTexto from '@/components/formulario/CampoTexto.vue'
-import FiltroSelector from '@/components/formulario/FiltroSelector.vue'
-import GraficoDona from '@/components/graficos/GraficoDona.vue'
-import GraficoLineas from '@/components/graficos/GraficoLineas.vue'
-import TablaDatos from '@/components/tabla/TablaDatos.vue'
-import { useConsulta } from '@/composables/useConsulta'
-import { useSesion } from '@/composables/useSesion'
-import type { Columna } from '@/interfaces/OpcionInterface'
-import type { FiltrosTablero, TableroInterface } from '@/interfaces/TableroInterface'
-import type { TransaccionInterface } from '@/interfaces/TransaccionInterface'
-import { describirError } from '@/services/http'
-import { PropiedadService } from '@/services/PropiedadService'
-import { TableroService } from '@/services/TableroService'
-import { TransaccionService } from '@/services/TransaccionService'
-import { TIPOS_TRANSACCION, TONOS_TRANSACCION } from '@/utils/etiquetas'
-import { hoy, inicioDeMesHace } from '@/utils/fechas'
-import { formatearFecha, formatearMes, formatearMonto, formatearPesos } from '@/utils/formato'
-import { COLORES } from '@/utils/paleta'
+import AvisoError from '@/components/base/AvisoError.vue';
+import EncabezadoPagina from '@/components/base/EncabezadoPagina.vue';
+import Icono from '@/components/base/Icono.vue';
+import InsigniaEstado from '@/components/base/InsigniaEstado.vue';
+import TarjetaGrafico from '@/components/base/TarjetaGrafico.vue';
+import TarjetaKpi from '@/components/base/TarjetaKpi.vue';
+import CampoTexto from '@/components/formulario/CampoTexto.vue';
+import FiltroSelector from '@/components/formulario/FiltroSelector.vue';
+import GraficoDona from '@/components/graficos/GraficoDona.vue';
+import GraficoLineas from '@/components/graficos/GraficoLineas.vue';
+import TablaDatos from '@/components/tabla/TablaDatos.vue';
+import { useConsulta } from '@/composables/useConsulta';
+import { useSesion } from '@/composables/useSesion';
+import type { Columna } from '@/interfaces/OpcionInterface';
+import type { FiltrosTablero, TableroInterface } from '@/interfaces/TableroInterface';
+import type { TransaccionInterface } from '@/interfaces/TransaccionInterface';
+import { describirError } from '@/services/http';
+import { PropiedadService } from '@/services/PropiedadService';
+import { TableroService } from '@/services/TableroService';
+import { TransaccionService } from '@/services/TransaccionService';
+import { TIPOS_TRANSACCION, TONOS_TRANSACCION } from '@/utils/etiquetas';
+import { hoy, inicioDeMesHace } from '@/utils/fechas';
+import { formatearFecha, formatearMes, formatearMonto, formatearPesos } from '@/utils/formato';
+import { COLORES } from '@/utils/paleta';
 
 // Lo que se muestra antes de que responda el back (o si no hay datos).
 const RESUMEN_VACIO: TableroInterface = {
@@ -33,7 +33,7 @@ const RESUMEN_VACIO: TableroInterface = {
   porMes: [],
   gastosPorCategoria: [],
   ultimasTransacciones: [],
-}
+};
 
 const COLUMNAS: Columna[] = [
   { clave: 'fecha', titulo: 'Fecha' },
@@ -42,36 +42,38 @@ const COLUMNAS: Columna[] = [
   { clave: 'categoria', titulo: 'Categoría' },
   { clave: 'tipo', titulo: 'Tipo' },
   { clave: 'monto', titulo: 'Monto', alineacion: 'derecha' },
-]
+];
 
-const router = useRouter()
-const { usuario } = useSesion()
+const router = useRouter();
+const { usuario } = useSesion();
 
 // Por defecto se ven los últimos seis meses, incluido el actual.
 const filtros = reactive<FiltrosTablero>({
   propiedadId: null,
   desde: inicioDeMesHace(5),
   hasta: hoy(),
-})
-const errorAccion = ref('')
+});
+const errorAccion = ref('');
 
-const propiedades = useConsulta(() => PropiedadService.obtenerPropiedades(), [])
-const resumen = useConsulta(() => TableroService.obtenerResumenTablero(filtros), RESUMEN_VACIO)
+const propiedades = useConsulta(() => PropiedadService.obtenerPropiedades(), []);
+const resumen = useConsulta(() => TableroService.obtenerResumenTablero(filtros), RESUMEN_VACIO);
 
-const saludo = computed(() => `Hola, ${usuario.value?.nombre.split(' ')[0] ?? ''}`)
+const saludo = computed(() => `Hola, ${usuario.value?.nombre.split(' ')[0] ?? ''}`);
 
 const opcionesPropiedad = computed(() => [
   { valor: null, texto: 'Todas las propiedades' },
   ...propiedades.datos.value.map((propiedad) => ({ valor: propiedad.id, texto: propiedad.nombre })),
-])
+]);
 
-const indicadores = computed(() => resumen.datos.value.indicadores)
+const indicadores = computed(() => resumen.datos.value.indicadores);
 
-const etiquetasMeses = computed(() => resumen.datos.value.porMes.map((m) => formatearMes(m.mes)))
+const etiquetasMeses = computed(() => resumen.datos.value.porMes.map((m) => formatearMes(m.mes)));
 const nombresCategorias = computed(() =>
   resumen.datos.value.gastosPorCategoria.map((g) => g.categoria),
-)
-const totalesCategorias = computed(() => resumen.datos.value.gastosPorCategoria.map((g) => g.total))
+);
+const totalesCategorias = computed(() =>
+  resumen.datos.value.gastosPorCategoria.map((g) => g.total),
+);
 
 const seriesPorMes = computed(() => [
   {
@@ -84,36 +86,36 @@ const seriesPorMes = computed(() => [
     color: COLORES.gasto,
     valores: resumen.datos.value.porMes.map((m) => m.gastos),
   },
-])
+]);
 
 const margen = computed(() => {
-  const { ingresos, utilidadNeta } = indicadores.value
-  if (ingresos === 0) return 'Sin ingresos en el periodo'
-  return `Margen ${Math.round((utilidadNeta / ingresos) * 100)}%`
-})
+  const { ingresos, utilidadNeta } = indicadores.value;
+  if (ingresos === 0) return 'Sin ingresos en el periodo';
+  return `Margen ${Math.round((utilidadNeta / ingresos) * 100)}%`;
+});
 
 function editarTransaccion(transaccion: TransaccionInterface): void {
-  router.push(`/transacciones/${transaccion.id}/editar`)
+  router.push(`/transacciones/${transaccion.id}/editar`);
 }
 
 async function borrarTransaccion(transaccion: TransaccionInterface): Promise<void> {
   if (!window.confirm(`¿Eliminar "${transaccion.descripcion}"? Esta acción no se puede deshacer.`))
-    return
-  errorAccion.value = ''
+    return;
+  errorAccion.value = '';
   try {
-    await TransaccionService.eliminarTransaccion(transaccion.id)
-    await resumen.cargar()
+    await TransaccionService.eliminarTransaccion(transaccion.id);
+    await resumen.cargar();
   } catch (error) {
-    errorAccion.value = describirError(error, 'No se pudo eliminar la transacción.')
+    errorAccion.value = describirError(error, 'No se pudo eliminar la transacción.');
   }
 }
 
 onMounted(() => {
-  propiedades.cargar()
-  resumen.cargar()
-})
+  propiedades.cargar();
+  resumen.cargar();
+});
 
-watch(filtros, resumen.cargar)
+watch(filtros, resumen.cargar);
 </script>
 
 <template>

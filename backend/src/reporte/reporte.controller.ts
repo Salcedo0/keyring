@@ -1,7 +1,7 @@
-import { Controller, Get } from '@nestjs/common'
+import { Controller, Get } from '@nestjs/common';
 
-import { SoloAdmin } from '../comun/decoradores.js'
-import { ReporteService, type ReporteGlobal } from './reporte.service.js'
+import { SoloAdmin } from '../comun/decoradores.js';
+import { ReporteService, type ReporteGlobal } from './reporte.service.js';
 
 @SoloAdmin()
 @Controller('reporte')
@@ -10,6 +10,6 @@ export class ReporteController {
 
   @Get()
   generar(): Promise<ReporteGlobal> {
-    return this.reporteService.generar()
+    return this.reporteService.generar();
   }
 }

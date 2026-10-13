@@ -1,19 +1,19 @@
-import './entorno.js'
+import './entorno.js';
 
-import { Logger, type INestApplicationContext } from '@nestjs/common'
-import { NestFactory } from '@nestjs/core'
+import { Logger, type INestApplicationContext } from '@nestjs/common';
+import { NestFactory } from '@nestjs/core';
 
-import { AppModule } from './app.module.js'
-import { ContratosService, type ContratoRespuesta } from './contratos/contratos.service.js'
-import type { GuardarContratoDto } from './contratos/dto/guardar-contrato.dto.js'
-import type { EstadoContrato } from './contratos/entities/contrato.entity.js'
-import { variableObligatoria } from './entorno.js'
-import type { GuardarPropiedadDto } from './propiedades/dto/guardar-propiedad.dto.js'
-import { PropiedadesService } from './propiedades/propiedades.service.js'
-import type { GuardarTransaccionDto } from './transacciones/dto/guardar-transaccion.dto.js'
-import type { TipoTransaccion } from './transacciones/entities/transaccion.entity.js'
-import { TransaccionesService } from './transacciones/transacciones.service.js'
-import { UsuariosService } from './usuarios/usuarios.service.js'
+import { AppModule } from './app.module.js';
+import { ContratosService, type ContratoRespuesta } from './contratos/contratos.service.js';
+import type { GuardarContratoDto } from './contratos/dto/guardar-contrato.dto.js';
+import type { EstadoContrato } from './contratos/entities/contrato.entity.js';
+import { variableObligatoria } from './entorno.js';
+import type { GuardarPropiedadDto } from './propiedades/dto/guardar-propiedad.dto.js';
+import { PropiedadesService } from './propiedades/propiedades.service.js';
+import type { GuardarTransaccionDto } from './transacciones/dto/guardar-transaccion.dto.js';
+import type { TipoTransaccion } from './transacciones/entities/transaccion.entity.js';
+import { TransaccionesService } from './transacciones/transacciones.service.js';
+import { UsuariosService } from './usuarios/usuarios.service.js';
 
 /*
  * npm run demo: crea un propietario con un año de datos realistas para la sustentación.
@@ -22,38 +22,38 @@ import { UsuariosService } from './usuarios/usuarios.service.js'
  * Las fechas son relativas a hoy: "meses atrás" 0 es el mes actual y un número negativo, el futuro.
  */
 
-type ClavePropiedad = 'bocagrande' | 'provenza' | 'chapinero' | 'rodadero' | 'laureles'
-type IdsPropiedades = Record<ClavePropiedad, number>
+type ClavePropiedad = 'bocagrande' | 'provenza' | 'chapinero' | 'rodadero' | 'laureles';
+type IdsPropiedades = Record<ClavePropiedad, number>;
 type Inquilino = Pick<
   GuardarContratoDto,
   'inquilinoNombre' | 'inquilinoDocumento' | 'inquilinoCorreo' | 'inquilinoTelefono'
->
+>;
 
 interface ContratoFijo {
-  propiedad: ClavePropiedad
-  inquilino: Inquilino
-  desde: number
-  hasta: number
-  canon: number
-  estado: EstadoContrato
+  propiedad: ClavePropiedad;
+  inquilino: Inquilino;
+  desde: number;
+  hasta: number;
+  canon: number;
+  estado: EstadoContrato;
 }
 
 interface GastoRecurrente {
-  categoria: string
-  descripcion: string
-  dia: number
-  meses: number[]
-  montos: Partial<Record<ClavePropiedad, number>>
+  categoria: string;
+  descripcion: string;
+  dia: number;
+  meses: number[];
+  montos: Partial<Record<ClavePropiedad, number>>;
 }
 
 interface MovimientoPuntual {
-  propiedad: ClavePropiedad
-  tipo: TipoTransaccion
-  categoria: string
-  monto: number
-  mesesAtras: number
-  dia: number
-  descripcion: string
+  propiedad: ClavePropiedad;
+  tipo: TipoTransaccion;
+  categoria: string;
+  monto: number;
+  mesesAtras: number;
+  dia: number;
+  descripcion: string;
 }
 
 const PROPIEDADES: Record<ClavePropiedad, GuardarPropiedadDto> = {
@@ -102,7 +102,7 @@ const PROPIEDADES: Record<ClavePropiedad, GuardarPropiedadDto> = {
     latitud: 6.2447,
     longitud: -75.5966,
   },
-}
+};
 
 // [nombre, documento, correo, teléfono]
 const INQUILINOS: Inquilino[] = [
@@ -117,14 +117,14 @@ const INQUILINOS: Inquilino[] = [
   inquilinoDocumento,
   inquilinoCorreo,
   inquilinoTelefono,
-}))
+}));
 
 const EMPRESA: Inquilino = {
   inquilinoNombre: 'Ferretería Andina S.A.S.',
   inquilinoDocumento: '901234567-8',
   inquilinoCorreo: 'gerencia@ferreteriaandina.co',
   inquilinoTelefono: '6044445566',
-}
+};
 
 // Contratos con canon mensual. desde y hasta son "meses atrás" (el día 1 de cada mes).
 const CONTRATOS_FIJOS: ContratoFijo[] = [
@@ -152,13 +152,13 @@ const CONTRATOS_FIJOS: ContratoFijo[] = [
     canon: 1_900_000,
     estado: 'FINALIZADO',
   },
-]
+];
 
 const TARIFA_NOCHE: Partial<Record<ClavePropiedad, number>> = {
   bocagrande: 520_000,
   provenza: 380_000,
   rodadero: 290_000,
-}
+};
 
 // Reservas de corta estancia: [propiedad, meses atrás, día de llegada, noches, estado].
 const ESTADIAS: [ClavePropiedad, number, number, number, EstadoContrato][] = [
@@ -186,10 +186,10 @@ const ESTADIAS: [ClavePropiedad, number, number, number, EstadoContrato][] = [
   ['rodadero', 1, 20, 4, 'FINALIZADO'],
   // Estadía de un mes que empezó el día 1: siempre está en curso, se corra el día que se corra.
   ['rodadero', 0, 1, 31, 'ACTIVO'],
-]
+];
 
 // Los últimos 12 meses: 0 es el mes actual y 11 el más antiguo.
-const MESES = [...Array(12).keys()]
+const MESES = [...Array(12).keys()];
 
 // En las de corta estancia el dueño paga la administración y los servicios; en el local, solo la
 // administración; en la casa, ninguno de los dos.
@@ -221,7 +221,7 @@ const GASTOS_RECURRENTES: GastoRecurrente[] = [
       laureles: 750_000,
     },
   },
-]
+];
 
 const MOVIMIENTOS_PUNTUALES: MovimientoPuntual[] = [
   {
@@ -278,36 +278,36 @@ const MOVIMIENTOS_PUNTUALES: MovimientoPuntual[] = [
     dia: 16,
     descripcion: 'Reintegro del seguro por el arreglo',
   },
-]
+];
 
-const COMISION_PLATAFORMA = 0.15
-const VALOR_ASEO = 95_000
-const CLAVES = Object.keys(PROPIEDADES) as ClavePropiedad[]
+const COMISION_PLATAFORMA = 0.15;
+const VALOR_ASEO = 95_000;
+const CLAVES = Object.keys(PROPIEDADES) as ClavePropiedad[];
 
-const logger = new Logger('Demo')
+const logger = new Logger('Demo');
 
 function aTexto(fecha: Date): string {
-  const mes = String(fecha.getMonth() + 1).padStart(2, '0')
-  const dia = String(fecha.getDate()).padStart(2, '0')
-  return `${fecha.getFullYear()}-${mes}-${dia}`
+  const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+  const dia = String(fecha.getDate()).padStart(2, '0');
+  return `${fecha.getFullYear()}-${mes}-${dia}`;
 }
 
 /** Fecha AAAA-MM-DD de un día de hace `mesesAtras` meses. En el pasado nunca pasa de hoy. */
 function fecha(mesesAtras: number, dia: number): string {
-  const hoy = new Date()
-  const resultado = new Date(hoy.getFullYear(), hoy.getMonth() - mesesAtras, dia)
-  return aTexto(mesesAtras >= 0 && resultado > hoy ? hoy : resultado)
+  const hoy = new Date();
+  const resultado = new Date(hoy.getFullYear(), hoy.getMonth() - mesesAtras, dia);
+  return aTexto(mesesAtras >= 0 && resultado > hoy ? hoy : resultado);
 }
 
 function sumarDias(fechaTexto: string, dias: number): string {
-  const [anio, mes, dia] = fechaTexto.split('-').map(Number)
-  return aTexto(new Date(anio, mes - 1, dia + dias))
+  const [anio, mes, dia] = fechaTexto.split('-').map(Number);
+  return aTexto(new Date(anio, mes - 1, dia + dias));
 }
 
 function nombreMes(mesesAtras: number): string {
-  const hoy = new Date()
-  const primerDia = new Date(hoy.getFullYear(), hoy.getMonth() - mesesAtras, 1)
-  return primerDia.toLocaleDateString('es-CO', { month: 'long' })
+  const hoy = new Date();
+  const primerDia = new Date(hoy.getFullYear(), hoy.getMonth() - mesesAtras, 1);
+  return primerDia.toLocaleDateString('es-CO', { month: 'long' });
 }
 
 function contratoFijo(fijo: ContratoFijo, ids: IdsPropiedades): GuardarContratoDto {
@@ -319,7 +319,7 @@ function contratoFijo(fijo: ContratoFijo, ids: IdsPropiedades): GuardarContratoD
     fechaFin: fecha(fijo.hasta, 1),
     valor: fijo.canon,
     estado: fijo.estado,
-  }
+  };
 }
 
 function contratoCorto(
@@ -327,7 +327,7 @@ function contratoCorto(
   ids: IdsPropiedades,
   inquilino: Inquilino,
 ): GuardarContratoDto {
-  const fechaInicio = fecha(mesesAtras, dia)
+  const fechaInicio = fecha(mesesAtras, dia);
   return {
     propiedadId: ids[propiedad],
     ...inquilino,
@@ -336,7 +336,7 @@ function contratoCorto(
     fechaFin: sumarDias(fechaInicio, noches),
     valor: noches * (TARIFA_NOCHE[propiedad] ?? 0),
     estado,
-  }
+  };
 }
 
 /** El canon de cada mes en que el contrato estuvo vigente y el depósito al firmarlo. */
@@ -345,21 +345,21 @@ function cobrosFijos(fijo: ContratoFijo, contrato: ContratoRespuesta): GuardarTr
     propiedadId: contrato.propiedadId,
     contratoId: contrato.id,
     tipo: 'INGRESO' as const,
-  }
+  };
   const cobros = MESES.filter((mes) => mes <= fijo.desde && mes > fijo.hasta).map((mes) => ({
     ...base,
     categoria: 'Canon de arriendo',
     monto: fijo.canon,
     fecha: fecha(mes, 1),
     descripcion: `Canon de ${nombreMes(mes)}`,
-  }))
-  if (!MESES.includes(fijo.desde)) return cobros
-  const deposito = { categoria: 'Depósito', monto: fijo.canon, fecha: contrato.fechaInicio }
-  return [...cobros, { ...base, ...deposito, descripcion: 'Depósito al firmar el contrato' }]
+  }));
+  if (!MESES.includes(fijo.desde)) return cobros;
+  const deposito = { categoria: 'Depósito', monto: fijo.canon, fecha: contrato.fechaInicio };
+  return [...cobros, { ...base, ...deposito, descripcion: 'Depósito al firmar el contrato' }];
 }
 
 function reserva(contrato: ContratoRespuesta): GuardarTransaccionDto {
-  const noches = (Date.parse(contrato.fechaFin) - Date.parse(contrato.fechaInicio)) / 86_400_000
+  const noches = (Date.parse(contrato.fechaFin) - Date.parse(contrato.fechaInicio)) / 86_400_000;
   return {
     propiedadId: contrato.propiedadId,
     contratoId: contrato.id,
@@ -368,7 +368,7 @@ function reserva(contrato: ContratoRespuesta): GuardarTransaccionDto {
     monto: contrato.valor,
     fecha: contrato.fechaInicio,
     descripcion: `Reserva de ${noches} noches`,
-  }
+  };
 }
 
 function comision(contrato: ContratoRespuesta): GuardarTransaccionDto {
@@ -380,7 +380,7 @@ function comision(contrato: ContratoRespuesta): GuardarTransaccionDto {
     monto: Math.round(contrato.valor * COMISION_PLATAFORMA),
     fecha: contrato.fechaInicio,
     descripcion: 'Comisión de la plataforma de reservas',
-  }
+  };
 }
 
 function aseoDeSalida(contrato: ContratoRespuesta): GuardarTransaccionDto {
@@ -392,16 +392,16 @@ function aseoDeSalida(contrato: ContratoRespuesta): GuardarTransaccionDto {
     monto: VALOR_ASEO,
     fecha: contrato.fechaFin,
     descripcion: 'Limpieza después de la salida',
-  }
+  };
 }
 
 /** La reserva cobrada, la comisión de la plataforma y, si ya terminó, el aseo de salida. */
 function cobrosEstadia(contrato: ContratoRespuesta): GuardarTransaccionDto[] {
   if (contrato.estado === 'FINALIZADO') {
-    return [reserva(contrato), comision(contrato), aseoDeSalida(contrato)]
+    return [reserva(contrato), comision(contrato), aseoDeSalida(contrato)];
   }
-  if (contrato.estado === 'ACTIVO') return [reserva(contrato), comision(contrato)]
-  return []
+  if (contrato.estado === 'ACTIVO') return [reserva(contrato), comision(contrato)];
+  return [];
 }
 
 function gastosRecurrentes(ids: IdsPropiedades): GuardarTransaccionDto[] {
@@ -417,7 +417,7 @@ function gastosRecurrentes(ids: IdsPropiedades): GuardarTransaccionDto[] {
         descripcion,
       })),
     ),
-  )
+  );
 }
 
 function movimientosPuntuales(ids: IdsPropiedades): GuardarTransaccionDto[] {
@@ -426,7 +426,7 @@ function movimientosPuntuales(ids: IdsPropiedades): GuardarTransaccionDto[] {
     propiedadId: ids[propiedad],
     contratoId: null,
     fecha: fecha(mesesAtras, dia),
-  }))
+  }));
 }
 
 /** Si el propietario de demo existe lo elimina (sus datos caen en cascada) y lo crea de nuevo. */
@@ -434,24 +434,24 @@ async function reiniciarPropietario(
   usuarios: UsuariosService,
   demo: { nombre: string; correo: string; contrasena: string },
 ): Promise<number> {
-  const existente = await usuarios.buscarParaIngreso(demo.correo)
+  const existente = await usuarios.buscarParaIngreso(demo.correo);
   if (existente && existente.rol !== 'PROPIETARIO') {
     throw new Error(
       `${demo.correo} es de un ${existente.rol}: el demo solo reemplaza a un propietario`,
-    )
+    );
   }
   // Quien elimina es este script, no un usuario: 0 no coincide con ningún id.
-  if (existente) await usuarios.eliminar(existente.id, 0)
-  return (await usuarios.crear({ ...demo, rol: 'PROPIETARIO' })).id
+  if (existente) await usuarios.eliminar(existente.id, 0);
+  return (await usuarios.crear({ ...demo, rol: 'PROPIETARIO' })).id;
 }
 
 async function crearPropiedades(
   servicio: PropiedadesService,
   usuarioId: number,
 ): Promise<IdsPropiedades> {
-  const ids = {} as IdsPropiedades
-  for (const clave of CLAVES) ids[clave] = (await servicio.crear(PROPIEDADES[clave], usuarioId)).id
-  return ids
+  const ids = {} as IdsPropiedades;
+  for (const clave of CLAVES) ids[clave] = (await servicio.crear(PROPIEDADES[clave], usuarioId)).id;
+  return ids;
 }
 
 /** Crea los contratos y después todas las transacciones. Devuelve cuántas transacciones creó. */
@@ -460,20 +460,20 @@ async function crearMovimientos(
   ids: IdsPropiedades,
   usuarioId: number,
 ): Promise<number> {
-  const contratos = app.get(ContratosService)
-  const transacciones = [...gastosRecurrentes(ids), ...movimientosPuntuales(ids)]
+  const contratos = app.get(ContratosService);
+  const transacciones = [...gastosRecurrentes(ids), ...movimientosPuntuales(ids)];
   for (const fijo of CONTRATOS_FIJOS) {
-    const contrato = await contratos.crear(contratoFijo(fijo, ids), usuarioId)
-    transacciones.push(...cobrosFijos(fijo, contrato))
+    const contrato = await contratos.crear(contratoFijo(fijo, ids), usuarioId);
+    transacciones.push(...cobrosFijos(fijo, contrato));
   }
   for (const [i, estadia] of ESTADIAS.entries()) {
-    const inquilino = INQUILINOS[i % INQUILINOS.length]
-    const contrato = await contratos.crear(contratoCorto(estadia, ids, inquilino), usuarioId)
-    transacciones.push(...cobrosEstadia(contrato))
+    const inquilino = INQUILINOS[i % INQUILINOS.length];
+    const contrato = await contratos.crear(contratoCorto(estadia, ids, inquilino), usuarioId);
+    transacciones.push(...cobrosEstadia(contrato));
   }
-  const servicio = app.get(TransaccionesService)
-  for (const datos of transacciones) await servicio.crear(datos, usuarioId)
-  return transacciones.length
+  const servicio = app.get(TransaccionesService);
+  for (const datos of transacciones) await servicio.crear(datos, usuarioId);
+  return transacciones.length;
 }
 
 async function cargarDemo(): Promise<void> {
@@ -482,18 +482,18 @@ async function cargarDemo(): Promise<void> {
     nombre: variableObligatoria('DEMO_NOMBRE'),
     correo: variableObligatoria('DEMO_CORREO'),
     contrasena: variableObligatoria('DEMO_CONTRASENA'),
-  }
+  };
   // Sin los mensajes de arranque de Nest; solo errores, advertencias y el resumen final.
-  const app = await NestFactory.createApplicationContext(AppModule, { logger: ['error', 'warn'] })
+  const app = await NestFactory.createApplicationContext(AppModule, { logger: ['error', 'warn'] });
   try {
-    const usuarioId = await reiniciarPropietario(app.get(UsuariosService), demo)
-    const ids = await crearPropiedades(app.get(PropiedadesService), usuarioId)
-    const total = await crearMovimientos(app, ids, usuarioId)
-    app.useLogger(['log', 'error', 'warn'])
-    logger.log(`Listo: ${demo.correo} con ${CLAVES.length} propiedades y ${total} transacciones`)
+    const usuarioId = await reiniciarPropietario(app.get(UsuariosService), demo);
+    const ids = await crearPropiedades(app.get(PropiedadesService), usuarioId);
+    const total = await crearMovimientos(app, ids, usuarioId);
+    app.useLogger(['log', 'error', 'warn']);
+    logger.log(`Listo: ${demo.correo} con ${CLAVES.length} propiedades y ${total} transacciones`);
   } finally {
-    await app.close()
+    await app.close();
   }
 }
 
-await cargarDemo()
+await cargarDemo();

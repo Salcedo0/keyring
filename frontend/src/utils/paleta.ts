@@ -8,7 +8,7 @@ export const COLORES = {
   gasto: '#D46A76',
   apagado: '#6E625A',
   rejilla: '#F0E9E2',
-}
+};
 
 /** Colores para series sin un color propio (categorías de la dona, roles). */
-export const PALETA_CATEGORIAS = ['#A35A44', '#2B2523', '#C9A27E', '#7C9A82', '#D46A76', '#8C8C94']
+export const PALETA_CATEGORIAS = ['#A35A44', '#2B2523', '#C9A27E', '#7C9A82', '#D46A76', '#8C8C94'];

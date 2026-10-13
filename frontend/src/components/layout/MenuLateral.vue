@@ -1,26 +1,26 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { computed } from 'vue';
+import { useRoute } from 'vue-router';
 
-import Icono from '@/components/base/Icono.vue'
-import LogoKeyRing from '@/components/base/LogoKeyRing.vue'
-import { useSesion } from '@/composables/useSesion'
-import type { NombreIcono } from '@/utils/iconos'
+import Icono from '@/components/base/Icono.vue';
+import LogoKeyRing from '@/components/base/LogoKeyRing.vue';
+import { useSesion } from '@/composables/useSesion';
+import type { NombreIcono } from '@/utils/iconos';
 
 defineProps<{
   /** Solo íconos (en escritorio). */
-  colapsado: boolean
-}>()
+  colapsado: boolean;
+}>();
 
 const emit = defineEmits<{
-  alternarColapso: []
-  navegar: []
-}>()
+  alternarColapso: [];
+  navegar: [];
+}>();
 
 interface EnlaceMenu {
-  ruta: string
-  texto: string
-  icono: NombreIcono
+  ruta: string;
+  texto: string;
+  icono: NombreIcono;
 }
 
 const ENLACES_GENERALES: EnlaceMenu[] = [
@@ -28,26 +28,26 @@ const ENLACES_GENERALES: EnlaceMenu[] = [
   { ruta: '/propiedades', texto: 'Propiedades', icono: 'casa' },
   { ruta: '/contratos', texto: 'Contratos', icono: 'documento' },
   { ruta: '/transacciones', texto: 'Transacciones', icono: 'flechas' },
-]
+];
 
 const ENLACES_ADMIN: EnlaceMenu[] = [
   { ruta: '/admin/usuarios', texto: 'Usuarios', icono: 'usuarios' },
   { ruta: '/admin/reporte', texto: 'Reporte global', icono: 'tendencia' },
-]
+];
 
-const ruta = useRoute()
-const { esAdmin } = useSesion()
+const ruta = useRoute();
+const { esAdmin } = useSesion();
 
 // La sección de administración solo existe para el rol ADMIN.
 const secciones = computed(() => {
-  const lista = [{ titulo: 'General', enlaces: ENLACES_GENERALES }]
-  if (esAdmin.value) lista.push({ titulo: 'Administración', enlaces: ENLACES_ADMIN })
-  return lista
-})
+  const lista = [{ titulo: 'General', enlaces: ENLACES_GENERALES }];
+  if (esAdmin.value) lista.push({ titulo: 'Administración', enlaces: ENLACES_ADMIN });
+  return lista;
+});
 
 /** El enlace queda marcado también en sus páginas hijas (ej. /propiedades/nueva). */
 function estaActivo(enlace: EnlaceMenu): boolean {
-  return ruta.path.startsWith(enlace.ruta)
+  return ruta.path.startsWith(enlace.ruta);
 }
 </script>
 

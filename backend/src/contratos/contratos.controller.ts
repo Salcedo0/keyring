@@ -9,13 +9,13 @@ import {
   Post,
   Put,
   Query,
-} from '@nestjs/common'
+} from '@nestjs/common';
 
-import { UsuarioActual } from '../comun/decoradores.js'
-import type { UsuarioDelToken } from '../comun/sesion.js'
-import { ContratosService, type ContratoRespuesta } from './contratos.service.js'
-import { FiltroContratosDto } from './dto/filtro-contratos.dto.js'
-import { GuardarContratoDto } from './dto/guardar-contrato.dto.js'
+import { UsuarioActual } from '../comun/decoradores.js';
+import type { UsuarioDelToken } from '../comun/sesion.js';
+import { ContratosService, type ContratoRespuesta } from './contratos.service.js';
+import { FiltroContratosDto } from './dto/filtro-contratos.dto.js';
+import { GuardarContratoDto } from './dto/guardar-contrato.dto.js';
 
 @Controller('contratos')
 export class ContratosController {
@@ -26,7 +26,7 @@ export class ContratosController {
     @Query() filtros: FiltroContratosDto,
     @UsuarioActual() usuario: UsuarioDelToken,
   ): Promise<ContratoRespuesta[]> {
-    return this.contratosService.listar(usuario.sub, filtros)
+    return this.contratosService.listar(usuario.sub, filtros);
   }
 
   @Get(':id')
@@ -34,7 +34,7 @@ export class ContratosController {
     @Param('id', ParseIntPipe) id: number,
     @UsuarioActual() usuario: UsuarioDelToken,
   ): Promise<ContratoRespuesta> {
-    return this.contratosService.buscar(id, usuario.sub)
+    return this.contratosService.buscar(id, usuario.sub);
   }
 
   @Post()
@@ -42,7 +42,7 @@ export class ContratosController {
     @Body() datos: GuardarContratoDto,
     @UsuarioActual() usuario: UsuarioDelToken,
   ): Promise<ContratoRespuesta> {
-    return this.contratosService.crear(datos, usuario.sub)
+    return this.contratosService.crear(datos, usuario.sub);
   }
 
   @Put(':id')
@@ -51,7 +51,7 @@ export class ContratosController {
     @Body() datos: GuardarContratoDto,
     @UsuarioActual() usuario: UsuarioDelToken,
   ): Promise<ContratoRespuesta> {
-    return this.contratosService.actualizar(id, datos, usuario.sub)
+    return this.contratosService.actualizar(id, datos, usuario.sub);
   }
 
   @Delete(':id')
@@ -60,6 +60,6 @@ export class ContratosController {
     @Param('id', ParseIntPipe) id: number,
     @UsuarioActual() usuario: UsuarioDelToken,
   ): Promise<void> {
-    return this.contratosService.eliminar(id, usuario.sub)
+    return this.contratosService.eliminar(id, usuario.sub);
   }
 }
