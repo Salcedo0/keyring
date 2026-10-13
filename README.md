@@ -11,6 +11,8 @@ Proyecto del curso **Ingeniería de Software para Aplicaciones Web**.
 **Toda la documentación está en la [wiki del repositorio](https://github.com/Salcedo0/keyring/wiki)**: diagramas del
 Entregable 2, guía de estilo y reglas de programación, contrato de la API, autenticación y decisiones.
 
+**Desplegada en Google Cloud:** http://34.121.178.26 (la API responde en `http://34.121.178.26:3000/api`).
+
 ## Estado
 
 | Parte | Estado |
@@ -179,7 +181,7 @@ opciones de administración en el menú y, si escribe la dirección a mano, vuel
 | `PlantillaInterna`, `MenuLateral`, `BarraSuperior` | `layout/` | Estructura de las páginas internas, menú colapsable |
 | `EncabezadoPublico` | `layout/` | Encabezado de las páginas públicas (inicio, login, registro) |
 
-## Pendientes
+## Despliegue
 
-- Desplegar en la VM de GCP (la configuración de Docker ya está; ver "Despliegue con Docker") y
-  actualizar los enlaces de la wiki con la dirección pública.
+La aplicación está desplegada en una VM de Google Cloud: **http://34.121.178.26**.
+Para reproducirlo en otra máquina, ver "Despliegue con Docker".
