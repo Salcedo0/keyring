@@ -28,7 +28,9 @@ keyring/
 ├── docs/
 │   ├── AUTENTICACION.md  El login frente a la guía de Nest (para la sustentación)
 │   ├── CONTRATO-API.md   Lo que el back responde y el front consume
-│   └── DECISIONES.md     Por qué se tomó cada decisión importante
+│   ├── DECISIONES.md     Por qué se tomó cada decisión importante
+│   ├── arquitectura/     Diagramas del Entregable 2 (`.drawio` editables y `.png`)
+│   └── wiki/             Texto fuente de páginas de la wiki
 ├── backend/              API en Nest + TypeORM + SQLite
 ├── frontend/             App en Vue 3 + TypeScript + Vite + Tailwind
 ├── docker-compose.yml    Los dos contenedores del despliegue (API y front con nginx)
@@ -138,24 +140,28 @@ opciones de administración en el menú y, si escribe la dirección a mano, vuel
 | `TablaDatos` | `tabla/` | Tabla con columnas, acciones editar/eliminar, carga y estado vacío |
 | `FiltroSelector` | `formulario/` | Selector compacto con etiqueta para las barras de filtros |
 | `CampoTexto`, `CampoSelector`, `GrupoOpciones` | `formulario/` | Campos de formulario con error de validación |
+| `MensajeCampo` | `formulario/` | El error del campo o, si no hay, su texto de ayuda |
 | `TarjetaKpi` | `base/` | Número grande con etiqueta |
 | `TarjetaGrafico` | `base/` | Título + gráfico, con estado vacío si no hay datos |
+| `EncabezadoPagina` | `base/` | Título y descripción de la página, con sus botones de acción |
+| `Icono` | `base/` | Íconos SVG propios (el catálogo vive en `utils/iconos.ts`) |
 | `GraficoLineas`, `GraficoBarras`, `GraficoDona` | `graficos/` | Gráficos con Chart.js |
 | `MapaPropiedades`, `SelectorUbicacion` | `mapa/` | Mapas con Leaflet y OpenStreetMap |
 | `LogoKeyRing` | `base/` | Logo completo o solo ícono, en versión normal o clara (fondos oscuros) |
 | `InsigniaEstado`, `AvisoError`, `EstadoVacio` | `base/` | Insignias de color, avisos de error, "No hay datos todavía" |
 | `PlantillaInterna`, `MenuLateral`, `BarraSuperior` | `layout/` | Estructura de las páginas internas, menú colapsable |
+| `EncabezadoPublico` | `layout/` | Encabezado de las páginas públicas (inicio, login, registro) |
 
 ## Pendientes
 
-- Desplegar en la VM de GCP (la configuración de Docker ya está; ver "Despliegue con Docker").
-- Wiki del repositorio: Entregable 2 (diagramas), guía de estilo y reglas de programación del
-  backend.
+- Desplegar en la VM de GCP (la configuración de Docker ya está; ver "Despliegue con Docker") y
+  actualizar los enlaces de la wiki con la dirección pública.
 
 ## Documentación
 
 | Documento | Contenido |
 | --- | --- |
+| [Wiki del repositorio](https://github.com/Salcedo0/keyring/wiki) | Entregables 1 y 2, guías de estilo, reglas de programación y pantallazos |
 | [`GUIA-DE-CODIGO.md`](GUIA-DE-CODIGO.md) | Reglas de código: idioma, nombres, estructura, KISS, comentarios, git |
 | [`docs/CONTRATO-API.md`](docs/CONTRATO-API.md) | Endpoints, filtros, cuerpos, respuestas y errores de la API |
 | [`docs/AUTENTICACION.md`](docs/AUTENTICACION.md) | El login paso a paso frente a la guía de Nest, y por qué se agregó cada cosa |
