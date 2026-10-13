@@ -35,7 +35,6 @@ const OPCIONES_TIPO = aOpciones(TIPOS_TRANSACCION);
 const ruta = useRoute();
 const router = useRouter();
 
-// Si la ruta trae id se está editando; si no, se está creando.
 const id = computed(() => (ruta.params.id ? Number(ruta.params.id) : null));
 const esEdicion = computed(() => id.value !== null);
 

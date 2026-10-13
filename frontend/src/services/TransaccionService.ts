@@ -42,19 +42,16 @@ export class TransaccionService {
     return respuesta.data;
   }
 
-  /** Trae una transacción por su id. */
   static async obtenerTransaccion(id: number): Promise<TransaccionInterface> {
     const respuesta = await http.get<TransaccionInterface>(`/transacciones/${id}`);
     return respuesta.data;
   }
 
-  /** Crea una transacción nueva. */
   static async crearTransaccion(datos: GuardarTransaccionDTO): Promise<TransaccionInterface> {
     const respuesta = await http.post<TransaccionInterface>('/transacciones', datos);
     return respuesta.data;
   }
 
-  /** Reemplaza los datos de una transacción existente. */
   static async actualizarTransaccion(
     id: number,
     datos: GuardarTransaccionDTO,
@@ -63,7 +60,6 @@ export class TransaccionService {
     return respuesta.data;
   }
 
-  /** Elimina una transacción. */
   static async eliminarTransaccion(id: number): Promise<void> {
     await http.delete(`/transacciones/${id}`);
   }

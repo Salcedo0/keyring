@@ -7,7 +7,7 @@ import {
   type TipoPropiedad,
 } from '../entities/propiedad.entity.js';
 
-/** Sirve para crear y para actualizar una propiedad. El dueño sale del token, no del cuerpo. */
+/** El dueño sale del token, no del cuerpo. */
 export class GuardarPropiedadDto {
   @IsString()
   @Length(2, 100)

@@ -2,7 +2,6 @@ import { ref, type Ref } from 'vue';
 
 import { describirError } from '@/services/http';
 
-/** Lo que entrega useConsulta a la vista. */
 export interface Consulta<T> {
   datos: Ref<T>;
   cargando: Ref<boolean>;
@@ -15,7 +14,10 @@ export interface Consulta<T> {
  * Evita repetir el mismo try/catch en cada vista.
  *
  * Uso:
- *   const { datos, cargando, error, cargar } = useConsulta(obtenerPropiedades, [])
+ *   const { datos, cargando, error, cargar } = useConsulta(
+ *     () => PropiedadService.obtenerPropiedades(),
+ *     [],
+ *   )
  *   onMounted(cargar)
  */
 export function useConsulta<T>(consultar: () => Promise<T>, valorInicial: T): Consulta<T> {

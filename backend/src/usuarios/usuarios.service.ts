@@ -19,7 +19,6 @@ export interface NuevoUsuario {
   rol: Rol;
 }
 
-/** Cuántos usuarios tiene un rol. */
 export interface ResumenRol {
   rol: Rol;
   cantidad: number;

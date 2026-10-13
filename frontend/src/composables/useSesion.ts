@@ -15,7 +15,6 @@ function activarSesion(sesion: Sesion): void {
   usuario.value = sesion.usuario;
 }
 
-/** Lo que entrega useSesion a las vistas y al router. */
 export interface SesionActual {
   usuario: Ref<UsuarioInterface | null>;
   estaAutenticado: ComputedRef<boolean>;

@@ -10,7 +10,6 @@ declare module 'vue-router' {
     titulo?: string;
     /** Se ve sin iniciar sesión y sin menú lateral. */
     publica?: boolean;
-    /** Solo la puede abrir un usuario con rol ADMIN. */
     soloAdmin?: boolean;
   }
 }
