@@ -9,6 +9,7 @@ import { AutenticacionModule } from './autenticacion/autenticacion.module.js'
 import { AutenticacionGuard } from './comun/autenticacion.guard.js'
 import { ContratosModule } from './contratos/contratos.module.js'
 import { variableObligatoria } from './entorno.js'
+import { HomeModule } from './home/home.module.js'
 import { PropiedadesModule } from './propiedades/propiedades.module.js'
 import { ReporteModule } from './reporte/reporte.module.js'
 import { TableroModule } from './tablero/tablero.module.js'
@@ -37,6 +38,7 @@ const rutaBaseDeDatos =
       secret: variableObligatoria('JWT_SECRETO'),
       signOptions: { expiresIn: '8h' },
     }),
+    HomeModule,
     AutenticacionModule,
     UsuariosModule,
     PropiedadesModule,
