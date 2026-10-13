@@ -1,4 +1,4 @@
-import { computed, ref } from 'vue'
+import { computed, ref, type ComputedRef, type Ref } from 'vue'
 
 import type { IngresoDTO } from '@/dtos/IngresoDTO'
 import type { RegistroDTO } from '@/dtos/RegistroDTO'
@@ -15,8 +15,18 @@ function activarSesion(sesion: Sesion): void {
   usuario.value = sesion.usuario
 }
 
+/** Lo que entrega useSesion a las vistas y al router. */
+export interface SesionActual {
+  usuario: Ref<Usuario | null>
+  estaAutenticado: ComputedRef<boolean>
+  esAdmin: ComputedRef<boolean>
+  iniciarSesion: (datos: IngresoDTO) => Promise<void>
+  crearCuenta: (datos: RegistroDTO) => Promise<void>
+  cerrarSesion: () => void
+}
+
 /** Usuario actual, su rol y las acciones para entrar, registrarse y salir. */
-export function useSesion() {
+export function useSesion(): SesionActual {
   const estaAutenticado = computed(() => usuario.value !== null)
   const esAdmin = computed(() => usuario.value?.rol === 'ADMIN')
 

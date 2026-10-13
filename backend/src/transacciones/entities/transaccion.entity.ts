@@ -7,11 +7,17 @@ import { Propiedad } from '../../propiedades/entities/propiedad.entity.js'
 export const TIPOS_TRANSACCION = ['INGRESO', 'GASTO'] as const
 export type TipoTransaccion = (typeof TIPOS_TRANSACCION)[number]
 
+/** Una opción de la lista de categorías (no es una tabla ni una clase del modelo). */
+export interface OpcionCategoria {
+  nombre: string
+  tipo: TipoTransaccion
+}
+
 /**
  * Las categorías son una lista fija, no una tabla: el modelo del proyecto se limita a cuatro
  * clases (Usuario, Propiedad, Contrato y Transaccion). Para agregar una, se agrega aquí.
  */
-export const CATEGORIAS: { nombre: string; tipo: TipoTransaccion }[] = [
+export const CATEGORIAS: OpcionCategoria[] = [
   { nombre: 'Arriendo corta estancia', tipo: 'INGRESO' },
   { nombre: 'Canon de arriendo', tipo: 'INGRESO' },
   { nombre: 'Depósito', tipo: 'INGRESO' },

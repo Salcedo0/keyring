@@ -6,7 +6,10 @@ Dashboard para propietarios de inmuebles en arriendo, de **corta estancia** (tip
 **contrato fijo**. Permite registrar propiedades, contratos e ingresos y gastos, y ver el desempeño
 del negocio con tablas, filtros y gráficos. Textos en español y valores en pesos colombianos (COP).
 
-Proyecto del curso **Ingeniería de Desarrollo Web**.
+Proyecto del curso **Ingeniería de Software para Aplicaciones Web**.
+
+**Toda la documentación está en la [wiki del repositorio](https://github.com/Salcedo0/keyring/wiki)**: diagramas del
+Entregable 2, guía de estilo y reglas de programación, contrato de la API, autenticación y decisiones.
 
 ## Estado
 
@@ -14,7 +17,6 @@ Proyecto del curso **Ingeniería de Desarrollo Web**.
 | --- | --- |
 | `frontend/` | Listo. Todas las pantallas consumen la API; **no tiene datos de ejemplo**. |
 | `backend/` | Listo. API en Nest con login (JWT), roles y base de datos SQLite. |
-| Contrato de la API | Listo en [`docs/CONTRATO-API.md`](docs/CONTRATO-API.md). |
 
 Si el backend no está corriendo, el front abre bien pero cada pantalla muestra el aviso
 "No se pudo conectar con el servidor" y sus tablas vacías.
@@ -23,21 +25,15 @@ Si el backend no está corriendo, el front abre bien pero cada pantalla muestra 
 
 ```
 keyring/
-├── GUIA-DE-CODIGO.md     Reglas para escribir el código (leer antes de programar)
 ├── README.md             Este archivo
-├── docs/
-│   ├── AUTENTICACION.md  El login frente a la guía de Nest (para la sustentación)
-│   ├── CONTRATO-API.md   Lo que el back responde y el front consume
-│   └── DECISIONES.md     Por qué se tomó cada decisión importante
-├── backend/              API en Nest + TypeORM + SQLite
-├── frontend/             App en Vue 3 + TypeScript + Vite + Tailwind
+├── backend/              API REST en Nest.js + TypeORM + SQLite
+├── frontend/             SPA en Vue 3 + TypeScript + Vite + Tailwind
 ├── docker-compose.yml    Los dos contenedores del despliegue (API y front con nginx)
 ├── deploy.sh             Construye y levanta el despliegue en la VM
 └── .env.example          Variables del despliegue (se copia como .env en la VM)
 ```
 
-El detalle de cada carpeta de `frontend/src/` está en la sección 3 de
-[`GUIA-DE-CODIGO.md`](GUIA-DE-CODIGO.md).
+La arquitectura de cada proyecto está explicada en la wiki: [Entregable 2](https://github.com/Salcedo0/keyring/wiki/Entregable-2).
 
 ## Requisitos
 
@@ -46,7 +42,7 @@ El detalle de cada carpeta de `frontend/src/` está en la sección 3 de
 
 ## Cómo correr el proyecto
 
-Primero el backend (en una terminal), siguiendo [`backend/README.md`](backend/README.md):
+### 1. Backend (en una terminal)
 
 ```bash
 cd backend
@@ -55,7 +51,20 @@ cp .env.example .env
 npm run start:dev
 ```
 
-Después el frontend (en otra terminal):
+Cambia los valores del `.env` antes de arrancar. La API queda en `http://localhost:3000/api`. La
+primera vez que arranca crea el archivo `database.sqlite` con sus cuatro tablas y el **primer
+administrador** con `ADMIN_CORREO` y `ADMIN_CONTRASENA`. No crea datos de ejemplo.
+
+| Variable | Obligatoria | Para qué |
+| --- | --- | --- |
+| `JWT_SECRETO` | Sí | Clave para firmar los tokens. Sin ella la API no arranca. Texto largo y aleatorio. |
+| `ADMIN_CORREO`, `ADMIN_CONTRASENA` | La primera vez | Datos del primer administrador. |
+| `ADMIN_NOMBRE` | No | Nombre del primer administrador. |
+| `PORT` | No | Puerto (por defecto `3000`). |
+| `CORS_ORIGIN` | No | Direcciones del front que pueden llamar a la API, separadas por coma. |
+| `SQLITE_PATH` | No | Dónde guardar la base de datos (en Docker, en un volumen). |
+
+### 2. Frontend (en otra terminal)
 
 ```bash
 cd frontend
@@ -67,21 +76,19 @@ npm run dev
 La app queda en `http://localhost:5173`. La ruta principal es `/` (página pública de inicio).
 Para entrar: usa el administrador del `.env` del backend, o crea una cuenta en "Crear cuenta".
 
-### Variables de entorno
-
 | Variable | Para qué | Ejemplo |
 | --- | --- | --- |
 | `VITE_API_BASE_URL` | Dirección del backend, sin `/api` al final | `http://localhost:3000` |
 
 ### Comandos
 
-| Comando | Qué hace |
-| --- | --- |
-| `npm run dev` | Servidor de desarrollo |
-| `npm run type-check` | Revisa los tipos de TypeScript |
-| `npm run build` | Revisa los tipos y genera `dist/` para producción |
-| `npm run preview` | Sirve el `dist/` generado |
-| `npm run format` | Formatea el código con Prettier |
+| Comando | Backend | Frontend |
+| --- | --- | --- |
+| `npm run start:dev` / `npm run dev` | Arranca y se reinicia al guardar | Servidor de desarrollo |
+| `npm run build` | Compila a `dist/` | Revisa los tipos y genera `dist/` |
+| `npm run format` | Formatea con Prettier | Formatea con Prettier |
+| `npm run type-check` | | Revisa los tipos de TypeScript |
+| `npm run preview` | | Sirve el `dist/` generado |
 
 ## Despliegue con Docker
 
@@ -127,6 +134,7 @@ Para probarlo en el computador, lo mismo con `http://localhost:3000` y `http://l
 | `/transacciones` | Lista, filtros y gráfico por categoría | Con sesión |
 | `/transacciones/nueva`, `/transacciones/:id/editar` | Formulario de transacción | Con sesión |
 | `/admin/usuarios` | Usuarios por rol | Solo `ADMIN` |
+| `/admin/reporte` | Reporte global: propiedades, contratos activos y utilidad de cada propietario | Solo `ADMIN` |
 
 Sin sesión, cualquier página interna redirige al login. Un usuario sin rol `ADMIN` no ve las
 opciones de administración en el menú y, si escribe la dirección a mano, vuelve al dashboard.
@@ -149,19 +157,3 @@ opciones de administración en el menú y, si escribe la dirección a mano, vuel
 ## Pendientes
 
 - Desplegar en la VM de GCP (la configuración de Docker ya está; ver "Despliegue con Docker").
-- Wiki del repositorio: Entregable 2 (diagramas), guía de estilo y reglas de programación del
-  backend.
-
-## Documentación
-
-| Documento | Contenido |
-| --- | --- |
-| [`GUIA-DE-CODIGO.md`](GUIA-DE-CODIGO.md) | Reglas de código: idioma, nombres, estructura, KISS, comentarios, git |
-| [`docs/CONTRATO-API.md`](docs/CONTRATO-API.md) | Endpoints, filtros, cuerpos, respuestas y errores de la API |
-| [`docs/AUTENTICACION.md`](docs/AUTENTICACION.md) | El login paso a paso frente a la guía de Nest, y por qué se agregó cada cosa |
-| [`docs/DECISIONES.md`](docs/DECISIONES.md) | Decisiones importantes y su porqué (registro público, JWT, fechas, modelo de 4 clases…) |
-| [`backend/README.md`](backend/README.md) | Cómo correr el back, su estructura, cómo funciona el login y sus reglas |
-| [`docs/arquitectura/entregable-2/`](docs/arquitectura/entregable-2/) | Diagrama de clases y los 3 de arquitectura (`.drawio` editables y `.png`) |
-| [`docs/wiki/Entregable-2.md`](docs/wiki/Entregable-2.md) | Texto de la página "Entregable 2" de la wiki |
-
-Cada cambio se documenta al terminarlo (ver la sección 13 de la guía).

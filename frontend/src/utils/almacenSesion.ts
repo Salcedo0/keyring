@@ -2,7 +2,8 @@ import type { Sesion } from '@/interfaces/UsuarioInterface'
 
 /*
  * Guarda la sesión en el navegador para que no se pierda al recargar la página.
- * Es el único uso permitido de localStorage en el proyecto (ver GUIA-DE-CODIGO.md, sección 4).
+ * Es el único uso permitido de localStorage en el proyecto
+ * (ver la "Guía de código (Front-end)" de la wiki, sección 4).
  */
 const CLAVE_SESION = 'keyring.sesion'
 

@@ -19,6 +19,12 @@ export interface NuevoUsuario {
   rol: Rol
 }
 
+/** Cuántos usuarios tiene un rol. */
+export interface ResumenRol {
+  rol: Rol
+  cantidad: number
+}
+
 // Cuántas vueltas da bcrypt al calcular el hash: más vueltas, más difícil de adivinar por fuerza bruta.
 const VUELTAS_BCRYPT = 10
 
@@ -55,7 +61,7 @@ export class UsuariosService implements OnApplicationBootstrap {
   }
 
   /** Cuántos usuarios tiene cada rol, de mayor a menor. */
-  async resumenPorRol(): Promise<{ rol: Rol; cantidad: number }[]> {
+  async resumenPorRol(): Promise<ResumenRol[]> {
     const resumen = await Promise.all(
       ROLES.map(async (rol) => ({ rol, cantidad: await this.usuarios.countBy({ rol }) })),
     )

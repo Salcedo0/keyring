@@ -68,7 +68,10 @@ export class TransaccionesService {
     })
   }
 
-  async resumenPorCategoria(usuarioId: number, filtros: FiltroTransaccionesDto) {
+  async resumenPorCategoria(
+    usuarioId: number,
+    filtros: FiltroTransaccionesDto,
+  ): Promise<TotalCategoria[]> {
     return sumarPorCategoria(await this.listar(usuarioId, filtros))
   }
 

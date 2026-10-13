@@ -11,6 +11,21 @@ import {
 } from '../transacciones/transacciones.service.js'
 import type { FiltroTableroDto } from './dto/filtro-tablero.dto.js'
 
+export interface TotalMes {
+  /** Formato AAAA-MM. */
+  mes: string
+  ingresos: number
+  gastos: number
+}
+
+/** Todo lo que muestra el dashboard. */
+export interface ResumenTablero {
+  indicadores: { ingresos: number; gastos: number; utilidadNeta: number; contratosActivos: number }
+  porMes: TotalMes[]
+  gastosPorCategoria: { categoria: string; total: number }[]
+  ultimasTransacciones: TransaccionRespuesta[]
+}
+
 // Cuántas transacciones muestra la tabla "Últimas transacciones" del dashboard.
 const CANTIDAD_ULTIMAS = 6
 
@@ -47,7 +62,7 @@ export class TableroService {
   ) {}
 
   /** Todo lo que muestra el dashboard. Los cálculos se hacen aquí para que el front solo los pinte. */
-  async resumen(usuarioId: number, filtros: FiltroTableroDto) {
+  async resumen(usuarioId: number, filtros: FiltroTableroDto): Promise<ResumenTablero> {
     if (filtros.hasta < filtros.desde) {
       throw new BadRequestException('La fecha "hasta" debe ser igual o posterior a "desde"')
     }
@@ -75,7 +90,10 @@ export class TableroService {
   }
 
   /** Ingresos y gastos de cada mes del rango, también de los meses sin movimientos (en 0). */
-  private totalesPorMes(transacciones: TransaccionRespuesta[], filtros: FiltroTableroDto) {
+  private totalesPorMes(
+    transacciones: TransaccionRespuesta[],
+    filtros: FiltroTableroDto,
+  ): TotalMes[] {
     return mesesEntre(filtros.desde, filtros.hasta).map((mes) => {
       const delMes = transacciones.filter((transaccion) => transaccion.fecha.startsWith(mes))
       return { mes, ingresos: sumar(delMes, 'INGRESO'), gastos: sumar(delMes, 'GASTO') }

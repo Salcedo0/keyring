@@ -4,7 +4,7 @@ import { SoloAdmin, UsuarioActual } from '../comun/decoradores.js'
 import type { UsuarioDelToken } from '../comun/sesion.js'
 import { FiltroUsuariosDto } from './dto/filtro-usuarios.dto.js'
 import type { Usuario } from './entities/usuario.entity.js'
-import { UsuariosService } from './usuarios.service.js'
+import { UsuariosService, type ResumenRol } from './usuarios.service.js'
 
 // Todas las rutas de este controlador son solo para ADMIN.
 @SoloAdmin()
@@ -18,7 +18,7 @@ export class UsuariosController {
   }
 
   @Get('resumen-por-rol')
-  resumenPorRol() {
+  resumenPorRol(): Promise<ResumenRol[]> {
     return this.usuariosService.resumenPorRol()
   }
 

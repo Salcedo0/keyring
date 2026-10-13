@@ -15,7 +15,7 @@ import { UsuarioActual } from '../comun/decoradores.js'
 import type { UsuarioDelToken } from '../comun/sesion.js'
 import { FiltroTransaccionesDto } from './dto/filtro-transacciones.dto.js'
 import { GuardarTransaccionDto } from './dto/guardar-transaccion.dto.js'
-import { CATEGORIAS } from './entities/transaccion.entity.js'
+import { CATEGORIAS, type OpcionCategoria } from './entities/transaccion.entity.js'
 import {
   TransaccionesService,
   type TotalCategoria,
@@ -38,7 +38,7 @@ export class TransaccionesController {
 
   /** La lista fija de categorías, para los selectores del front. */
   @Get('categorias')
-  listarCategorias() {
+  listarCategorias(): OpcionCategoria[] {
     return CATEGORIAS
   }
 

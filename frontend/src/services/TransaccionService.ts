@@ -9,7 +9,9 @@ import type {
 import { http } from './http'
 
 /** Quita el mes cuando está vacío para que no viaje como "mes=" en la URL. */
-function aParametros(filtros: FiltrosTransacciones) {
+function aParametros(filtros: FiltrosTransacciones): Omit<FiltrosTransacciones, 'mes'> & {
+  mes: string | null
+} {
   return { ...filtros, mes: filtros.mes || null }
 }
 
