@@ -9,7 +9,10 @@
     "start:dev": "nest start --watch",
     "start:prod": "node dist/main.js",
     "format": "prettier --write \"src/**/*.ts\"",
-    "lint": "oxlint src/"
+    "lint": "oxlint src/",
+    "migration:generate": "nest build && typeorm migration:generate -d dist/data-source.js",
+    "migration:run": "nest build && typeorm migration:run -d dist/data-source.js",
+    "migration:revert": "nest build && typeorm migration:revert -d dist/data-source.js"
   },
   "dependencies": {
     "@nestjs/common": "^12.1.2",
