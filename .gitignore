@@ -23,3 +23,6 @@ npm-debug.log*
 .idea/
 .DS_Store
 Thumbs.db
+
+# Copia local de la wiki (es otro repositorio: keyring.wiki.git)
+keyring.wiki/
