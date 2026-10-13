@@ -12,7 +12,8 @@
     "lint": "oxlint src/",
     "migration:generate": "nest build && typeorm migration:generate -d dist/data-source.js",
     "migration:run": "nest build && typeorm migration:run -d dist/data-source.js",
-    "migration:revert": "nest build && typeorm migration:revert -d dist/data-source.js"
+    "migration:revert": "nest build && typeorm migration:revert -d dist/data-source.js",
+    "demo": "nest build && node dist/demo.js"
   },
   "dependencies": {
     "@nestjs/common": "^12.1.2",
