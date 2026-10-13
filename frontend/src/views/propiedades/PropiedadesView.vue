@@ -11,7 +11,7 @@ import MapaPropiedades from '@/components/mapa/MapaPropiedades.vue'
 import TablaDatos from '@/components/tabla/TablaDatos.vue'
 import { useConsulta } from '@/composables/useConsulta'
 import type { Columna } from '@/interfaces/OpcionInterface'
-import type { Propiedad } from '@/interfaces/PropiedadInterface'
+import type { PropiedadInterface } from '@/interfaces/PropiedadInterface'
 import { describirError } from '@/services/http'
 import { PropiedadService } from '@/services/PropiedadService'
 import { MODALIDADES, TIPOS_PROPIEDAD, TONOS_MODALIDAD } from '@/utils/etiquetas'
@@ -33,11 +33,11 @@ const {
   cargar,
 } = useConsulta(() => PropiedadService.obtenerPropiedades(), [])
 
-function editar(propiedad: Propiedad): void {
+function editar(propiedad: PropiedadInterface): void {
   router.push(`/propiedades/${propiedad.id}/editar`)
 }
 
-async function eliminar(propiedad: Propiedad): Promise<void> {
+async function eliminar(propiedad: PropiedadInterface): Promise<void> {
   if (!window.confirm(`¿Eliminar "${propiedad.nombre}"? Esta acción no se puede deshacer.`)) return
   errorAccion.value = ''
   try {

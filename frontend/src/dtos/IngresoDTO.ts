@@ -1,5 +1,5 @@
 /** Datos que se envían para iniciar sesión. */
-export interface IngresoDTO {
+export type IngresoDTO = {
   correo: string
   contrasena: string
 }

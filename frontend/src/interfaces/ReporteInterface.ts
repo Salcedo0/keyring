@@ -12,7 +12,7 @@ export interface FilaReporte {
 }
 
 /** Lo que muestra la página de administración "Reporte global". */
-export interface ReporteGlobal {
+export interface ReporteInterface {
   totales: Omit<FilaReporte, 'id' | 'nombre' | 'correo'>
   propietarios: FilaReporte[]
 }

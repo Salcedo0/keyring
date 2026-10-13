@@ -1,6 +1,6 @@
 export type Rol = 'ADMIN' | 'PROPIETARIO'
 
-export interface Usuario {
+export interface UsuarioInterface {
   id: number
   nombre: string
   correo: string
@@ -16,5 +16,5 @@ export interface ResumenRol {
 /** Lo que responde el back al iniciar sesión. Es también lo que se guarda en el navegador. */
 export interface Sesion {
   token: string
-  usuario: Usuario
+  usuario: UsuarioInterface
 }

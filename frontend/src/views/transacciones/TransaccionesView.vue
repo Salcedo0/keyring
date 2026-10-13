@@ -13,7 +13,7 @@ import GraficoBarras from '@/components/graficos/GraficoBarras.vue'
 import TablaDatos from '@/components/tabla/TablaDatos.vue'
 import { useConsulta } from '@/composables/useConsulta'
 import type { Columna } from '@/interfaces/OpcionInterface'
-import type { FiltrosTransacciones, Transaccion } from '@/interfaces/TransaccionInterface'
+import type { FiltrosTransacciones, TransaccionInterface } from '@/interfaces/TransaccionInterface'
 import { describirError } from '@/services/http'
 import { PropiedadService } from '@/services/PropiedadService'
 import { TransaccionService } from '@/services/TransaccionService'
@@ -70,11 +70,11 @@ function recargar(): void {
   resumen.cargar()
 }
 
-function editar(transaccion: Transaccion): void {
+function editar(transaccion: TransaccionInterface): void {
   router.push(`/transacciones/${transaccion.id}/editar`)
 }
 
-async function eliminar(transaccion: Transaccion): Promise<void> {
+async function eliminar(transaccion: TransaccionInterface): Promise<void> {
   if (!window.confirm(`¿Eliminar "${transaccion.descripcion}"? Esta acción no se puede deshacer.`))
     return
   errorAccion.value = ''

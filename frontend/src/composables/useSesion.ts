@@ -2,12 +2,12 @@ import { computed, ref, type ComputedRef, type Ref } from 'vue'
 
 import type { IngresoDTO } from '@/dtos/IngresoDTO'
 import type { RegistroDTO } from '@/dtos/RegistroDTO'
-import type { Sesion, Usuario } from '@/interfaces/UsuarioInterface'
+import type { Sesion, UsuarioInterface } from '@/interfaces/UsuarioInterface'
 import { AutenticacionService } from '@/services/AutenticacionService'
 import { borrarSesion, guardarSesion, leerSesion } from '@/utils/almacenSesion'
 
 // Vive fuera de la función para que todas las pantallas compartan el mismo usuario.
-const usuario = ref<Usuario | null>(leerSesion()?.usuario ?? null)
+const usuario = ref<UsuarioInterface | null>(leerSesion()?.usuario ?? null)
 
 /** Guarda la sesión que respondió el back y la deja activa en todas las pantallas. */
 function activarSesion(sesion: Sesion): void {
@@ -17,7 +17,7 @@ function activarSesion(sesion: Sesion): void {
 
 /** Lo que entrega useSesion a las vistas y al router. */
 export interface SesionActual {
-  usuario: Ref<Usuario | null>
+  usuario: Ref<UsuarioInterface | null>
   estaAutenticado: ComputedRef<boolean>
   esAdmin: ComputedRef<boolean>
   iniciarSesion: (datos: IngresoDTO) => Promise<void>

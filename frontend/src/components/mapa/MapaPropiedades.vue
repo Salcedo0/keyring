@@ -4,11 +4,11 @@ import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
 import { onBeforeUnmount, onMounted, useTemplateRef, watch } from 'vue'
 
-import type { Propiedad } from '@/interfaces/PropiedadInterface'
+import type { PropiedadInterface } from '@/interfaces/PropiedadInterface'
 import { COLORES } from '@/utils/paleta'
 
 const props = defineProps<{
-  propiedades: Propiedad[]
+  propiedades: PropiedadInterface[]
 }>()
 
 // Centro de Colombia: es lo que se ve mientras no haya propiedades con ubicación.
@@ -19,7 +19,7 @@ let mapa: L.Map | null = null
 const marcadores = L.layerGroup()
 
 /** Texto de la ventanita del punto. Se arma como texto (no HTML) porque el nombre lo escribe un usuario. */
-function contenidoVentana(propiedad: Propiedad): HTMLElement {
+function contenidoVentana(propiedad: PropiedadInterface): HTMLElement {
   const elemento = document.createElement('span')
   elemento.textContent = `${propiedad.nombre} · ${propiedad.ciudad}`
   return elemento

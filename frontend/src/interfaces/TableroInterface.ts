@@ -1,4 +1,4 @@
-import type { Transaccion } from './TransaccionInterface'
+import type { TransaccionInterface } from './TransaccionInterface'
 
 /** Filtros del dashboard. Las fechas van en formato AAAA-MM-DD. */
 export interface FiltrosTablero {
@@ -27,9 +27,9 @@ export interface TotalCategoria {
 }
 
 /** Todo lo que muestra el dashboard. Los cálculos los hace el back. */
-export interface ResumenTablero {
+export interface TableroInterface {
   indicadores: Indicadores
   porMes: TotalMes[]
   gastosPorCategoria: TotalCategoria[]
-  ultimasTransacciones: Transaccion[]
+  ultimasTransacciones: TransaccionInterface[]
 }

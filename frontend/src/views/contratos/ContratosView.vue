@@ -9,7 +9,7 @@ import InsigniaEstado from '@/components/base/InsigniaEstado.vue'
 import FiltroSelector from '@/components/formulario/FiltroSelector.vue'
 import TablaDatos from '@/components/tabla/TablaDatos.vue'
 import { useConsulta } from '@/composables/useConsulta'
-import type { Contrato, FiltrosContratos } from '@/interfaces/ContratoInterface'
+import type { ContratoInterface, FiltrosContratos } from '@/interfaces/ContratoInterface'
 import type { Columna } from '@/interfaces/OpcionInterface'
 import { ContratoService } from '@/services/ContratoService'
 import { describirError } from '@/services/http'
@@ -54,11 +54,11 @@ const mensajeVacio = computed(() =>
     : 'Cuando registres tu primer contrato aparecerá aquí.',
 )
 
-function editar(contrato: Contrato): void {
+function editar(contrato: ContratoInterface): void {
   router.push(`/contratos/${contrato.id}/editar`)
 }
 
-async function eliminar(contrato: Contrato): Promise<void> {
+async function eliminar(contrato: ContratoInterface): Promise<void> {
   const pregunta = `¿Eliminar el contrato de ${contrato.inquilinoNombre}? Esta acción no se puede deshacer.`
   if (!window.confirm(pregunta)) return
   errorAccion.value = ''

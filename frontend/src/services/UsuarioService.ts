@@ -1,11 +1,11 @@
-import type { ResumenRol, Rol, Usuario } from '@/interfaces/UsuarioInterface'
+import type { ResumenRol, Rol, UsuarioInterface } from '@/interfaces/UsuarioInterface'
 
 import { http } from './http'
 
 export class UsuarioService {
   /** Lista los usuarios (solo ADMIN). Si `rol` es null, trae todos. */
-  static async obtenerUsuarios(rol: Rol | null): Promise<Usuario[]> {
-    const respuesta = await http.get<Usuario[]>('/usuarios', { params: { rol } })
+  static async obtenerUsuarios(rol: Rol | null): Promise<UsuarioInterface[]> {
+    const respuesta = await http.get<UsuarioInterface[]>('/usuarios', { params: { rol } })
     return respuesta.data
   }
 

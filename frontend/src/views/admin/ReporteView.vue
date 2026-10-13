@@ -9,7 +9,7 @@ import GraficoBarras from '@/components/graficos/GraficoBarras.vue'
 import TablaDatos from '@/components/tabla/TablaDatos.vue'
 import { useConsulta } from '@/composables/useConsulta'
 import type { Columna } from '@/interfaces/OpcionInterface'
-import type { ReporteGlobal } from '@/interfaces/ReporteInterface'
+import type { ReporteInterface } from '@/interfaces/ReporteInterface'
 import { ReporteService } from '@/services/ReporteService'
 import { formatearPesos } from '@/utils/formato'
 import { COLORES } from '@/utils/paleta'
@@ -23,7 +23,7 @@ const COLUMNAS: Columna[] = [
   { clave: 'utilidad', titulo: 'Utilidad', alineacion: 'derecha' },
 ]
 
-const REPORTE_VACIO: ReporteGlobal = {
+const REPORTE_VACIO: ReporteInterface = {
   totales: { propiedades: 0, contratosActivos: 0, ingresos: 0, gastos: 0, utilidad: 0 },
   propietarios: [],
 }

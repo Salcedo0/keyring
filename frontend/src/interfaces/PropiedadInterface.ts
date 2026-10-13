@@ -3,7 +3,7 @@ export type TipoPropiedad = 'APARTAMENTO' | 'CASA' | 'LOFT' | 'ESTUDIO' | 'LOCAL
 /** CORTA: corta estancia (por noches). FIJA: contrato con canon mensual. AMBAS: según temporada. */
 export type Modalidad = 'CORTA' | 'FIJA' | 'AMBAS'
 
-export interface Propiedad {
+export interface PropiedadInterface {
   id: number
   nombre: string
   direccion: string

@@ -16,8 +16,8 @@ import TablaDatos from '@/components/tabla/TablaDatos.vue'
 import { useConsulta } from '@/composables/useConsulta'
 import { useSesion } from '@/composables/useSesion'
 import type { Columna } from '@/interfaces/OpcionInterface'
-import type { FiltrosTablero, ResumenTablero } from '@/interfaces/TableroInterface'
-import type { Transaccion } from '@/interfaces/TransaccionInterface'
+import type { FiltrosTablero, TableroInterface } from '@/interfaces/TableroInterface'
+import type { TransaccionInterface } from '@/interfaces/TransaccionInterface'
 import { describirError } from '@/services/http'
 import { PropiedadService } from '@/services/PropiedadService'
 import { TableroService } from '@/services/TableroService'
@@ -28,7 +28,7 @@ import { formatearFecha, formatearMes, formatearMonto, formatearPesos } from '@/
 import { COLORES } from '@/utils/paleta'
 
 // Lo que se muestra antes de que responda el back (o si no hay datos).
-const RESUMEN_VACIO: ResumenTablero = {
+const RESUMEN_VACIO: TableroInterface = {
   indicadores: { ingresos: 0, gastos: 0, utilidadNeta: 0, contratosActivos: 0 },
   porMes: [],
   gastosPorCategoria: [],
@@ -92,11 +92,11 @@ const margen = computed(() => {
   return `Margen ${Math.round((utilidadNeta / ingresos) * 100)}%`
 })
 
-function editarTransaccion(transaccion: Transaccion): void {
+function editarTransaccion(transaccion: TransaccionInterface): void {
   router.push(`/transacciones/${transaccion.id}/editar`)
 }
 
-async function borrarTransaccion(transaccion: Transaccion): Promise<void> {
+async function borrarTransaccion(transaccion: TransaccionInterface): Promise<void> {
   if (!window.confirm(`¿Eliminar "${transaccion.descripcion}"? Esta acción no se puede deshacer.`))
     return
   errorAccion.value = ''

@@ -1,6 +1,6 @@
 export type TipoTransaccion = 'INGRESO' | 'GASTO'
 
-export interface Transaccion {
+export interface TransaccionInterface {
   id: number
   propiedadId: number
   propiedadNombre: string

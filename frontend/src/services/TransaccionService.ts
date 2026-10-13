@@ -3,7 +3,7 @@ import type {
   Categoria,
   FiltrosTransacciones,
   ResumenCategoria,
-  Transaccion,
+  TransaccionInterface,
 } from '@/interfaces/TransaccionInterface'
 
 import { http } from './http'
@@ -17,8 +17,10 @@ function aParametros(filtros: FiltrosTransacciones): Omit<FiltrosTransacciones, 
 
 export class TransaccionService {
   /** Lista las transacciones, de la más reciente a la más antigua. */
-  static async obtenerTransacciones(filtros: FiltrosTransacciones): Promise<Transaccion[]> {
-    const respuesta = await http.get<Transaccion[]>('/transacciones', {
+  static async obtenerTransacciones(
+    filtros: FiltrosTransacciones,
+  ): Promise<TransaccionInterface[]> {
+    const respuesta = await http.get<TransaccionInterface[]>('/transacciones', {
       params: aParametros(filtros),
     })
     return respuesta.data
@@ -41,14 +43,14 @@ export class TransaccionService {
   }
 
   /** Trae una transacción por su id. */
-  static async obtenerTransaccion(id: number): Promise<Transaccion> {
-    const respuesta = await http.get<Transaccion>(`/transacciones/${id}`)
+  static async obtenerTransaccion(id: number): Promise<TransaccionInterface> {
+    const respuesta = await http.get<TransaccionInterface>(`/transacciones/${id}`)
     return respuesta.data
   }
 
   /** Crea una transacción nueva. */
-  static async crearTransaccion(datos: GuardarTransaccionDTO): Promise<Transaccion> {
-    const respuesta = await http.post<Transaccion>('/transacciones', datos)
+  static async crearTransaccion(datos: GuardarTransaccionDTO): Promise<TransaccionInterface> {
+    const respuesta = await http.post<TransaccionInterface>('/transacciones', datos)
     return respuesta.data
   }
 
@@ -56,8 +58,8 @@ export class TransaccionService {
   static async actualizarTransaccion(
     id: number,
     datos: GuardarTransaccionDTO,
-  ): Promise<Transaccion> {
-    const respuesta = await http.put<Transaccion>(`/transacciones/${id}`, datos)
+  ): Promise<TransaccionInterface> {
+    const respuesta = await http.put<TransaccionInterface>(`/transacciones/${id}`, datos)
     return respuesta.data
   }
 

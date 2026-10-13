@@ -10,7 +10,7 @@ import GraficoBarras from '@/components/graficos/GraficoBarras.vue'
 import TablaDatos from '@/components/tabla/TablaDatos.vue'
 import { useConsulta } from '@/composables/useConsulta'
 import type { Columna } from '@/interfaces/OpcionInterface'
-import type { Rol, Usuario } from '@/interfaces/UsuarioInterface'
+import type { Rol, UsuarioInterface } from '@/interfaces/UsuarioInterface'
 import { describirError } from '@/services/http'
 import { UsuarioService } from '@/services/UsuarioService'
 import { aOpcionesConTodos, ROLES } from '@/utils/etiquetas'
@@ -36,7 +36,7 @@ const totalUsuarios = computed(() =>
   cantidadesResumen.value.reduce((suma, cantidad) => suma + cantidad, 0),
 )
 
-async function eliminar(usuario: Usuario): Promise<void> {
+async function eliminar(usuario: UsuarioInterface): Promise<void> {
   if (!window.confirm(`¿Eliminar a ${usuario.nombre}? Esta acción no se puede deshacer.`)) return
   errorAccion.value = ''
   try {

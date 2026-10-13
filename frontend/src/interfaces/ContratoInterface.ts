@@ -2,7 +2,7 @@ export type TipoContrato = 'CORTA' | 'FIJA'
 
 export type EstadoContrato = 'ACTIVO' | 'PENDIENTE' | 'FINALIZADO' | 'CANCELADO'
 
-export interface Contrato {
+export interface ContratoInterface {
   id: number
   propiedadId: number
   propiedadNombre: string
