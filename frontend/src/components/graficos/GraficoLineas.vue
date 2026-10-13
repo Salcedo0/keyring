@@ -53,7 +53,12 @@ const opciones: ChartOptions<'line'> = {
     y: {
       beginAtZero: true,
       grid: { color: COLORES.rejilla },
-      ticks: { color: COLORES.apagado, callback: (valor) => formatearPesos(Number(valor)) },
+      // precision: 0 evita marcas decimales ($0,1…) que al redondear a pesos se ven como "$ 1, $ 1…".
+      ticks: {
+        color: COLORES.apagado,
+        precision: 0,
+        callback: (valor) => formatearPesos(Number(valor)),
+      },
     },
   },
 }
