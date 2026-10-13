@@ -51,9 +51,19 @@ cp .env.example .env
 npm run start:dev
 ```
 
-Cambia los valores del `.env` antes de arrancar. La API queda en `http://localhost:3000/api`. La
-primera vez que arranca crea el archivo `database.sqlite` con sus cuatro tablas y el **primer
-administrador** con `ADMIN_CORREO` y `ADMIN_CONTRASENA`. No crea datos de ejemplo.
+Cambia los valores del `.env` antes de arrancar. La API queda en `http://localhost:3000/api`
+(`GET /api` responde su estado sin pedir sesión). Al arrancar aplica las **migraciones** pendientes
+(la primera vez crea `database.sqlite` con sus cuatro tablas) y crea el **primer administrador** con
+`ADMIN_CORREO` y `ADMIN_CONTRASENA`.
+
+Para tener datos de ejemplo (un propietario con un año de movimientos):
+
+```bash
+npm run demo
+```
+
+> ¿Ya tenías una `database.sqlite` de antes de las migraciones? Bórrala, o conserva sus datos con
+> `npm run build && npx typeorm migration:run -d dist/data-source.js --fake`.
 
 | Variable | Obligatoria | Para qué |
 | --- | --- | --- |
@@ -63,6 +73,7 @@ administrador** con `ADMIN_CORREO` y `ADMIN_CONTRASENA`. No crea datos de ejempl
 | `PORT` | No | Puerto (por defecto `3000`). |
 | `CORS_ORIGIN` | No | Direcciones del front que pueden llamar a la API, separadas por coma. |
 | `SQLITE_PATH` | No | Dónde guardar la base de datos (en Docker, en un volumen). |
+| `DEMO_NOMBRE`, `DEMO_CORREO`, `DEMO_CONTRASENA` | Para `npm run demo` | Propietario de demostración. Si ya existe, se borra con sus datos y se crea de nuevo. |
 
 ### 2. Frontend (en otra terminal)
 
@@ -89,6 +100,10 @@ Para entrar: usa el administrador del `.env` del backend, o crea una cuenta en "
 | `npm run format` | Formatea con Prettier | Formatea con Prettier |
 | `npm run type-check` | | Revisa los tipos de TypeScript |
 | `npm run preview` | | Sirve el `dist/` generado |
+| `npm run lint` | Revisa el código con Oxlint | Revisa el código con Oxlint |
+| `npm run demo` | Crea el propietario de demostración | |
+| `npm run migration:generate -- src/migrations/Nombre` | Genera una migración desde las entidades | |
+| `npm run migration:run` / `migration:revert` | Aplica las pendientes / deshace la última | |
 
 ## Despliegue con Docker
 
@@ -119,6 +134,12 @@ En GCP hay que abrir los puertos `80` (front) y `3000` (API) en el firewall.
 Para probarlo en el computador, lo mismo con `http://localhost:3000` y `http://localhost` en el
 `.env`.
 
+Para cargar el propietario de demostración en el despliegue (con la API ya levantada):
+
+```bash
+docker compose run --rm -e DEMO_NOMBRE="Laura Gómez" -e DEMO_CORREO=demo@keyring.co -e DEMO_CONTRASENA=una-clave backend node dist/demo.js
+```
+
 ## Páginas
 
 | Ruta | Página | Acceso |
@@ -146,14 +167,19 @@ opciones de administración en el menú y, si escribe la dirección a mano, vuel
 | `TablaDatos` | `tabla/` | Tabla con columnas, acciones editar/eliminar, carga y estado vacío |
 | `FiltroSelector` | `formulario/` | Selector compacto con etiqueta para las barras de filtros |
 | `CampoTexto`, `CampoSelector`, `GrupoOpciones` | `formulario/` | Campos de formulario con error de validación |
+| `MensajeCampo` | `formulario/` | El error del campo o, si no hay, su texto de ayuda |
 | `TarjetaKpi` | `base/` | Número grande con etiqueta |
 | `TarjetaGrafico` | `base/` | Título + gráfico, con estado vacío si no hay datos |
+| `EncabezadoPagina` | `base/` | Título y descripción de la página, con sus botones de acción |
+| `Icono` | `base/` | Íconos SVG propios (el catálogo vive en `utils/iconos.ts`) |
 | `GraficoLineas`, `GraficoBarras`, `GraficoDona` | `graficos/` | Gráficos con Chart.js |
 | `MapaPropiedades`, `SelectorUbicacion` | `mapa/` | Mapas con Leaflet y OpenStreetMap |
 | `LogoKeyRing` | `base/` | Logo completo o solo ícono, en versión normal o clara (fondos oscuros) |
 | `InsigniaEstado`, `AvisoError`, `EstadoVacio` | `base/` | Insignias de color, avisos de error, "No hay datos todavía" |
 | `PlantillaInterna`, `MenuLateral`, `BarraSuperior` | `layout/` | Estructura de las páginas internas, menú colapsable |
+| `EncabezadoPublico` | `layout/` | Encabezado de las páginas públicas (inicio, login, registro) |
 
 ## Pendientes
 
-- Desplegar en la VM de GCP (la configuración de Docker ya está; ver "Despliegue con Docker").
+- Desplegar en la VM de GCP (la configuración de Docker ya está; ver "Despliegue con Docker") y
+  actualizar los enlaces de la wiki con la dirección pública.
