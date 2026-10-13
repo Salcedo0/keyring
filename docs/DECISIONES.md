@@ -82,3 +82,62 @@ lo que pide el Entregable 1 Parte 2 ("elimine los seeders").
 navegador (Colombia es UTC−5). Como texto, el 30 de septiembre siempre es el 30 de septiembre.
 Además el formato `AAAA-MM-DD` se ordena y se compara bien como texto, así que los filtros por mes
 y por rango funcionan sin conversiones.
+
+---
+
+## D6. El guard comprueba en cada petición que el usuario todavía exista
+
+**Decisión:** después de verificar el token, `AutenticacionGuard` busca al usuario por su id. Si ya
+no existe responde 401, y el rol que usa para `@SoloAdmin()` es el de la base de datos, no el del
+token.
+
+**Por qué:** un JWT sigue siendo válido hasta que vence (8 horas), aunque el ADMIN haya eliminado
+la cuenta. En las pruebas, el token de un usuario eliminado seguía leyendo datos y al crear una
+propiedad la API fallaba con un error 500. Con la comprobación, el usuario eliminado pierde el
+acceso de inmediato, y un cambio de rol aplica en la siguiente petición.
+
+**Costo:** una consulta por llave primaria en cada petición, que en SQLite es instantánea.
+
+**Qué se descartó:** dejar que el token venza solo (deja la ventana de 8 horas) o usar tokens de
+muy corta duración con tokens de refresco (mucho más código para el mismo resultado).
+
+---
+
+## D7. Se sigue la versión clásica de la guía de autenticación de Nest
+
+**Decisión:** el login sigue la guía clásica (`@nestjs/jwt`, `AuthGuard` propio, `@Public()`), no
+el paquete nuevo `@nestjs/authentication` que la guía empezó a usar el 29 de septiembre de 2026.
+
+**Por qué:** el paquete nuevo está en la versión 0.1.0 (recién publicado) y esconde el
+funcionamiento detrás de clases ya hechas. La versión clásica muestra cada paso y es la que
+corresponde al curso. La comparación completa está en [`AUTENTICACION.md`](AUTENTICACION.md).
+
+---
+
+## D8. El modelo tiene solo cuatro clases
+
+**Contexto:** el docente puso como reto que el dominio de la aplicación (el diagrama de clases y las
+tablas) tenga **solo cuatro clases**. Antes había seis: `Usuario`, `Propiedad`, `Contrato`,
+`Transaccion`, `Categoria` y `Inquilino` (una clase incrustada dentro de `Contrato`).
+
+**Decisión:** quedan `Usuario`, `Propiedad`, `Contrato` y `Transaccion`.
+
+- **`Categoria` dejó de ser una tabla.** Ahora es una lista fija (`CATEGORIAS`, en
+  `transaccion.entity.ts`) y cada transacción guarda el nombre de su categoría. La lista sale por
+  `GET /transacciones/categorias`, así que el front la sigue recibiendo del back. El back revisa
+  que la categoría exista y que sea del mismo tipo (ingreso o gasto) que la transacción.
+- **`Inquilino` dejó de ser una clase.** Sus datos son columnas de `Contrato`
+  (`inquilinoNombre`, `inquilinoDocumento`, `inquilinoCorreo`, `inquilinoTelefono`). En la base de
+  datos las columnas ya se llamaban así, solo cambió el código y la forma del JSON.
+
+**Por qué esas dos:** son las únicas que no son el centro del negocio. Una propiedad se arrienda
+con contratos y produce transacciones; el usuario es quien inicia sesión. La categoría es solo una
+etiqueta para clasificar, y el inquilino nunca existió sin un contrato (no tenía tabla propia).
+Quitar `Contrato` habría roto la mitad del front; quitar estas dos casi no se nota.
+
+**Lo que se perdió:** la pantalla de administración de categorías. El ADMIN ya no puede crear
+categorías desde la aplicación; para agregar una se agrega a la lista en el código. Con diez
+categorías fijas se cubren los ingresos y gastos de un arriendo, así que es un costo pequeño.
+
+**Lo que no cambió:** login, roles, dashboard, gráficos, filtros y la regla de que cada propietario
+solo ve lo suyo.

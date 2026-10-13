@@ -32,7 +32,6 @@ const ENLACES_GENERALES: EnlaceMenu[] = [
 
 const ENLACES_ADMIN: EnlaceMenu[] = [
   { ruta: '/admin/usuarios', texto: 'Usuarios', icono: 'usuarios' },
-  { ruta: '/admin/categorias', texto: 'Categorías', icono: 'etiqueta' },
 ]
 
 const ruta = useRoute()

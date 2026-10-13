@@ -62,6 +62,11 @@ export class UsuariosService implements OnApplicationBootstrap {
     return resumen.sort((a, b) => b.cantidad - a.cantidad)
   }
 
+  /** Lo usa el AutenticacionGuard en cada petición para saber si el usuario del token sigue existiendo. */
+  buscarPorId(id: number): Promise<Usuario | null> {
+    return this.usuarios.findOneBy({ id })
+  }
+
   /** Busca un usuario por correo trayendo también el hash de su contraseña (solo para el login). */
   buscarParaIngreso(correo: string): Promise<Usuario | null> {
     return this.usuarios.findOne({

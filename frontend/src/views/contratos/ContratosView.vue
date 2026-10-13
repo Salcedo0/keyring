@@ -24,7 +24,7 @@ import { formatearFecha, formatearPesos } from '@/utils/formato'
 
 const COLUMNAS: Columna[] = [
   { clave: 'propiedadNombre', titulo: 'Propiedad' },
-  { clave: 'inquilino', titulo: 'Inquilino' },
+  { clave: 'inquilinoNombre', titulo: 'Inquilino' },
   { clave: 'tipo', titulo: 'Tipo' },
   { clave: 'fechaInicio', titulo: 'Inicio' },
   { clave: 'fechaFin', titulo: 'Fin' },
@@ -59,7 +59,7 @@ function editar(contrato: Contrato): void {
 }
 
 async function eliminar(contrato: Contrato): Promise<void> {
-  const pregunta = `¿Eliminar el contrato de ${contrato.inquilino.nombre}? Esta acción no se puede deshacer.`
+  const pregunta = `¿Eliminar el contrato de ${contrato.inquilinoNombre}? Esta acción no se puede deshacer.`
   if (!window.confirm(pregunta)) return
   errorAccion.value = ''
   try {
@@ -115,9 +115,9 @@ watch(filtros, contratos.cargar)
       <template #celda-propiedadNombre="{ fila }">
         <span class="font-semibold">{{ fila.propiedadNombre }}</span>
       </template>
-      <template #celda-inquilino="{ fila }">
-        <div class="font-medium">{{ fila.inquilino.nombre }}</div>
-        <div class="text-xs text-apagado">{{ fila.inquilino.documento }}</div>
+      <template #celda-inquilinoNombre="{ fila }">
+        <div class="font-medium">{{ fila.inquilinoNombre }}</div>
+        <div class="text-xs text-apagado">{{ fila.inquilinoDocumento }}</div>
       </template>
       <template #celda-tipo="{ fila }">{{ TIPOS_CONTRATO[fila.tipo] }}</template>
       <template #celda-fechaInicio="{ fila }">{{ formatearFecha(fila.fechaInicio) }}</template>

@@ -39,7 +39,7 @@ const COLUMNAS: Columna[] = [
   { clave: 'fecha', titulo: 'Fecha' },
   { clave: 'propiedadNombre', titulo: 'Propiedad' },
   { clave: 'descripcion', titulo: 'Descripción' },
-  { clave: 'categoriaNombre', titulo: 'Categoría' },
+  { clave: 'categoria', titulo: 'Categoría' },
   { clave: 'tipo', titulo: 'Tipo' },
   { clave: 'monto', titulo: 'Monto', alineacion: 'derecha' },
 ]

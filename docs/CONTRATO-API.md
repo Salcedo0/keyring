@@ -20,7 +20,7 @@ Si algo cambia, se cambia **primero aquí** y luego en el código de los dos lad
 - **Filtros:** van como parámetros de la URL (`?propiedadId=3&estado=ACTIVO`). Un filtro que no se
   envía significa "todos".
 - **Alcance de los datos:** un `PROPIETARIO` solo ve sus propias propiedades, contratos y
-  transacciones. Un `ADMIN` además administra usuarios y categorías.
+  transacciones. Un `ADMIN` además administra los usuarios.
 
 ### Errores
 
@@ -30,7 +30,7 @@ Si algo cambia, se cambia **primero aquí** y luego en el código de los dos lad
 | `401` | Sin token, token vencido o credenciales incorrectas | Cierra la sesión y lleva al login |
 | `403` | Un `PROPIETARIO` intenta una ruta de `ADMIN` | Muestra el `message` |
 | `404` | No existe el recurso | Muestra el `message` |
-| `409` | Conflicto (ej. categoría con nombre repetido) | Muestra el `message` |
+| `409` | Conflicto (ej. correo ya registrado) | Muestra el `message` |
 
 Cuerpo de error (el formato por defecto de Nest):
 
@@ -71,18 +71,14 @@ interface Propiedad {
   longitud: number | null
 }
 
-interface Inquilino {
-  nombre: string
-  documento: string
-  correo: string
-  telefono: string        // puede venir vacío
-}
-
 interface Contrato {
   id: number
   propiedadId: number
   propiedadNombre: string // lo arma el back para no pedir la propiedad aparte
-  inquilino: Inquilino
+  inquilinoNombre: string
+  inquilinoDocumento: string
+  inquilinoCorreo: string
+  inquilinoTelefono: string // puede venir vacío
   tipo: TipoContrato
   fechaInicio: string     // AAAA-MM-DD
   fechaFin: string        // AAAA-MM-DD, posterior a fechaInicio
@@ -90,8 +86,8 @@ interface Contrato {
   estado: EstadoContrato
 }
 
+// No es una tabla: es la lista fija que entrega GET /transacciones/categorias.
 interface Categoria {
-  id: number
   nombre: string
   tipo: TipoTransaccion
 }
@@ -102,8 +98,7 @@ interface Transaccion {
   propiedadNombre: string
   contratoId: number | null
   tipo: TipoTransaccion
-  categoriaId: number
-  categoriaNombre: string
+  categoria: string       // uno de los nombres de la lista fija, del mismo tipo
   monto: number           // siempre positivo; el tipo dice si suma o resta
   fecha: string           // AAAA-MM-DD
   descripcion: string
@@ -211,8 +206,8 @@ explique.
 
 Filtros de `GET /contratos`: `propiedadId`, `estado`.
 
-`GuardarContrato` es `Contrato` sin `id` ni `propiedadNombre`. Validaciones: inquilino con nombre,
-documento y correo válido; `fechaFin` posterior a `fechaInicio`; `valor` mayor que 0.
+`GuardarContrato` es `Contrato` sin `id` ni `propiedadNombre`. Validaciones: `inquilinoNombre`,
+`inquilinoDocumento` y un `inquilinoCorreo` válido; `fechaFin` posterior a `fechaInicio`; `valor` mayor que 0.
 
 ---
 
@@ -226,14 +221,15 @@ documento y correo válido; `fechaFin` posterior a `fechaInicio`; `valor` mayor 
 | `PUT` | `/transacciones/:id` | `GuardarTransaccion` | `Transaccion` |
 | `DELETE` | `/transacciones/:id` | | `204` |
 | `GET` | `/transacciones/resumen-por-categoria` | | `ResumenCategoria[]` |
+| `GET` | `/transacciones/categorias` | | `Categoria[]` |
 
 Filtros de `GET /transacciones` y de `GET /transacciones/resumen-por-categoria`: `propiedadId`,
-`tipo`, `categoriaId`, `mes` (AAAA-MM).
+`tipo`, `categoria` (el nombre), `mes` (AAAA-MM).
 
 `GET /transacciones` devuelve la lista ordenada de la más reciente a la más antigua.
 
-`GuardarTransaccion` es `Transaccion` sin `id`, `propiedadNombre` ni `categoriaNombre`. Validaciones:
-`monto` mayor que 0; la categoría debe ser del mismo `tipo` que la transacción; si viene
+`GuardarTransaccion` es `Transaccion` sin `id` ni `propiedadNombre`. Validaciones: `monto` mayor
+que 0; la categoría debe existir en la lista y ser del mismo `tipo` que la transacción; si viene
 `contratoId`, el contrato debe pertenecer a la misma propiedad.
 
 `ResumenCategoria`:
@@ -248,20 +244,16 @@ Ordenado de mayor a menor `total`.
 
 ## Categorías
 
-| Método | Ruta | Cuerpo | Respuesta | Quién |
-| --- | --- | --- | --- | --- |
-| `GET` | `/categorias` | | `Categoria[]` | Todos |
-| `POST` | `/categorias` | `GuardarCategoria` | `201` `Categoria` | `ADMIN` |
-| `PUT` | `/categorias/:id` | `GuardarCategoria` | `Categoria` | `ADMIN` |
-| `DELETE` | `/categorias/:id` | | `204` | `ADMIN` |
+Las categorías **no son una tabla**: son una lista fija en el back (`CATEGORIAS`, en
+`transaccion.entity.ts`), porque el modelo del proyecto se limita a cuatro clases (decisión D8 en
+[`DECISIONES.md`](DECISIONES.md)). Se leen con `GET /transacciones/categorias`:
 
-Filtro de `GET /categorias`: `tipo`.
+```json
+[{ "nombre": "Canon de arriendo", "tipo": "INGRESO" }, { "nombre": "Aseo", "tipo": "GASTO" }]
+```
 
-`GuardarCategoria`: `{ "nombre": "Seguros", "tipo": "GASTO" }`. El nombre no se puede repetir:
-`409`. Una categoría que ya usan transacciones no se puede eliminar: `409`.
-
-La primera vez que arranca la API se crean las categorías iniciales (canon de arriendo, corta
-estancia, administración, mantenimiento, servicios públicos, aseo, etc.).
+Ingresos: arriendo corta estancia, canon de arriendo, depósito, otros ingresos. Gastos:
+administración, mantenimiento, servicios públicos, comisión plataforma, aseo, impuestos y predial.
 
 ---
 
