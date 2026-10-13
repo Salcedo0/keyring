@@ -2,6 +2,14 @@ import { ref, type Ref } from 'vue'
 
 import { describirError } from '@/services/http'
 
+/** Lo que entrega useConsulta a la vista. */
+export interface Consulta<T> {
+  datos: Ref<T>
+  cargando: Ref<boolean>
+  error: Ref<string>
+  cargar: () => Promise<void>
+}
+
 /**
  * Maneja los estados de una consulta al back: cargando, error y datos.
  * Evita repetir el mismo try/catch en cada vista.
@@ -10,7 +18,7 @@ import { describirError } from '@/services/http'
  *   const { datos, cargando, error, cargar } = useConsulta(obtenerPropiedades, [])
  *   onMounted(cargar)
  */
-export function useConsulta<T>(consultar: () => Promise<T>, valorInicial: T) {
+export function useConsulta<T>(consultar: () => Promise<T>, valorInicial: T): Consulta<T> {
   const datos = ref(valorInicial) as Ref<T>
   const cargando = ref(false)
   const error = ref('')

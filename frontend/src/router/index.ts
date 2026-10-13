@@ -91,6 +91,12 @@ const rutas: RouteRecordRaw[] = [
     meta: { titulo: 'Usuarios', soloAdmin: true },
   },
   {
+    path: '/admin/reporte',
+    name: 'admin-reporte',
+    component: () => import('@/views/admin/ReporteView.vue'),
+    meta: { titulo: 'Reporte global', soloAdmin: true },
+  },
+  {
     path: '/:pathMatch(.*)*',
     name: 'no-encontrada',
     component: () => import('@/views/NoEncontradaView.vue'),
