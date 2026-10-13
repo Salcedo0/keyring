@@ -31,7 +31,7 @@ function dibujarMarcador(): void {
   }
   marcador = L.circleMarker(punto, {
     radius: 10,
-    color: '#FFFFFF',
+    color: COLORES.contornoMarcador,
     weight: 3,
     fillColor: COLORES.marca,
     fillOpacity: 1,
