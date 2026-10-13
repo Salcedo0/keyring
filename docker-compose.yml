@@ -1,0 +1,31 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: 3000
+      SQLITE_PATH: /data/database.sqlite
+      CORS_ORIGIN: "${CORS_ORIGIN:-http://localhost}"
+      JWT_SECRETO: "${JWT_SECRETO:?Falta JWT_SECRETO en el archivo .env}"
+      ADMIN_NOMBRE: "${ADMIN_NOMBRE:-Administrador KeyRing}"
+      ADMIN_CORREO: "${ADMIN_CORREO:?Falta ADMIN_CORREO en el archivo .env}"
+      ADMIN_CONTRASENA: "${ADMIN_CONTRASENA:?Falta ADMIN_CONTRASENA en el archivo .env}"
+    volumes:
+      - backend-data:/data
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_BASE_URL: "${VITE_API_BASE_URL:-http://localhost:3000}"
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  backend-data:
