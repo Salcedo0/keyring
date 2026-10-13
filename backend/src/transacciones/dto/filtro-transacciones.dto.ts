@@ -24,7 +24,6 @@ export class FiltroTransaccionesDto {
   @IsIn(NOMBRES_CATEGORIAS)
   categoria?: string;
 
-  /** Formato AAAA-MM. */
   @IsOptional()
   @EsMes()
   mes?: string;

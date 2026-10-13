@@ -2,8 +2,7 @@ import type { Sesion } from '@/interfaces/UsuarioInterface';
 
 /*
  * Guarda la sesión en el navegador para que no se pierda al recargar la página.
- * Es el único uso permitido de localStorage en el proyecto
- * (ver la "Guía de código (Front-end)" de la wiki, sección 4).
+ * Es el único uso permitido de localStorage en el proyecto ("Reglas de programación" de la wiki).
  */
 const CLAVE_SESION = 'keyring.sesion';
 
@@ -18,12 +17,10 @@ export function leerSesion(): Sesion | null {
   }
 }
 
-/** Guarda la sesión que respondió el back al iniciar sesión. */
 export function guardarSesion(sesion: Sesion): void {
   localStorage.setItem(CLAVE_SESION, JSON.stringify(sesion));
 }
 
-/** Borra la sesión guardada. */
 export function borrarSesion(): void {
   localStorage.removeItem(CLAVE_SESION);
 }

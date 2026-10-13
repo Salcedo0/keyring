@@ -6,7 +6,6 @@ import { FiltroUsuariosDto } from './dto/filtro-usuarios.dto.js';
 import type { Usuario } from './entities/usuario.entity.js';
 import { UsuariosService, type ResumenRol } from './usuarios.service.js';
 
-// Todas las rutas de este controlador son solo para ADMIN.
 @SoloAdmin()
 @Controller('usuarios')
 export class UsuariosController {

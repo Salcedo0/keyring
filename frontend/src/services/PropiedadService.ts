@@ -10,19 +10,16 @@ export class PropiedadService {
     return respuesta.data;
   }
 
-  /** Trae una propiedad por su id. */
   static async obtenerPropiedad(id: number): Promise<PropiedadInterface> {
     const respuesta = await http.get<PropiedadInterface>(`/propiedades/${id}`);
     return respuesta.data;
   }
 
-  /** Crea una propiedad nueva. */
   static async crearPropiedad(datos: GuardarPropiedadDTO): Promise<PropiedadInterface> {
     const respuesta = await http.post<PropiedadInterface>('/propiedades', datos);
     return respuesta.data;
   }
 
-  /** Reemplaza los datos de una propiedad existente. */
   static async actualizarPropiedad(
     id: number,
     datos: GuardarPropiedadDTO,
@@ -31,7 +28,6 @@ export class PropiedadService {
     return respuesta.data;
   }
 
-  /** Elimina una propiedad. */
   static async eliminarPropiedad(id: number): Promise<void> {
     await http.delete(`/propiedades/${id}`);
   }

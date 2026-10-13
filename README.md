@@ -179,7 +179,7 @@ opciones de administración en el menú y, si escribe la dirección a mano, vuel
 | `PlantillaInterna`, `MenuLateral`, `BarraSuperior` | `layout/` | Estructura de las páginas internas, menú colapsable |
 | `EncabezadoPublico` | `layout/` | Encabezado de las páginas públicas (inicio, login, registro) |
 
-## Pendientes
+## Despliegue actual
 
-- Desplegar en la VM de GCP (la configuración de Docker ya está; ver "Despliegue con Docker") y
-  actualizar los enlaces de la wiki con la dirección pública.
+La aplicación está desplegada en una VM de Google Cloud: **<http://34.121.178.26>** (la API responde
+en `http://34.121.178.26:3000/api`). Para actualizarla, en la VM: `git pull && ./deploy.sh`.

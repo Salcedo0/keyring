@@ -34,7 +34,7 @@ import { UsuariosModule } from './usuarios/usuarios.module.js';
     TableroModule,
     ReporteModule,
   ],
-  // El guard protege TODAS las rutas. Las públicas (login, registro) se marcan con @Publica().
+  // El guard protege TODAS las rutas. Las públicas (login, registro, GET /api) llevan @Publica().
   providers: [{ provide: APP_GUARD, useClass: AutenticacionGuard }],
 })
 export class AppModule {}

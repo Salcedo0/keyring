@@ -7,7 +7,6 @@ import {
   type TipoTransaccion,
 } from '../entities/transaccion.entity.js';
 
-/** Sirve para crear y para actualizar una transacción. */
 export class GuardarTransaccionDto {
   @IsInt()
   @Min(1)

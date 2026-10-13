@@ -34,7 +34,7 @@ function dibujarPropiedades(): void {
   for (const propiedad of conUbicacion) {
     L.circleMarker([propiedad.latitud!, propiedad.longitud!], {
       radius: 9,
-      color: '#FFFFFF',
+      color: COLORES.contornoMarcador,
       weight: 2.5,
       fillColor: COLORES.marca,
       fillOpacity: 1,

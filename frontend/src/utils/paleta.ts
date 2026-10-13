@@ -8,6 +8,8 @@ export const COLORES = {
   gasto: '#D46A76',
   apagado: '#6E625A',
   rejilla: '#F0E9E2',
+  /** Borde de los puntos del mapa, para que se distingan sobre las calles. */
+  contornoMarcador: '#FFFFFF',
 };
 
 /** Colores para series sin un color propio (categorías de la dona, roles). */

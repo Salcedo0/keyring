@@ -61,7 +61,7 @@ export class TableroService {
     private readonly contratos: Repository<Contrato>,
   ) {}
 
-  /** Todo lo que muestra el dashboard. Los cálculos se hacen aquí para que el front solo los pinte. */
+  /** Los cálculos se hacen aquí para que el front solo los pinte. */
   async resumen(usuarioId: number, filtros: FiltroTableroDto): Promise<ResumenTablero> {
     if (filtros.hasta < filtros.desde) {
       throw new BadRequestException('La fecha "hasta" debe ser igual o posterior a "desde"');

@@ -8,7 +8,6 @@ import {
   type TipoContrato,
 } from '../entities/contrato.entity.js';
 
-/** Sirve para crear y para actualizar un contrato. */
 export class GuardarContratoDto {
   @IsInt()
   @Min(1)
