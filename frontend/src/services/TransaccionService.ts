@@ -1,5 +1,6 @@
 import type { GuardarTransaccionDTO } from '@/dtos/GuardarTransaccionDTO'
 import type {
+  Categoria,
   FiltrosTransacciones,
   ResumenCategoria,
   Transaccion,
@@ -17,6 +18,12 @@ export async function obtenerTransacciones(filtros: FiltrosTransacciones): Promi
   const respuesta = await http.get<Transaccion[]>('/transacciones', {
     params: aParametros(filtros),
   })
+  return respuesta.data
+}
+
+/** La lista fija de categorías (ingreso y gasto). */
+export async function obtenerCategorias(): Promise<Categoria[]> {
+  const respuesta = await http.get<Categoria[]>('/transacciones/categorias')
   return respuesta.data
 }
 

@@ -15,6 +15,7 @@ import { UsuarioActual } from '../comun/decoradores.js'
 import type { UsuarioDelToken } from '../comun/sesion.js'
 import { FiltroTransaccionesDto } from './dto/filtro-transacciones.dto.js'
 import { GuardarTransaccionDto } from './dto/guardar-transaccion.dto.js'
+import { CATEGORIAS } from './entities/transaccion.entity.js'
 import {
   TransaccionesService,
   type TotalCategoria,
@@ -33,7 +34,14 @@ export class TransaccionesController {
     return this.transaccionesService.listar(usuario.sub, filtros)
   }
 
-  // Va antes de ':id' para que "resumen-por-categoria" no se lea como un id.
+  // Las dos rutas que siguen van antes de ':id' para que su nombre no se lea como un id.
+
+  /** La lista fija de categorías, para los selectores del front. */
+  @Get('categorias')
+  listarCategorias() {
+    return CATEGORIAS
+  }
+
   @Get('resumen-por-categoria')
   resumenPorCategoria(
     @Query() filtros: FiltroTransaccionesDto,

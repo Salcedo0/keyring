@@ -2,8 +2,8 @@ import { BadRequestException, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 
-import type { TipoTransaccion } from '../categorias/entities/categoria.entity.js'
 import { Contrato } from '../contratos/entities/contrato.entity.js'
+import type { TipoTransaccion } from '../transacciones/entities/transaccion.entity.js'
 import {
   sumarPorCategoria,
   TransaccionesService,

@@ -1,11 +1,12 @@
 import { Type } from 'class-transformer'
 import { IsIn, IsInt, IsOptional } from 'class-validator'
 
+import { EsMes } from '../../comun/validaciones.js'
 import {
+  NOMBRES_CATEGORIAS,
   TIPOS_TRANSACCION,
   type TipoTransaccion,
-} from '../../categorias/entities/categoria.entity.js'
-import { EsMes } from '../../comun/validaciones.js'
+} from '../entities/transaccion.entity.js'
 
 /** Filtros de GET /transacciones y de su resumen por categoría. Sin filtro = "todos". */
 export class FiltroTransaccionesDto {
@@ -20,9 +21,8 @@ export class FiltroTransaccionesDto {
   tipo?: TipoTransaccion
 
   @IsOptional()
-  @Type(() => Number)
-  @IsInt()
-  categoriaId?: number
+  @IsIn(NOMBRES_CATEGORIAS)
+  categoria?: string
 
   /** Formato AAAA-MM. */
   @IsOptional()

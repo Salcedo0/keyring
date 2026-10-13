@@ -9,24 +9,6 @@ export type TipoContrato = (typeof TIPOS_CONTRATO)[number]
 export const ESTADOS_CONTRATO = ['ACTIVO', 'PENDIENTE', 'FINALIZADO', 'CANCELADO'] as const
 export type EstadoContrato = (typeof ESTADOS_CONTRATO)[number]
 
-/**
- * Datos del inquilino. No es una tabla aparte: sus columnas viven dentro de la tabla de contratos
- * (inquilinoNombre, inquilinoCorreo…), pero la API los entrega agrupados en "inquilino".
- */
-export class Inquilino {
-  @Column({ type: 'varchar', length: 100 })
-  nombre: string
-
-  @Column({ type: 'varchar', length: 30 })
-  documento: string
-
-  @Column({ type: 'varchar', length: 150 })
-  correo: string
-
-  @Column({ type: 'varchar', length: 30, default: '' })
-  telefono: string
-}
-
 @Entity()
 @Check(`"tipo" IN ('CORTA', 'FIJA')`)
 @Check(`"estado" IN ('ACTIVO', 'PENDIENTE', 'FINALIZADO', 'CANCELADO')`)
@@ -43,8 +25,18 @@ export class Contrato {
   @JoinColumn({ name: 'propiedadId' })
   propiedad: Relation<Propiedad>
 
-  @Column(() => Inquilino)
-  inquilino: Inquilino
+  // Datos del inquilino: son columnas del contrato, no una clase aparte.
+  @Column({ type: 'varchar', length: 100 })
+  inquilinoNombre: string
+
+  @Column({ type: 'varchar', length: 30 })
+  inquilinoDocumento: string
+
+  @Column({ type: 'varchar', length: 150 })
+  inquilinoCorreo: string
+
+  @Column({ type: 'varchar', length: 30, default: '' })
+  inquilinoTelefono: string
 
   @Column({ type: 'varchar', length: 5 })
   tipo: TipoContrato

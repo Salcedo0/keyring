@@ -1,5 +1,4 @@
-import { Type } from 'class-transformer'
-import { IsEmail, IsIn, IsInt, IsString, Length, Min, ValidateNested } from 'class-validator'
+import { IsEmail, IsIn, IsInt, IsString, Length, Min } from 'class-validator'
 
 import { EsFecha } from '../../comun/validaciones.js'
 import {
@@ -9,33 +8,27 @@ import {
   type TipoContrato,
 } from '../entities/contrato.entity.js'
 
-export class InquilinoDto {
-  @IsString()
-  @Length(2, 100)
-  nombre: string
-
-  @IsString()
-  @Length(3, 30)
-  documento: string
-
-  @IsEmail()
-  correo: string
-
-  // Opcional en la práctica: puede llegar vacío.
-  @IsString()
-  @Length(0, 30)
-  telefono: string
-}
-
 /** Sirve para crear y para actualizar un contrato. */
 export class GuardarContratoDto {
   @IsInt()
   @Min(1)
   propiedadId: number
 
-  @ValidateNested()
-  @Type(() => InquilinoDto)
-  inquilino: InquilinoDto
+  @IsString()
+  @Length(2, 100)
+  inquilinoNombre: string
+
+  @IsString()
+  @Length(3, 30)
+  inquilinoDocumento: string
+
+  @IsEmail()
+  inquilinoCorreo: string
+
+  // Opcional en la práctica: puede llegar vacío.
+  @IsString()
+  @Length(0, 30)
+  inquilinoTelefono: string
 
   @IsIn(TIPOS_CONTRATO)
   tipo: TipoContrato

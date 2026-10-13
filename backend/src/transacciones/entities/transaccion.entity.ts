@@ -1,9 +1,30 @@
 import { Check, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
 import type { Relation } from 'typeorm'
 
-import { Categoria, type TipoTransaccion } from '../../categorias/entities/categoria.entity.js'
 import { Contrato } from '../../contratos/entities/contrato.entity.js'
 import { Propiedad } from '../../propiedades/entities/propiedad.entity.js'
+
+export const TIPOS_TRANSACCION = ['INGRESO', 'GASTO'] as const
+export type TipoTransaccion = (typeof TIPOS_TRANSACCION)[number]
+
+/**
+ * Las categorías son una lista fija, no una tabla: el modelo del proyecto se limita a cuatro
+ * clases (Usuario, Propiedad, Contrato y Transaccion). Para agregar una, se agrega aquí.
+ */
+export const CATEGORIAS: { nombre: string; tipo: TipoTransaccion }[] = [
+  { nombre: 'Arriendo corta estancia', tipo: 'INGRESO' },
+  { nombre: 'Canon de arriendo', tipo: 'INGRESO' },
+  { nombre: 'Depósito', tipo: 'INGRESO' },
+  { nombre: 'Otros ingresos', tipo: 'INGRESO' },
+  { nombre: 'Administración', tipo: 'GASTO' },
+  { nombre: 'Mantenimiento', tipo: 'GASTO' },
+  { nombre: 'Servicios públicos', tipo: 'GASTO' },
+  { nombre: 'Comisión plataforma', tipo: 'GASTO' },
+  { nombre: 'Aseo', tipo: 'GASTO' },
+  { nombre: 'Impuestos y predial', tipo: 'GASTO' },
+]
+
+export const NOMBRES_CATEGORIAS = CATEGORIAS.map((categoria) => categoria.nombre)
 
 @Entity()
 @Check(`"tipo" IN ('INGRESO', 'GASTO')`)
@@ -31,12 +52,9 @@ export class Transaccion {
   @Column({ type: 'varchar', length: 10 })
   tipo: TipoTransaccion
 
-  @Column({ type: 'integer' })
-  categoriaId: number
-
-  @ManyToOne(() => Categoria)
-  @JoinColumn({ name: 'categoriaId' })
-  categoria: Relation<Categoria>
+  /** Uno de los nombres de CATEGORIAS, del mismo tipo que la transacción. */
+  @Column({ type: 'varchar', length: 60 })
+  categoria: string
 
   /** Pesos colombianos, siempre positivo: el tipo dice si suma o resta. */
   @Column({ type: 'integer' })

@@ -26,6 +26,7 @@ keyring/
 ├── GUIA-DE-CODIGO.md     Reglas para escribir el código (leer antes de programar)
 ├── README.md             Este archivo
 ├── docs/
+│   ├── AUTENTICACION.md  El login frente a la guía de Nest (para la sustentación)
 │   ├── CONTRATO-API.md   Lo que el back responde y el front consume
 │   └── DECISIONES.md     Por qué se tomó cada decisión importante
 ├── backend/              API en Nest + TypeORM + SQLite
@@ -94,7 +95,6 @@ Para entrar: usa el administrador del `.env` del backend, o crea una cuenta en "
 | `/transacciones` | Lista, filtros y gráfico por categoría | Con sesión |
 | `/transacciones/nueva`, `/transacciones/:id/editar` | Formulario de transacción | Con sesión |
 | `/admin/usuarios` | Usuarios por rol | Solo `ADMIN` |
-| `/admin/categorias` | Categorías de transacción | Solo `ADMIN` |
 
 Sin sesión, cualquier página interna redirige al login. Un usuario sin rol `ADMIN` no ve las
 opciones de administración en el menú y, si escribe la dirección a mano, vuelve al dashboard.
@@ -126,7 +126,10 @@ opciones de administración en el menú y, si escribe la dirección a mano, vuel
 | --- | --- |
 | [`GUIA-DE-CODIGO.md`](GUIA-DE-CODIGO.md) | Reglas de código: idioma, nombres, estructura, KISS, comentarios, git |
 | [`docs/CONTRATO-API.md`](docs/CONTRATO-API.md) | Endpoints, filtros, cuerpos, respuestas y errores de la API |
-| [`docs/DECISIONES.md`](docs/DECISIONES.md) | Decisiones importantes y su porqué (registro público, JWT, fechas…) |
+| [`docs/AUTENTICACION.md`](docs/AUTENTICACION.md) | El login paso a paso frente a la guía de Nest, y por qué se agregó cada cosa |
+| [`docs/DECISIONES.md`](docs/DECISIONES.md) | Decisiones importantes y su porqué (registro público, JWT, fechas, modelo de 4 clases…) |
 | [`backend/README.md`](backend/README.md) | Cómo correr el back, su estructura, cómo funciona el login y sus reglas |
+| [`docs/arquitectura/entregable-2/`](docs/arquitectura/entregable-2/) | Diagrama de clases y los 3 de arquitectura (`.drawio` editables y `.png`) |
+| [`docs/wiki/Entregable-2.md`](docs/wiki/Entregable-2.md) | Texto de la página "Entregable 2" de la wiki |
 
 Cada cambio se documenta al terminarlo (ver la sección 13 de la guía).

@@ -2,18 +2,15 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { InjectRepository } from '@nestjs/typeorm'
 import { Between, Like, Repository, type FindOptionsWhere } from 'typeorm'
 
-import { CategoriasService } from '../categorias/categorias.service.js'
-import type { TipoTransaccion } from '../categorias/entities/categoria.entity.js'
 import { Contrato } from '../contratos/entities/contrato.entity.js'
 import { PropiedadesService } from '../propiedades/propiedades.service.js'
 import type { FiltroTransaccionesDto } from './dto/filtro-transacciones.dto.js'
 import type { GuardarTransaccionDto } from './dto/guardar-transaccion.dto.js'
-import { Transaccion } from './entities/transaccion.entity.js'
+import { CATEGORIAS, Transaccion, type TipoTransaccion } from './entities/transaccion.entity.js'
 
-/** Así sale una transacción por la API: con los nombres de su propiedad y su categoría. */
-export type TransaccionRespuesta = Omit<Transaccion, 'propiedad' | 'categoria' | 'contrato'> & {
+/** Así sale una transacción por la API: sin los objetos relacionados, solo con el nombre de su propiedad. */
+export type TransaccionRespuesta = Omit<Transaccion, 'propiedad' | 'contrato'> & {
   propiedadNombre: string
-  categoriaNombre: string
 }
 
 export interface TotalCategoria {
@@ -22,22 +19,17 @@ export interface TotalCategoria {
   total: number
 }
 
-function aRespuesta({
-  propiedad,
-  categoria,
-  contrato: _,
-  ...transaccion
-}: Transaccion): TransaccionRespuesta {
-  return { ...transaccion, propiedadNombre: propiedad.nombre, categoriaNombre: categoria.nombre }
+function aRespuesta({ propiedad, contrato: _, ...transaccion }: Transaccion): TransaccionRespuesta {
+  return { ...transaccion, propiedadNombre: propiedad.nombre }
 }
 
 /** Suma los montos por categoría, de mayor a menor total. La usan este servicio y el tablero. */
 export function sumarPorCategoria(transacciones: TransaccionRespuesta[]): TotalCategoria[] {
   const totales = new Map<string, TotalCategoria>()
-  for (const { categoriaNombre, tipo, monto } of transacciones) {
-    const fila = totales.get(categoriaNombre) ?? { categoria: categoriaNombre, tipo, total: 0 }
+  for (const { categoria, tipo, monto } of transacciones) {
+    const fila = totales.get(categoria) ?? { categoria, tipo, total: 0 }
     fila.total += monto
-    totales.set(categoriaNombre, fila)
+    totales.set(categoria, fila)
   }
   return [...totales.values()].sort((a, b) => b.total - a.total)
 }
@@ -50,7 +42,6 @@ export class TransaccionesService {
     @InjectRepository(Contrato)
     private readonly contratos: Repository<Contrato>,
     private readonly propiedadesService: PropiedadesService,
-    private readonly categoriasService: CategoriasService,
   ) {}
 
   /** Transacciones de las propiedades del usuario con los filtros de la lista. */
@@ -58,7 +49,7 @@ export class TransaccionesService {
     return this.buscarVarias({
       propiedadId: filtros.propiedadId,
       tipo: filtros.tipo,
-      categoriaId: filtros.categoriaId,
+      categoria: filtros.categoria,
       // Las fechas son texto AAAA-MM-DD, así que "todo septiembre" es "2026-09-%".
       fecha: filtros.mes ? Like(`${filtros.mes}-%`) : undefined,
       propiedad: { usuarioId },
@@ -115,7 +106,7 @@ export class TransaccionesService {
   ): Promise<TransaccionRespuesta[]> {
     const transacciones = await this.transacciones.find({
       where: condiciones,
-      relations: { propiedad: true, categoria: true },
+      relations: { propiedad: true },
       order: { fecha: 'DESC', id: 'DESC' },
     })
     return transacciones.map(aRespuesta)
@@ -125,8 +116,8 @@ export class TransaccionesService {
   private async validar(datos: GuardarTransaccionDto, usuarioId: number): Promise<void> {
     await this.propiedadesService.buscar(datos.propiedadId, usuarioId)
 
-    const categoria = await this.categoriasService.buscar(datos.categoriaId)
-    if (categoria.tipo !== datos.tipo) {
+    const categoria = CATEGORIAS.find(({ nombre }) => nombre === datos.categoria)
+    if (categoria?.tipo !== datos.tipo) {
       throw new BadRequestException('La categoría no corresponde al tipo de la transacción')
     }
 

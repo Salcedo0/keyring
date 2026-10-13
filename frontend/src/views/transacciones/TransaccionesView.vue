@@ -14,11 +14,11 @@ import TablaDatos from '@/components/tabla/TablaDatos.vue'
 import { useConsulta } from '@/composables/useConsulta'
 import type { Columna } from '@/interfaces/OpcionInterface'
 import type { FiltrosTransacciones, Transaccion } from '@/interfaces/TransaccionInterface'
-import { obtenerCategorias } from '@/services/CategoriaService'
 import { describirError } from '@/services/http'
 import { obtenerPropiedades } from '@/services/PropiedadService'
 import {
   eliminarTransaccion,
+  obtenerCategorias,
   obtenerResumenPorCategoria,
   obtenerTransacciones,
 } from '@/services/TransaccionService'
@@ -30,7 +30,7 @@ const COLUMNAS: Columna[] = [
   { clave: 'fecha', titulo: 'Fecha' },
   { clave: 'propiedadNombre', titulo: 'Propiedad' },
   { clave: 'descripcion', titulo: 'Descripción' },
-  { clave: 'categoriaNombre', titulo: 'Categoría' },
+  { clave: 'categoria', titulo: 'Categoría' },
   { clave: 'tipo', titulo: 'Tipo' },
   { clave: 'monto', titulo: 'Monto', alineacion: 'derecha' },
 ]
@@ -41,7 +41,7 @@ const router = useRouter()
 const filtros = reactive<FiltrosTransacciones>({
   propiedadId: null,
   tipo: null,
-  categoriaId: null,
+  categoria: null,
   mes: '',
 })
 const errorAccion = ref('')
@@ -61,7 +61,7 @@ const opcionesCategoria = computed(() => [
   { valor: null, texto: 'Todas las categorías' },
   ...categorias.datos.value
     .filter((categoria) => filtros.tipo === null || categoria.tipo === filtros.tipo)
-    .map((categoria) => ({ valor: categoria.id, texto: categoria.nombre })),
+    .map((categoria) => ({ valor: categoria.nombre, texto: categoria.nombre })),
 ])
 
 const nombresResumen = computed(() => resumen.datos.value.map((fila) => fila.categoria))
@@ -100,7 +100,7 @@ onMounted(() => {
 // Al cambiar el tipo, la categoría elegida puede dejar de ser válida.
 watch(
   () => filtros.tipo,
-  () => (filtros.categoriaId = null),
+  () => (filtros.categoria = null),
 )
 watch(filtros, recargar)
 </script>
@@ -125,7 +125,7 @@ watch(filtros, recargar)
     />
     <FiltroSelector v-model="filtros.tipo" etiqueta="Tipo" :opciones="OPCIONES_TIPO" />
     <FiltroSelector
-      v-model="filtros.categoriaId"
+      v-model="filtros.categoria"
       etiqueta="Categoría"
       :opciones="opcionesCategoria"
     />

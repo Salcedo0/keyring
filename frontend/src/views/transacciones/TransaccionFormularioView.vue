@@ -10,13 +10,13 @@ import GrupoOpciones from '@/components/formulario/GrupoOpciones.vue'
 import { useConsulta } from '@/composables/useConsulta'
 import type { GuardarTransaccionDTO } from '@/dtos/GuardarTransaccionDTO'
 import type { TipoTransaccion } from '@/interfaces/TransaccionInterface'
-import { obtenerCategorias } from '@/services/CategoriaService'
 import { obtenerContratos } from '@/services/ContratoService'
 import { describirError } from '@/services/http'
 import { obtenerPropiedades } from '@/services/PropiedadService'
 import {
   actualizarTransaccion,
   crearTransaccion,
+  obtenerCategorias,
   obtenerTransaccion,
 } from '@/services/TransaccionService'
 import { aOpciones, TIPOS_TRANSACCION } from '@/utils/etiquetas'
@@ -29,7 +29,7 @@ interface FormularioTransaccion {
   propiedadId: number | null
   contratoId: number | null
   tipo: TipoTransaccion | null
-  categoriaId: number | null
+  categoria: string | null
   monto: number | null
   fecha: string
   descripcion: string
@@ -48,7 +48,7 @@ const formulario = reactive<FormularioTransaccion>({
   propiedadId: null,
   contratoId: null,
   tipo: null,
-  categoriaId: null,
+  categoria: null,
   monto: null,
   fecha: hoy(),
   descripcion: '',
@@ -56,7 +56,7 @@ const formulario = reactive<FormularioTransaccion>({
 const errores = reactive({
   propiedadId: '',
   tipo: '',
-  categoriaId: '',
+  categoria: '',
   monto: '',
   fecha: '',
   descripcion: '',
@@ -77,7 +77,7 @@ const opcionesContrato = computed(() => [
   { valor: null, texto: 'Sin contrato' },
   ...contratos.datos.value.map((contrato) => ({
     valor: contrato.id,
-    texto: `${contrato.inquilino.nombre} · ${formatearFecha(contrato.fechaInicio)}`,
+    texto: `${contrato.inquilinoNombre} · ${formatearFecha(contrato.fechaInicio)}`,
   })),
 ])
 
@@ -85,7 +85,7 @@ const opcionesContrato = computed(() => [
 const opcionesCategoria = computed(() =>
   categorias.datos.value
     .filter((categoria) => categoria.tipo === formulario.tipo)
-    .map((categoria) => ({ valor: categoria.id, texto: categoria.nombre })),
+    .map((categoria) => ({ valor: categoria.nombre, texto: categoria.nombre })),
 )
 
 const textoVacioCategoria = computed(() =>
@@ -100,12 +100,7 @@ async function cargarTransaccion(): Promise<void> {
   if (id.value === null) return
   try {
     const transaccion = await obtenerTransaccion(id.value)
-    const {
-      id: _id,
-      propiedadNombre: _propiedad,
-      categoriaNombre: _categoria,
-      ...datos
-    } = transaccion
+    const { id: _id, propiedadNombre: _propiedad, ...datos } = transaccion
     Object.assign(formulario, datos)
   } catch (error) {
     errorGeneral.value = describirError(error, 'No se pudo cargar la transacción.')
@@ -115,7 +110,7 @@ async function cargarTransaccion(): Promise<void> {
 function validar(): boolean {
   errores.propiedadId = formulario.propiedadId === null ? 'Elige la propiedad' : ''
   errores.tipo = formulario.tipo ? '' : 'Elige si es ingreso o gasto'
-  errores.categoriaId = formulario.categoriaId === null ? 'Selecciona una categoría' : ''
+  errores.categoria = formulario.categoria === null ? 'Selecciona una categoría' : ''
   errores.monto = formulario.monto && formulario.monto > 0 ? '' : 'El monto debe ser mayor a $0'
   errores.fecha = formulario.fecha ? '' : 'Elige la fecha'
   errores.descripcion = formulario.descripcion.length > 200 ? 'Máximo 200 caracteres' : ''
@@ -148,7 +143,7 @@ function alCambiarPropiedad(nueva: number | null, anterior: number | null): void
 
 /** Al cambiar entre ingreso y gasto, la categoría elegida deja de servir. */
 function alCambiarTipo(_nuevo: TipoTransaccion | null, anterior: TipoTransaccion | null): void {
-  if (anterior !== null) formulario.categoriaId = null
+  if (anterior !== null) formulario.categoria = null
 }
 
 onMounted(() => {
@@ -203,12 +198,12 @@ watch(() => formulario.tipo, alCambiarTipo)
       <div class="flex flex-wrap items-start gap-4">
         <div class="min-w-56 flex-1">
           <CampoSelector
-            v-model="formulario.categoriaId"
+            v-model="formulario.categoria"
             etiqueta="Categoría"
             :opciones="opcionesCategoria"
             :texto-vacio="textoVacioCategoria"
             obligatorio
-            :error="errores.categoriaId"
+            :error="errores.categoria"
           />
         </div>
         <div class="min-w-48 flex-1">

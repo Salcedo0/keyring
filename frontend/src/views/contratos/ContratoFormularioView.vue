@@ -9,7 +9,7 @@ import CampoTexto from '@/components/formulario/CampoTexto.vue'
 import GrupoOpciones from '@/components/formulario/GrupoOpciones.vue'
 import { useConsulta } from '@/composables/useConsulta'
 import type { GuardarContratoDTO } from '@/dtos/GuardarContratoDTO'
-import type { EstadoContrato, Inquilino, TipoContrato } from '@/interfaces/ContratoInterface'
+import type { EstadoContrato, TipoContrato } from '@/interfaces/ContratoInterface'
 import { actualizarContrato, crearContrato, obtenerContrato } from '@/services/ContratoService'
 import { describirError } from '@/services/http'
 import { obtenerPropiedades } from '@/services/PropiedadService'
@@ -20,7 +20,10 @@ import { esCorreoValido, estaVacio, hayErrores } from '@/utils/validaciones'
 // Los campos que el usuario debe elegir empiezan en null.
 interface FormularioContrato {
   propiedadId: number | null
-  inquilino: Inquilino
+  inquilinoNombre: string
+  inquilinoDocumento: string
+  inquilinoCorreo: string
+  inquilinoTelefono: string
   tipo: TipoContrato | null
   fechaInicio: string
   fechaFin: string
@@ -40,7 +43,10 @@ const esEdicion = computed(() => id.value !== null)
 
 const formulario = reactive<FormularioContrato>({
   propiedadId: null,
-  inquilino: { nombre: '', documento: '', correo: '', telefono: '' },
+  inquilinoNombre: '',
+  inquilinoDocumento: '',
+  inquilinoCorreo: '',
+  inquilinoTelefono: '',
   tipo: null,
   fechaInicio: '',
   fechaFin: '',
@@ -49,9 +55,9 @@ const formulario = reactive<FormularioContrato>({
 })
 const errores = reactive({
   propiedadId: '',
-  nombre: '',
-  documento: '',
-  correo: '',
+  inquilinoNombre: '',
+  inquilinoDocumento: '',
+  inquilinoCorreo: '',
   tipo: '',
   fechaInicio: '',
   fechaFin: '',
@@ -84,11 +90,14 @@ async function cargarContrato(): Promise<void> {
 }
 
 function validar(): boolean {
-  const { inquilino } = formulario
   errores.propiedadId = formulario.propiedadId === null ? 'Elige la propiedad' : ''
-  errores.nombre = estaVacio(inquilino.nombre) ? 'Escribe el nombre del inquilino' : ''
-  errores.documento = estaVacio(inquilino.documento) ? 'Escribe el número de documento' : ''
-  errores.correo = esCorreoValido(inquilino.correo)
+  errores.inquilinoNombre = estaVacio(formulario.inquilinoNombre)
+    ? 'Escribe el nombre del inquilino'
+    : ''
+  errores.inquilinoDocumento = estaVacio(formulario.inquilinoDocumento)
+    ? 'Escribe el número de documento'
+    : ''
+  errores.inquilinoCorreo = esCorreoValido(formulario.inquilinoCorreo)
     ? ''
     : 'Ingresa un correo válido, por ejemplo nombre@correo.com'
   errores.tipo = formulario.tipo ? '' : 'Elige el tipo de contrato'
@@ -160,34 +169,34 @@ onMounted(() => {
     <section class="flex flex-col gap-5 border-b border-fondo p-7">
       <h2 class="text-[17px] font-bold">Inquilino</h2>
       <CampoTexto
-        v-model="formulario.inquilino.nombre"
+        v-model="formulario.inquilinoNombre"
         etiqueta="Nombre completo"
         obligatorio
-        :error="errores.nombre"
+        :error="errores.inquilinoNombre"
       />
       <div class="flex flex-wrap gap-4">
         <div class="min-w-56 flex-1">
           <CampoTexto
-            v-model="formulario.inquilino.documento"
+            v-model="formulario.inquilinoDocumento"
             etiqueta="Documento"
             placeholder="CC, CE, pasaporte o NIT"
             obligatorio
-            :error="errores.documento"
+            :error="errores.inquilinoDocumento"
           />
         </div>
         <div class="min-w-56 flex-1">
           <CampoTexto
-            v-model="formulario.inquilino.correo"
+            v-model="formulario.inquilinoCorreo"
             etiqueta="Correo electrónico"
             tipo="email"
             placeholder="nombre@correo.com"
             obligatorio
-            :error="errores.correo"
+            :error="errores.inquilinoCorreo"
           />
         </div>
         <div class="min-w-56 flex-1">
           <CampoTexto
-            v-model="formulario.inquilino.telefono"
+            v-model="formulario.inquilinoTelefono"
             etiqueta="Teléfono"
             tipo="tel"
             placeholder="300 000 0000"

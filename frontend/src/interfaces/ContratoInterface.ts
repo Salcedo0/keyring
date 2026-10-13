@@ -2,18 +2,14 @@ export type TipoContrato = 'CORTA' | 'FIJA'
 
 export type EstadoContrato = 'ACTIVO' | 'PENDIENTE' | 'FINALIZADO' | 'CANCELADO'
 
-export interface Inquilino {
-  nombre: string
-  documento: string
-  correo: string
-  telefono: string
-}
-
 export interface Contrato {
   id: number
   propiedadId: number
   propiedadNombre: string
-  inquilino: Inquilino
+  inquilinoNombre: string
+  inquilinoDocumento: string
+  inquilinoCorreo: string
+  inquilinoTelefono: string
   tipo: TipoContrato
   /** Formato AAAA-MM-DD. */
   fechaInicio: string

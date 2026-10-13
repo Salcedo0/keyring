@@ -6,7 +6,6 @@ import { JwtModule } from '@nestjs/jwt'
 import { TypeOrmModule } from '@nestjs/typeorm'
 
 import { AutenticacionModule } from './autenticacion/autenticacion.module.js'
-import { CategoriasModule } from './categorias/categorias.module.js'
 import { AutenticacionGuard } from './comun/autenticacion.guard.js'
 import { ContratosModule } from './contratos/contratos.module.js'
 import { variableObligatoria } from './entorno.js'
@@ -39,7 +38,6 @@ const rutaBaseDeDatos =
     }),
     AutenticacionModule,
     UsuariosModule,
-    CategoriasModule,
     PropiedadesModule,
     ContratosModule,
     TransaccionesModule,
