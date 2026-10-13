@@ -54,9 +54,11 @@ const opcionesModalidad = aOpciones(MODALIDADES)
 async function cargarPropiedad(): Promise<void> {
   if (id.value === null) return
   try {
-    // El id no hace parte del formulario: va en la URL al guardar.
-    const { id: _id, ...propiedad } = await PropiedadService.obtenerPropiedad(id.value)
-    Object.assign(formulario, propiedad)
+    // Solo se copian los campos del formulario: la API también responde id y usuarioId, y si se
+    // devolvieran al guardar, el back los rechazaría (400) por ser campos de más.
+    const propiedad = await PropiedadService.obtenerPropiedad(id.value)
+    const { nombre, direccion, ciudad, tipo, modalidad, latitud, longitud } = propiedad
+    Object.assign(formulario, { nombre, direccion, ciudad, tipo, modalidad, latitud, longitud })
   } catch (error) {
     errorGeneral.value = describirError(error, 'No se pudo cargar la propiedad.')
   }
