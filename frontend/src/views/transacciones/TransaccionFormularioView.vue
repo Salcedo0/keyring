@@ -10,15 +10,10 @@ import GrupoOpciones from '@/components/formulario/GrupoOpciones.vue'
 import { useConsulta } from '@/composables/useConsulta'
 import type { GuardarTransaccionDTO } from '@/dtos/GuardarTransaccionDTO'
 import type { TipoTransaccion } from '@/interfaces/TransaccionInterface'
-import { obtenerContratos } from '@/services/ContratoService'
+import { ContratoService } from '@/services/ContratoService'
 import { describirError } from '@/services/http'
-import { obtenerPropiedades } from '@/services/PropiedadService'
-import {
-  actualizarTransaccion,
-  crearTransaccion,
-  obtenerCategorias,
-  obtenerTransaccion,
-} from '@/services/TransaccionService'
+import { PropiedadService } from '@/services/PropiedadService'
+import { TransaccionService } from '@/services/TransaccionService'
 import { aOpciones, TIPOS_TRANSACCION } from '@/utils/etiquetas'
 import { hoy } from '@/utils/fechas'
 import { formatearFecha, formatearPesos } from '@/utils/formato'
@@ -64,10 +59,13 @@ const errores = reactive({
 const errorGeneral = ref('')
 const enviando = ref(false)
 
-const propiedades = useConsulta(obtenerPropiedades, [])
-const categorias = useConsulta(obtenerCategorias, [])
+const propiedades = useConsulta(() => PropiedadService.obtenerPropiedades(), [])
+const categorias = useConsulta(() => TransaccionService.obtenerCategorias(), [])
 // Solo se ofrecen los contratos de la propiedad elegida.
-const contratos = useConsulta(() => obtenerContratos({ propiedadId: formulario.propiedadId }), [])
+const contratos = useConsulta(
+  () => ContratoService.obtenerContratos({ propiedadId: formulario.propiedadId }),
+  [],
+)
 
 const opcionesPropiedad = computed(() =>
   propiedades.datos.value.map((propiedad) => ({ valor: propiedad.id, texto: propiedad.nombre })),
@@ -99,7 +97,7 @@ const ayudaMonto = computed(() =>
 async function cargarTransaccion(): Promise<void> {
   if (id.value === null) return
   try {
-    const transaccion = await obtenerTransaccion(id.value)
+    const transaccion = await TransaccionService.obtenerTransaccion(id.value)
     const { id: _id, propiedadNombre: _propiedad, ...datos } = transaccion
     Object.assign(formulario, datos)
   } catch (error) {
@@ -125,8 +123,8 @@ async function guardar(): Promise<void> {
   try {
     // Después de validar, los campos que empezaban en null ya tienen valor.
     const datos = formulario as GuardarTransaccionDTO
-    if (id.value === null) await crearTransaccion(datos)
-    else await actualizarTransaccion(id.value, datos)
+    if (id.value === null) await TransaccionService.crearTransaccion(datos)
+    else await TransaccionService.actualizarTransaccion(id.value, datos)
     router.push('/transacciones')
   } catch (error) {
     errorGeneral.value = describirError(error, 'No se pudo guardar la transacción.')

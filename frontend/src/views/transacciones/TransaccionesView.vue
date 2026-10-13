@@ -15,13 +15,8 @@ import { useConsulta } from '@/composables/useConsulta'
 import type { Columna } from '@/interfaces/OpcionInterface'
 import type { FiltrosTransacciones, Transaccion } from '@/interfaces/TransaccionInterface'
 import { describirError } from '@/services/http'
-import { obtenerPropiedades } from '@/services/PropiedadService'
-import {
-  eliminarTransaccion,
-  obtenerCategorias,
-  obtenerResumenPorCategoria,
-  obtenerTransacciones,
-} from '@/services/TransaccionService'
+import { PropiedadService } from '@/services/PropiedadService'
+import { TransaccionService } from '@/services/TransaccionService'
 import { aOpcionesConTodos, TIPOS_TRANSACCION, TONOS_TRANSACCION } from '@/utils/etiquetas'
 import { formatearFecha, formatearMonto } from '@/utils/formato'
 import { COLORES } from '@/utils/paleta'
@@ -46,10 +41,10 @@ const filtros = reactive<FiltrosTransacciones>({
 })
 const errorAccion = ref('')
 
-const propiedades = useConsulta(obtenerPropiedades, [])
-const categorias = useConsulta(obtenerCategorias, [])
-const transacciones = useConsulta(() => obtenerTransacciones(filtros), [])
-const resumen = useConsulta(() => obtenerResumenPorCategoria(filtros), [])
+const propiedades = useConsulta(() => PropiedadService.obtenerPropiedades(), [])
+const categorias = useConsulta(() => TransaccionService.obtenerCategorias(), [])
+const transacciones = useConsulta(() => TransaccionService.obtenerTransacciones(filtros), [])
+const resumen = useConsulta(() => TransaccionService.obtenerResumenPorCategoria(filtros), [])
 
 const opcionesPropiedad = computed(() => [
   { valor: null, texto: 'Todas las propiedades' },
@@ -84,7 +79,7 @@ async function eliminar(transaccion: Transaccion): Promise<void> {
     return
   errorAccion.value = ''
   try {
-    await eliminarTransaccion(transaccion.id)
+    await TransaccionService.eliminarTransaccion(transaccion.id)
     recargar()
   } catch (error) {
     errorAccion.value = describirError(error, 'No se pudo eliminar la transacción.')

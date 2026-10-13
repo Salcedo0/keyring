@@ -13,7 +13,7 @@ import { useConsulta } from '@/composables/useConsulta'
 import type { Columna } from '@/interfaces/OpcionInterface'
 import type { Propiedad } from '@/interfaces/PropiedadInterface'
 import { describirError } from '@/services/http'
-import { eliminarPropiedad, obtenerPropiedades } from '@/services/PropiedadService'
+import { PropiedadService } from '@/services/PropiedadService'
 import { MODALIDADES, TIPOS_PROPIEDAD, TONOS_MODALIDAD } from '@/utils/etiquetas'
 
 const COLUMNAS: Columna[] = [
@@ -26,7 +26,12 @@ const COLUMNAS: Columna[] = [
 const router = useRouter()
 const errorAccion = ref('')
 
-const { datos: propiedades, cargando, error, cargar } = useConsulta(obtenerPropiedades, [])
+const {
+  datos: propiedades,
+  cargando,
+  error,
+  cargar,
+} = useConsulta(() => PropiedadService.obtenerPropiedades(), [])
 
 function editar(propiedad: Propiedad): void {
   router.push(`/propiedades/${propiedad.id}/editar`)
@@ -36,7 +41,7 @@ async function eliminar(propiedad: Propiedad): Promise<void> {
   if (!window.confirm(`¿Eliminar "${propiedad.nombre}"? Esta acción no se puede deshacer.`)) return
   errorAccion.value = ''
   try {
-    await eliminarPropiedad(propiedad.id)
+    await PropiedadService.eliminarPropiedad(propiedad.id)
     await cargar()
   } catch (problema) {
     errorAccion.value = describirError(problema, 'No se pudo eliminar la propiedad.')

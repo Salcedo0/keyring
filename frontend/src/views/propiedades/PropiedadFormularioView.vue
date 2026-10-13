@@ -11,7 +11,7 @@ import SelectorUbicacion from '@/components/mapa/SelectorUbicacion.vue'
 import type { GuardarPropiedadDTO } from '@/dtos/GuardarPropiedadDTO'
 import type { Modalidad, TipoPropiedad } from '@/interfaces/PropiedadInterface'
 import { describirError } from '@/services/http'
-import { actualizarPropiedad, crearPropiedad, obtenerPropiedad } from '@/services/PropiedadService'
+import { PropiedadService } from '@/services/PropiedadService'
 import { aOpciones, MODALIDADES, TIPOS_PROPIEDAD } from '@/utils/etiquetas'
 import { estaVacio, hayErrores } from '@/utils/validaciones'
 
@@ -55,7 +55,7 @@ async function cargarPropiedad(): Promise<void> {
   if (id.value === null) return
   try {
     // El id no hace parte del formulario: va en la URL al guardar.
-    const { id: _id, ...propiedad } = await obtenerPropiedad(id.value)
+    const { id: _id, ...propiedad } = await PropiedadService.obtenerPropiedad(id.value)
     Object.assign(formulario, propiedad)
   } catch (error) {
     errorGeneral.value = describirError(error, 'No se pudo cargar la propiedad.')
@@ -80,8 +80,8 @@ async function guardar(): Promise<void> {
   try {
     // Después de validar, tipo y modalidad ya tienen valor.
     const datos = formulario as GuardarPropiedadDTO
-    if (id.value === null) await crearPropiedad(datos)
-    else await actualizarPropiedad(id.value, datos)
+    if (id.value === null) await PropiedadService.crearPropiedad(datos)
+    else await PropiedadService.actualizarPropiedad(id.value, datos)
     router.push('/propiedades')
   } catch (error) {
     errorGeneral.value = describirError(error, 'No se pudo guardar la propiedad.')

@@ -12,7 +12,7 @@ import { useConsulta } from '@/composables/useConsulta'
 import type { Columna } from '@/interfaces/OpcionInterface'
 import type { Rol, Usuario } from '@/interfaces/UsuarioInterface'
 import { describirError } from '@/services/http'
-import { eliminarUsuario, obtenerResumenPorRol, obtenerUsuarios } from '@/services/UsuarioService'
+import { UsuarioService } from '@/services/UsuarioService'
 import { aOpcionesConTodos, ROLES } from '@/utils/etiquetas'
 import { PALETA_CATEGORIAS } from '@/utils/paleta'
 
@@ -27,8 +27,8 @@ const OPCIONES_ROL = aOpcionesConTodos(ROLES, 'Todos los roles')
 const filtroRol = ref<Rol | null>(null)
 const errorAccion = ref('')
 
-const usuarios = useConsulta(() => obtenerUsuarios(filtroRol.value), [])
-const resumen = useConsulta(obtenerResumenPorRol, [])
+const usuarios = useConsulta(() => UsuarioService.obtenerUsuarios(filtroRol.value), [])
+const resumen = useConsulta(() => UsuarioService.obtenerResumenPorRol(), [])
 
 const rolesResumen = computed(() => resumen.datos.value.map((fila) => fila.rol))
 const cantidadesResumen = computed(() => resumen.datos.value.map((fila) => fila.cantidad))
@@ -40,7 +40,7 @@ async function eliminar(usuario: Usuario): Promise<void> {
   if (!window.confirm(`¿Eliminar a ${usuario.nombre}? Esta acción no se puede deshacer.`)) return
   errorAccion.value = ''
   try {
-    await eliminarUsuario(usuario.id)
+    await UsuarioService.eliminarUsuario(usuario.id)
     usuarios.cargar()
     resumen.cargar()
   } catch (error) {

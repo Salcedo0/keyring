@@ -19,9 +19,9 @@ import type { Columna } from '@/interfaces/OpcionInterface'
 import type { FiltrosTablero, ResumenTablero } from '@/interfaces/TableroInterface'
 import type { Transaccion } from '@/interfaces/TransaccionInterface'
 import { describirError } from '@/services/http'
-import { obtenerPropiedades } from '@/services/PropiedadService'
-import { obtenerResumenTablero } from '@/services/TableroService'
-import { eliminarTransaccion } from '@/services/TransaccionService'
+import { PropiedadService } from '@/services/PropiedadService'
+import { TableroService } from '@/services/TableroService'
+import { TransaccionService } from '@/services/TransaccionService'
 import { TIPOS_TRANSACCION, TONOS_TRANSACCION } from '@/utils/etiquetas'
 import { hoy, inicioDeMesHace } from '@/utils/fechas'
 import { formatearFecha, formatearMes, formatearMonto, formatearPesos } from '@/utils/formato'
@@ -55,8 +55,8 @@ const filtros = reactive<FiltrosTablero>({
 })
 const errorAccion = ref('')
 
-const propiedades = useConsulta(obtenerPropiedades, [])
-const resumen = useConsulta(() => obtenerResumenTablero(filtros), RESUMEN_VACIO)
+const propiedades = useConsulta(() => PropiedadService.obtenerPropiedades(), [])
+const resumen = useConsulta(() => TableroService.obtenerResumenTablero(filtros), RESUMEN_VACIO)
 
 const saludo = computed(() => `Hola, ${usuario.value?.nombre.split(' ')[0] ?? ''}`)
 
@@ -101,7 +101,7 @@ async function borrarTransaccion(transaccion: Transaccion): Promise<void> {
     return
   errorAccion.value = ''
   try {
-    await eliminarTransaccion(transaccion.id)
+    await TransaccionService.eliminarTransaccion(transaccion.id)
     await resumen.cargar()
   } catch (error) {
     errorAccion.value = describirError(error, 'No se pudo eliminar la transacción.')

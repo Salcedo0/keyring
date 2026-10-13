@@ -11,9 +11,9 @@ import TablaDatos from '@/components/tabla/TablaDatos.vue'
 import { useConsulta } from '@/composables/useConsulta'
 import type { Contrato, FiltrosContratos } from '@/interfaces/ContratoInterface'
 import type { Columna } from '@/interfaces/OpcionInterface'
-import { eliminarContrato, obtenerContratos } from '@/services/ContratoService'
+import { ContratoService } from '@/services/ContratoService'
 import { describirError } from '@/services/http'
-import { obtenerPropiedades } from '@/services/PropiedadService'
+import { PropiedadService } from '@/services/PropiedadService'
 import {
   aOpcionesConTodos,
   ESTADOS_CONTRATO,
@@ -38,8 +38,8 @@ const router = useRouter()
 const filtros = reactive<FiltrosContratos>({ propiedadId: null, estado: null })
 const errorAccion = ref('')
 
-const propiedades = useConsulta(obtenerPropiedades, [])
-const contratos = useConsulta(() => obtenerContratos(filtros), [])
+const propiedades = useConsulta(() => PropiedadService.obtenerPropiedades(), [])
+const contratos = useConsulta(() => ContratoService.obtenerContratos(filtros), [])
 
 const opcionesPropiedad = computed(() => [
   { valor: null, texto: 'Todas las propiedades' },
@@ -63,7 +63,7 @@ async function eliminar(contrato: Contrato): Promise<void> {
   if (!window.confirm(pregunta)) return
   errorAccion.value = ''
   try {
-    await eliminarContrato(contrato.id)
+    await ContratoService.eliminarContrato(contrato.id)
     await contratos.cargar()
   } catch (error) {
     errorAccion.value = describirError(error, 'No se pudo eliminar el contrato.')

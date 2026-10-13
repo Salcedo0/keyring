@@ -10,9 +10,9 @@ import GrupoOpciones from '@/components/formulario/GrupoOpciones.vue'
 import { useConsulta } from '@/composables/useConsulta'
 import type { GuardarContratoDTO } from '@/dtos/GuardarContratoDTO'
 import type { EstadoContrato, TipoContrato } from '@/interfaces/ContratoInterface'
-import { actualizarContrato, crearContrato, obtenerContrato } from '@/services/ContratoService'
+import { ContratoService } from '@/services/ContratoService'
 import { describirError } from '@/services/http'
-import { obtenerPropiedades } from '@/services/PropiedadService'
+import { PropiedadService } from '@/services/PropiedadService'
 import { aOpciones, ESTADOS_CONTRATO, TIPOS_CONTRATO } from '@/utils/etiquetas'
 import { formatearPesos } from '@/utils/formato'
 import { esCorreoValido, estaVacio, hayErrores } from '@/utils/validaciones'
@@ -66,7 +66,7 @@ const errores = reactive({
 const errorGeneral = ref('')
 const enviando = ref(false)
 
-const propiedades = useConsulta(obtenerPropiedades, [])
+const propiedades = useConsulta(() => PropiedadService.obtenerPropiedades(), [])
 
 const opcionesPropiedad = computed(() =>
   propiedades.datos.value.map((propiedad) => ({ valor: propiedad.id, texto: propiedad.nombre })),
@@ -82,7 +82,11 @@ const ayudaValor = computed(() => {
 async function cargarContrato(): Promise<void> {
   if (id.value === null) return
   try {
-    const { id: _id, propiedadNombre: _nombre, ...contrato } = await obtenerContrato(id.value)
+    const {
+      id: _id,
+      propiedadNombre: _nombre,
+      ...contrato
+    } = await ContratoService.obtenerContrato(id.value)
     Object.assign(formulario, contrato)
   } catch (error) {
     errorGeneral.value = describirError(error, 'No se pudo cargar el contrato.')
@@ -116,8 +120,8 @@ async function guardar(): Promise<void> {
   try {
     // Después de validar, los campos que empezaban en null ya tienen valor.
     const datos = formulario as GuardarContratoDTO
-    if (id.value === null) await crearContrato(datos)
-    else await actualizarContrato(id.value, datos)
+    if (id.value === null) await ContratoService.crearContrato(datos)
+    else await ContratoService.actualizarContrato(id.value, datos)
     router.push('/contratos')
   } catch (error) {
     errorGeneral.value = describirError(error, 'No se pudo guardar el contrato.')

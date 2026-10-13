@@ -10,7 +10,7 @@ import TablaDatos from '@/components/tabla/TablaDatos.vue'
 import { useConsulta } from '@/composables/useConsulta'
 import type { Columna } from '@/interfaces/OpcionInterface'
 import type { ReporteGlobal } from '@/interfaces/ReporteInterface'
-import { obtenerReporte } from '@/services/ReporteService'
+import { ReporteService } from '@/services/ReporteService'
 import { formatearPesos } from '@/utils/formato'
 import { COLORES } from '@/utils/paleta'
 
@@ -28,7 +28,7 @@ const REPORTE_VACIO: ReporteGlobal = {
   propietarios: [],
 }
 
-const reporte = useConsulta(obtenerReporte, REPORTE_VACIO)
+const reporte = useConsulta(() => ReporteService.obtenerReporte(), REPORTE_VACIO)
 
 const totales = computed(() => reporte.datos.value.totales)
 const propietarios = computed(() => reporte.datos.value.propietarios)

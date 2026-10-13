@@ -3,7 +3,7 @@ import { computed, ref, type ComputedRef, type Ref } from 'vue'
 import type { IngresoDTO } from '@/dtos/IngresoDTO'
 import type { RegistroDTO } from '@/dtos/RegistroDTO'
 import type { Sesion, Usuario } from '@/interfaces/UsuarioInterface'
-import { ingresar, registrarse } from '@/services/AutenticacionService'
+import { AutenticacionService } from '@/services/AutenticacionService'
 import { borrarSesion, guardarSesion, leerSesion } from '@/utils/almacenSesion'
 
 // Vive fuera de la función para que todas las pantallas compartan el mismo usuario.
@@ -31,12 +31,12 @@ export function useSesion(): SesionActual {
   const esAdmin = computed(() => usuario.value?.rol === 'ADMIN')
 
   async function iniciarSesion(datos: IngresoDTO): Promise<void> {
-    activarSesion(await ingresar(datos))
+    activarSesion(await AutenticacionService.ingresar(datos))
   }
 
   /** Crea la cuenta y deja la sesión iniciada, sin pedir el login otra vez. */
   async function crearCuenta(datos: RegistroDTO): Promise<void> {
-    activarSesion(await registrarse(datos))
+    activarSesion(await AutenticacionService.registrarse(datos))
   }
 
   function cerrarSesion(): void {
